@@ -1,0 +1,20 @@
+{
+  "name": "afghan-darmal-toonr",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "next": "next -p 3000",
+    "dev": "nodemon server.js",
+    "build": "next build",
+    "prod": "cross-env NODE_ENV=production nodemon server.js",
+    "start": "npm run build && node server.js",
+    "export": "npm run build && next export"
+  },
+  "dependencies": {
+    "axios": "^0.21.0",
+    "express": "^4.17.1",
+    "next": "^10.0.0",
+    "react": "16.13.1",
+    "react-dom": "16.13.1"
+  }
+}
