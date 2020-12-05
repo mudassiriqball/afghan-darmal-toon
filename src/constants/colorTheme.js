@@ -29,6 +29,7 @@ export default {
         WHITE: '#FFFFFF',
         BLACK: '#000000',
         MAIN: '#EC0606',
-        SEC: '#172B4D'
+        SEC: '#172B4D',
+        LINK: 'blue'
     }
 };
