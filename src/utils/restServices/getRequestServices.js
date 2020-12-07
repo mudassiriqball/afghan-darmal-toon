@@ -2,7 +2,7 @@ import baseUrl from '../urls/baseUrl'
 import axios from 'axios'
 import React, { Component, useState, useEffect } from 'react';
 
-export default async function getRequestServices(_url, config) {
+export default async function getRequestServices(_url) {
     const [data, setData] = useState([])
     const [error, setError] = useState(false)
     const [success, setSuccess] = useState(false)

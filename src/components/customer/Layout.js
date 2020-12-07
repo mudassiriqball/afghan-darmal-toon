@@ -1,12 +1,19 @@
 import React, { useState } from 'react'
 import { Button, Card, DropdownButton, Dropdown, Form, Nav, Navbar, NavDropdown } from 'react-bootstrap'
-import colorTheme from '../../constants/colorTheme'
+import theme from '../../constants/theme'
 import PhoneInput from 'react-phone-input-2'
+import renderError from '../renderError'
+import { BiLogInCircle } from 'react-icons/bi'
+import globalStyle from '../../utils/styles/globalStyle'
+import Link from 'next/link'
+
 export default function Layout(props) {
     const [showDropdown, setShowDropdown] = useState(false)
+    const [passwordError, setPasswordError] = useState('')
+
     return (
         <>
-            <Navbar style={{ background: colorTheme.COLORS.SEC, padding: '0.45% 6%' }} variant='dark'>
+            <Navbar style={{ background: theme.COLORS.SEC, padding: '0.45% 6%' }} variant='dark'>
                 <Nav className="mr-auto">
                     <Nav.Link style={{ fontWeight: 'bold' }} className='text-uppercase' active href="">afghandarmaltoon@gmail.com</Nav.Link>
                     <Nav.Link style={{ fontWeight: 'bold' }} active href="">+92 3413657092</Nav.Link>
@@ -16,17 +23,17 @@ export default function Layout(props) {
                         flip={true}
                         onMouseEnter={() => setShowDropdown(true)}
                         onMouseLeave={() => setShowDropdown(false)}>
-                        <Dropdown.Toggle style={{ background: colorTheme.COLORS.SEC }}>
+                        <Dropdown.Toggle style={{ background: theme.COLORS.SEC }}>
                             {'Login / Signup'}
                         </Dropdown.Toggle>
                         <Dropdown.Menu style={{ width: '18rem', padding: '0' }} className='dropdown-menu dropdown-menu-right' >
-                            <div style={{ width: '18rem', marginTop: '10px', marginBottom: '10px', textAlign: 'center', color: colorTheme.COLORS.MUTED }}>
+                            <div style={{ width: '18rem', marginTop: '10px', marginBottom: '10px', textAlign: 'center', color: theme.COLORS.MUTED }}>
                                 {'Don\'t have account ? '}
-                                <span className='signupSpan'>{'Signup'}</span>
+                                <span className='signupSpan'><Link href='/signup'>{'Signup'}</Link></span>
                             </div>
                             <Card style={{ width: '18rem' }}>
                                 <Card.Body>
-                                    <Card.Title style={{ color: colorTheme.COLORS.MAIN, textAlign: 'center', marginBottom: '20px' }}>Signin</Card.Title>
+                                    <Card.Title style={{ color: theme.COLORS.MAIN, textAlign: 'center', marginBottom: '20px' }}>Signin</Card.Title>
                                     <Form>
                                         <Form.Group controlId="formBasicEmail">
                                             <PhoneInput
@@ -38,12 +45,13 @@ export default function Layout(props) {
                                                 onChange={phone => { }}
                                             />
                                         </Form.Group>
-
                                         <Form.Group controlId="formBasicPassword">
                                             <Form.Control type="password" placeholder="Password" />
+                                            {renderError(passwordError)}
                                         </Form.Group>
-                                        <Button variant="success" style={{ width: '100%', }} type="submit">
-                                            {'Submit'}
+                                        <Button variant="danger" style={{ width: '100%', }} type="submit">
+                                            <BiLogInCircle style={globalStyle.leftIcon} />
+                                            {'Login'}
                                         </Button>
                                     </Form>
                                     <a href="#" className='color w-100' style={{ fontSize: 'small', marginTop: '50px' }}>Forgot Password ?</a>
@@ -56,7 +64,7 @@ export default function Layout(props) {
 
 
 
-            <Navbar style={{ background: colorTheme.COLORS.WHITE, padding: '2.6% 6%' }} variant='light'>
+            <Navbar style={{ background: theme.COLORS.WHITE, padding: '2.6% 6%' }} variant='light'>
                 <Nav className="mr-auto">
                     <Nav.Link active href="">afghandarmaltoon@gmail.com</Nav.Link>
                     <Nav.Link active href="">+92 3413657092</Nav.Link>
@@ -68,16 +76,14 @@ export default function Layout(props) {
             </Navbar>
             <style jsx>{`
              .signupSpan {
-                 color: ${colorTheme.COLORS.MAIN};
                  cursor: pointer;
              }
              .signupSpan:hover {
-                 color: ${colorTheme.COLORS.MAIN};
                  cursor: pointer;
              }
-             .color {
-                 color: red
-             }
+            //  .color {
+            //      color: red
+            //  }
             `}</style>
         </>
     )

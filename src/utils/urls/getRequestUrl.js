@@ -1,3 +1,6 @@
 import baseUrl from './baseUrl'
-import axios from 'axios'
-export default baseUrl
+
+
+export default {
+    VARIFY_MOBILE_NUMBER: baseUrl + '/users/verify/mobile-number'
+}
