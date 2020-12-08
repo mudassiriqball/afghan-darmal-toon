@@ -24,10 +24,14 @@ export default {
     BLOCK: '#E7E7E7',
     ICON: '#172B4D',
     HEADER: '#525F7F',
+    HEADER_BACKGROUND: '#525F7F',
     BORDER: '#CAD1D7',
     WHITE: '#FFFFFF',
     BLACK: '#000000',
     MAIN: '#EC0606',
     SEC: '#172B4D',
-    LINK: 'blue'
+    LINK: 'blue',
+
+    // Admin
+    ADMIN_MAIN: '#4e5065'
 };

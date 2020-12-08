@@ -76,8 +76,7 @@ class Signup extends Component {
     async handleSenVerificationCode(mobileNumber) {
         this.setState({ phone: mobileNumber, sendCodeLoading: true, mobileError: '' })
         const currentComponent = this
-
-        // await axios.get(urls.VARIFY_MOBILE_NUMBER + `/${mobileNumber}`).then((response) => {
+        // await axios.get(urls.GET_REQUEST.VARIFY_MOBILE_NUMBER + `/${mobileNumber}`).then((response) => {
         //     currentComponent.setState({
         //         mobileError: 'Number Already Exists!,
         //         feedback: '',
@@ -182,7 +181,7 @@ class Signup extends Component {
                             this.setState({ licenseError: '' });
                             setTimeout(async () => {
                                 if (this.state.isCodeVerified && this.state.isCodeSended) {
-                                    await axios.post(urls.SIGNUP, values).then(function (response) {
+                                    await axios.post(urls.POST_REQUEST.SIGNUP, values).then(function (response) {
                                         currentComponent.setState({
                                             hide: true,
                                             isLoading: false,
@@ -378,7 +377,7 @@ class Signup extends Component {
                                             </Form.Group>
                                             {/* Address */}
                                             <Form.Group as={Col} lg='12' md="12" sm='12' xs='12' controlId="validationFormikUsername">
-                                                <Form.Label>Address</Form.Label>
+                                                <Form.Label>Address *</Form.Label>
                                                 <InputGroup>
                                                     <InputGroup.Prepend>
                                                         <InputGroup.Text id="inputGroupPrepend">

@@ -11,17 +11,28 @@
     "export": "npm run build && next export"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.32",
+    "@fortawesome/free-brands-svg-icons": "^5.15.1",
+    "@fortawesome/free-regular-svg-icons": "^5.15.1",
+    "@fortawesome/free-solid-svg-icons": "^5.15.1",
+    "@fortawesome/react-fontawesome": "^0.1.13",
     "axios": "^0.21.0",
     "bootstrap": "^4.5.3",
     "express": "^4.17.1",
     "firebase": "^8.1.2",
     "formik": "^2.2.5",
+    "jwt-decode": "^3.1.2",
+    "moment": "^2.29.1",
     "next": "^10.0.0",
     "react": "16.13.1",
     "react-bootstrap": "^1.4.0",
+    "react-datepicker": "^3.3.0",
     "react-dom": "16.13.1",
     "react-icons": "^4.1.0",
     "react-phone-input-2": "^2.13.9",
+    "react-select": "^3.1.1",
+    "react-to-print": "^2.12.0",
+    "react-use-dimensions": "^1.2.1",
     "yup": "^0.32.1"
   }
 }

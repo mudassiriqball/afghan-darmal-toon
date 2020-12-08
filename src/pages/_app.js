@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-phone-input-2/lib/style.css'
 // import "react-multi-carousel/lib/styles.css";
-// import "react-datepicker/dist/react-datepicker.css";
+import "react-datepicker/dist/react-datepicker.css";
 
 function MyApp({ Component, pageProps }) {
     return <Component {...pageProps} />

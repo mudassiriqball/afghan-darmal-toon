@@ -1,11 +1,11 @@
-import getRequestUrl from './getRequestUrl'
-import postRequestUrl from './postRequestUrl'
-import putRequestUrl from './putRequestUrl'
-import deleteRequestUrl from './deleteRequestUrl'
+import GET_REQUEST from './getRequestUrl'
+import POST_REQUEST from './postRequestUrl'
+import PUT_REQUEST from './putRequestUrl'
+import DELETE_REQUEST from './deleteRequestUrl'
 
 export default {
-    getRequestUrl,
-    postRequestUrl,
-    putRequestUrl,
-    deleteRequestUrl
+    GET_REQUEST,
+    POST_REQUEST,
+    PUT_REQUEST,
+    DELETE_REQUEST
 }

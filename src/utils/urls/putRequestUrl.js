@@ -1,3 +1,16 @@
 import baseUrl from './baseUrl'
 import axios from 'axios'
-export default baseUrl
+export default {
+    DELETE_PRODUCT: baseUrl + '/products/delete-product/',
+    UPDATE_Order_STATUS: baseUrl + '/orders/user-order-status/',
+    UPDATE_USER_STATUS: baseUrl + '/users/user-status/',
+
+    // Slider
+    UPDATE_SLIDER: baseUrl + '/sliders/slider/',
+
+    // Category
+    UPDATE_CATEGORY: baseUrl + '/categories/category/',
+
+    // Sub Category
+    UPDATE_SUB_CATEGORY: baseUrl + '/categories/sub-category/',
+}
