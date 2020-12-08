@@ -2,6 +2,9 @@
   "name": "afghan-darmal-toonr",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "12.13.0"
+  },
   "scripts": {
     "next": "next -p 3000",
     "dev": "nodemon server.js",
