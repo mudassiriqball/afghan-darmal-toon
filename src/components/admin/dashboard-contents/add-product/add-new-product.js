@@ -1,5 +1,5 @@
 
-import React, { Component, useRef } from 'react';
+import React, { Component, useRef, useState } from 'react';
 import { Accordion, Form, Col, Row, Card, Modal, InputGroup, Button, Toast, Alert, Nav, Tabs, Spinner } from 'react-bootstrap';
 import { Formik } from 'formik';
 import * as yup from 'yup';
@@ -15,16 +15,14 @@ import CardAccordion from '../../../card-accordion';
 import theme from '../../../../constants/theme';
 import urls from '../../../../utils/urls';
 
-// import Specifications from './add-new-contents/custom-fields';
-import ProductData from './product-data';
 import Specifications from './specifications';
 
 import Scanner from '../../../../utils/scanner/scanner';
 
 // Yup Schema for validation fields
 const schema = yup.object({
-    id: yup.string().required("Enter Product Name"),
-    name: yup.string().required("Enter Product Name")
+    id: yup.string().required('Required *'),
+    name: yup.string().required('Required *')
         .min(2, "Must have at least 2 characters")
         .max(40, "Can't be longer than 40 characters"),
 
@@ -32,16 +30,14 @@ const schema = yup.object({
         .min(5, "Must have at least 5 characters")
         .max(200, "Can't be longer than 200 characters"),
     // Product Data
-    // => Inventory
     sku: yup.string()
         .min(0, 'Enter Between 0-100')
         .max(100, 'Enter Between 0-100'),
-    // => General(Simple-Product)
-    price: yup.number()
+    price: yup.number().required('Required *')
         .integer("Enter Only Numbers")
         .positive('Enter Between 1-1000000')
         .max(1000000, 'Enter Between 1-1000000'),
-    stock: yup.number()
+    stock: yup.number().required('Required *')
         .integer("Enter Only Numbers")
         .positive('Enter Between 1-1000000')
         .max(1000000, "Can't be longer than 1000000"),
@@ -56,9 +52,7 @@ const schema = yup.object({
     discount: yup.number().integer("Enter Only Numbers")
         .min(0, 'Enter Between 0-100')
         .max(100, 'Enter Between 0-100'),
-    // => Attributes (Variable Product)
     purchaseNote: yup.string(),
-    // => Shipping
     shippingCharges: yup.number("Enter Only Numbers")
         .positive('Enter Between 0-10000')
         .max(10000, 'Enter Between 0-10000'),
@@ -66,11 +60,7 @@ const schema = yup.object({
         .integer("Enter Only Numbers")
         .positive('Enter Between 0-10000')
         .max(10000, "Can't be longer than 1000"),
-    // => Advanve
-    purchaseNote: yup.string(),
-    // Specifications
     specifications: yup.string(),
-
     categoryId: yup.string(),
     subCategoryId: yup.string(),
 });
@@ -88,7 +78,7 @@ class AddNew extends Component {
             isLoading: false,
             showToast: false,
             toastMessage: '',
-            showSimpleProductPriceImgLinkErrorrAlert: false,
+            showImgLinkErrorrAlert: false,
 
             productCategory: '',
             productSubCategory: '',
@@ -101,7 +91,6 @@ class AddNew extends Component {
             subCategoryDisabled: true,
             categoryErrorDiv: 'BorderDiv',
             subCategoryErrorDiv: 'BorderDiv',
-
             warrantyType: '',
             inputValue: '',
 
@@ -110,7 +99,7 @@ class AddNew extends Component {
 
             files: [],
             imagePreviewArray: [],
-            variationImagePreviewArray: [],
+            imgError: '',
         };
 
     }
@@ -166,13 +155,14 @@ class AddNew extends Component {
 
     // 
     async fileSelectedHandler(e) {
-        await this.setState({ files: [...this.state.files, ...e.target.files] })
+        await this.setState({ files: [...this.state.files, ...e.target.files], imgError: '' })
         let array = []
         this.state.files.forEach(element => {
             array.push({ 'url': URL.createObjectURL(element) })
         })
         this.setState({ imagePreviewArray: array })
     }
+
     deleteImage = (index) => {
         const copyArray = Object.assign([], this.state.files)
         const imgCopyArray = Object.assign([], this.state.imagePreviewArray)
@@ -188,9 +178,9 @@ class AddNew extends Component {
                 initialValues={
                     {
                         id: '',
+                        name: '',
                         price: '',
                         stock: '',
-                        name: '',
                         description: '',
                         sku: '',
                         brand: '',
@@ -201,14 +191,13 @@ class AddNew extends Component {
                         purchaseNote: '',
                         shippingCharges: '',
                         handlingFee: '',
-                        specifications: [],
+                        specifications: '',
                         categoryId: '',
                         subCategoryId: '',
                     }
                 }
                 onSubmit={(values, { setSubmitting, resetForm }) => {
                     const currentComponent = this
-
                     if (this.props.status == 'disapproved') {
                         this.setState({
                             userStatusAlert: true,
@@ -221,23 +210,25 @@ class AddNew extends Component {
                         })
                     } else {
                         //  Category & Sub-Category Checking
-                        if (this.state.productCategory == '' || this.state.productSubCategory == '') {
+                        if (this.state.productCategory == '' || this.state.productSubCategory == '' || this.state.files == '') {
                             if (this.state.productCategory == '') {
                                 this.setState({ categoryErrorDiv: 'RedBorderDiv' });
                             }
                             if (this.state.productSubCategory == '') {
                                 this.setState({ subCategoryErrorDiv: 'RedBorderDiv' });
                             }
+                            if (this.state.files == '') {
+                                this.setState({ imgError: 'Required *' });
+                            }
                         } // Product Price/Stock/Imgages Checking for Simple Product
-                        else if (values.price == '' || values.stock == '' || this.state.files == '') {
-                            this.setState({ showSimpleProductPriceImgLinkErrorrAlert: true });
-                        } else {
+                        else {
                             values.categoryId = this.state.categoryId;
                             values.subCategoryId = this.state.subCategoryId;
                             values.imagesUrl = this.state.files;
                             values.specifications = this.state.customFieldsArray;
 
                             console.log('Data:', values);
+
                             // this.setState({ isLoading: true });
                             // setTimeout(() => {
                             //     values.categoryId = this.state.categoryId;
@@ -282,7 +273,7 @@ class AddNew extends Component {
                             //             isLoading: false,
                             //             showToast: true,
                             //             toastMessage: 'Product Uploaded Successfully',
-                            //             showSimpleProductPriceImgLinkErrorrAlert: false,
+                            //             showImgLinkErrorrAlert: false,
 
                             //             productCategory: '',
                             //             productSubCategory: '',
@@ -345,7 +336,7 @@ class AddNew extends Component {
                         }
                         <Form noValidate onSubmit={handleSubmit}>
                             <AlertModal
-                                onHide={(e) => this.setState({ userStatusAlert: false })}
+                                onHide={() => this.setState({ userStatusAlert: false })}
                                 show={this.state.userStatusAlert}
                                 header={'Error'}
                                 message={this.state.statusAlertMessage}
@@ -361,8 +352,8 @@ class AddNew extends Component {
                                 color={"#00b300"}
                             />
                             <AlertModal
-                                onHide={(e) => this.setState({ showSimpleProductPriceImgLinkErrorrAlert: false })}
-                                show={this.state.showSimpleProductPriceImgLinkErrorrAlert}
+                                onHide={(e) => this.setState({ showImgLinkErrorrAlert: false })}
+                                show={this.state.showImgLinkErrorrAlert}
                                 header={'Error'}
                                 message={'Enter Price/Stock/Image(s) in General Tab First'}
                                 iconname={faExclamationTriangle}
@@ -410,40 +401,232 @@ class AddNew extends Component {
                                     </Form.Group>
                                     {/* End of Product Name */}
 
-                                    {/* Product Discription */}
-                                    <CardAccordion title={'Product Description'}>
-                                        <Form.Group>
-                                            <Form.Control
-                                                as="textarea"
-                                                placeholder="Enter Product Description"
-                                                name="description"
-                                                value={values.description}
-                                                rows="7"
-                                                onChange={handleChange}
-                                                isInvalid={errors.description && touched.description}
-                                            />
-                                            <Form.Control.Feedback type="invalid">
-                                                {errors.description}
-                                            </Form.Control.Feedback>
-                                        </Form.Group>
-                                    </CardAccordion>
                                     {/* Product Data Row */}
                                     <CardAccordion title={'Product Data'}>
-                                        <ProductData
-                                            {...this.props}
-                                            isUpdateProduct={this.props.isUpdateProduct}
-                                            fileSelectedHandler={this.fileSelectedHandler.bind(this)}
-                                            imagePreviewArray={this.state.imagePreviewArray}
-                                            deleteImage={this.deleteImage}
-                                            onChange={handleChange}
-                                            errors={errors}
-                                            touched={touched}
-                                            productColorChangeHandler={this.handleProductColorChange}
-                                            productSizeChangeHandler={this.handleProductSizeChange}
-                                        />
-                                    </CardAccordion>
+                                        <Card style={styles.card}>
+                                            <Card.Body style={{ padding: '0.5%', margin: '0px' }}>
+                                                <Form.Row>
+                                                    <Form.Group as={Col} lg={6} md={6} sm={12} xs={12} >
+                                                        <Form.Label style={styles.label}>Product SKU</Form.Label>
+                                                        <InputGroup>
+                                                            <Form.Control
+                                                                type="text"
+                                                                size="sm"
+                                                                placeholder="Enter SKU (Stock Keeping Unit)"
+                                                                name="sku"
+                                                                value={values.sku}
+                                                                onChange={handleChange}
+                                                                isInvalid={errors.sku}
+                                                            />
+                                                            <Form.Control.Feedback type="invalid">
+                                                                {errors.sku}
+                                                            </Form.Control.Feedback>
+                                                        </InputGroup>
+                                                    </Form.Group>
+                                                    <Form.Group as={Col} lg={6} md={6} sm={12} xs={12}>
+                                                        <Form.Label style={styles.label}>Product Price <span> * </span></Form.Label>
+                                                        <InputGroup>
+                                                            <Form.Control
+                                                                type="number"
+                                                                size="sm"
+                                                                placeholder="Enter Product Price"
+                                                                name="price"
+                                                                value={values.price}
+                                                                onChange={handleChange}
+                                                                isInvalid={errors.price}
+                                                            />
+                                                            <Form.Control.Feedback type="invalid">
+                                                                {errors.price}
+                                                            </Form.Control.Feedback>
+                                                        </InputGroup>
+                                                    </Form.Group>
+                                                </Form.Row>
 
+                                                <Form.Row>
+                                                    <Form.Group as={Col} lg={4} md={4} sm={12} xs={12}>
+                                                        <Form.Label style={styles.label}>Product in Stock<span> * </span></Form.Label>
+                                                        <Form.Control type="number"
+                                                            size="sm"
+                                                            name="stock"
+                                                            placeholder="Enter Product In Stock"
+                                                            value={values.stock}
+                                                            onChange={handleChange}
+                                                            isInvalid={errors.stock}
+                                                        />
+                                                        <Form.Control.Feedback type="invalid">
+                                                            {errors.stock}
+                                                        </Form.Control.Feedback>
+                                                    </Form.Group>
+                                                    <Form.Group as={Col} lg={4} md={4} sm={12} xs={12}>
+                                                        <Form.Label style={styles.label}>Brand Name</Form.Label>
+                                                        <InputGroup>
+                                                            <Form.Control
+                                                                type="text"
+                                                                size="sm"
+                                                                placeholder="Enter Brand Name"
+                                                                name="brand"
+                                                                value={values.brand}
+                                                                onChange={handleChange}
+                                                                isInvalid={errors.brand}
+                                                            />
+                                                            <Form.Control.Feedback type="invalid">
+                                                                {errors.brand}
+                                                            </Form.Control.Feedback>
+                                                        </InputGroup>
+                                                    </Form.Group>
+                                                    <Form.Group as={Col} lg={4} md={4} sm={12} xs={12} style={{ marginBottom: '5px' }}>
+                                                        <Form.Label style={{ width: '100%', fontSize: `${theme.SIZES.LABEL}` }}>Product Images <span> * </span></Form.Label>
+                                                        <input type="file" style={{ padding: '0.6% 2%', width: '100%', fontSize: '13px', border: '1px solid lightgray', borderRadius: '1px' }}
+                                                            multiple onChange={this.fileSelectedHandler.bind(this)}
+                                                            name="image" accept="image/*"
+                                                        />
+                                                        <Form.Label style={styles.label}>
+                                                            <span>{this.state.imgError}</span>
+                                                        </Form.Label>
+                                                    </Form.Group>
+                                                </Form.Row>
+
+                                                <Form.Row>
+                                                    {(this.state.imagePreviewArray || []).map((element, index) => (
+                                                        <div className="show-image" key={index}>
+                                                            <img style={{ height: '100px', width: '100px', margin: '1%' }} src={element.url} alt="..." />
+                                                            <input className="deleteImage" type="button" onClick={() => this.deleteImage(index)} value="Delete" />
+                                                        </div>
+                                                    ))}
+                                                </Form.Row>
+
+                                                <Form.Row className='mt-3'>
+                                                    <Form.Group as={Col} lg={4} md={4} sm={12} xs={12}>
+                                                        <Form.Label style={styles.label}>Product Warranty (months) </Form.Label>
+                                                        <InputGroup>
+                                                            <Form.Control
+                                                                type="number"
+                                                                size="sm"
+                                                                placeholder="Enter Product Warranty"
+                                                                name="warranty"
+                                                                value={values.warranty}
+                                                                onChange={handleChange}
+                                                                isInvalid={errors.warranty}
+                                                            />
+                                                            <Form.Control.Feedback type="invalid">
+                                                                {errors.warranty}
+                                                            </Form.Control.Feedback>
+                                                        </InputGroup>
+                                                    </Form.Group>
+                                                    <Form.Group as={Col} lg={4} md={4} sm={12} xs={12}>
+                                                        <Form.Label style={styles.label}> Warranty Type </Form.Label>
+                                                        <InputGroup>
+                                                            <Form.Control
+                                                                as="select"
+                                                                name="warrantyType"
+                                                                size="sm"
+                                                                value={values.warrantyType}
+                                                                onChange={handleChange}
+                                                                isInvalid={errors.warrantyType}
+                                                            >
+                                                                <option>Waranty Type</option>
+                                                                <option> No Warranty </option>
+                                                                <option> Brand Warranty </option>
+                                                                <option> Local Warranty </option>
+                                                                <option> Local Seller Warranty </option>
+                                                                <option> Non-Local Warranty </option>
+                                                                <option> Internationsl Warranty </option>
+                                                                <option> Internationsl Seller Warranty </option>
+                                                                <option> International Manufacturer Warranty </option>
+                                                            </Form.Control>
+                                                            <Form.Control.Feedback type="invalid">
+                                                                {errors.warrantyType}
+                                                            </Form.Control.Feedback>
+                                                        </InputGroup>
+                                                    </Form.Group>
+                                                    <Form.Group as={Col} lg={4} md={4} sm={12} xs={12}>
+                                                        <Form.Label style={styles.label}>Product Discount</Form.Label>
+                                                        <InputGroup>
+                                                            <Form.Control
+                                                                type="number"
+                                                                size="sm"
+                                                                placeholder="Enter Discount on on Product(%)"
+                                                                name="discount"
+                                                                value={values.discount}
+                                                                onChange={handleChange}
+                                                                isInvalid={errors.discount}
+                                                            />
+                                                            <InputGroup.Prepend>
+                                                                <Button variant='primary' size="sm">%</Button>
+                                                            </InputGroup.Prepend>
+                                                            <Form.Control.Feedback type="invalid">
+                                                                {errors.discount}
+                                                            </Form.Control.Feedback>
+                                                        </InputGroup>
+                                                    </Form.Group>
+                                                </Form.Row>
+
+                                                <Form.Row className='mt-3'>
+                                                    <Form.Group as={Col} lg={6} md={6} sm={12} xs={12}>
+                                                        <Form.Label style={styles.label}>Product Shipping Charges</Form.Label>
+                                                        <InputGroup>
+                                                            <Form.Control
+                                                                type="text"
+                                                                size="sm"
+                                                                placeholder="Enter Product Shipping Charges"
+                                                                name="shippingCharges"
+                                                                value={values.shippingCharges}
+                                                                onChange={handleChange}
+                                                                isInvalid={errors.shippingCharges}
+                                                            />
+                                                            <InputGroup.Prepend>
+                                                                <Button variant='primary' size="sm">PKR</Button>
+                                                            </InputGroup.Prepend>
+                                                            <Form.Control.Feedback type="invalid">
+                                                                {errors.shippingCharges}
+                                                            </Form.Control.Feedback>
+                                                        </InputGroup>
+                                                    </Form.Group>
+                                                    <Form.Group as={Col} lg={6} md={6} sm={12} xs={12}>
+                                                        <Form.Label style={styles.label}>Product Handling Fee</Form.Label>
+                                                        <InputGroup>
+                                                            <Form.Control
+                                                                type="text"
+                                                                size="sm"
+                                                                placeholder="Enter Product Handling Fee"
+                                                                name="handlingFee"
+                                                                value={values.handlingFee}
+                                                                onChange={handleChange}
+                                                                isInvalid={errors.handlingFee}
+                                                            />
+                                                            <InputGroup.Prepend>
+                                                                <Button variant='primary' size="sm">PKR</Button>
+                                                            </InputGroup.Prepend>
+                                                            <Form.Control.Feedback type="invalid">
+                                                                {errors.handlingFee}
+                                                            </Form.Control.Feedback>
+                                                        </InputGroup>
+                                                    </Form.Group>
+                                                </Form.Row>
+                                                <Form.Row>
+                                                    <Form.Group as={Col} lg={12} md={12} sm={12} xs={12}>
+                                                        <Form.Label style={styles.label}>Purchase Note</Form.Label>
+                                                        <InputGroup>
+                                                            <Form.Control
+                                                                type="text"
+                                                                size="sm"
+                                                                placeholder="Enter Purchase Notes"
+                                                                name="purchase_note"
+                                                                value={values.purchaseNote}
+                                                                onChange={handleChange}
+                                                                isInvalid={errors.purchaseNote}
+                                                            />
+                                                            <Form.Control.Feedback type="invalid">
+                                                                {errors.purchaseNote}
+                                                            </Form.Control.Feedback>
+                                                        </InputGroup>
+                                                    </Form.Group>
+                                                </Form.Row>
+                                            </Card.Body >
+                                        </Card >
+                                    </CardAccordion>
                                     {/* End of Product Data Row */}
+
                                     {/* Specifications Row */}
                                     <CardAccordion title={'Product Specifications'}>
                                         <Specifications
@@ -454,9 +637,29 @@ class AddNew extends Component {
                                     </CardAccordion>
                                     {/* End of Specifications Row */}
                                 </Col>
-
-                                <Col lg={12} md={12} sm={12} xs={12}>
-                                    {/* Product Category */}
+                            </Row>
+                            <Row noGutters style={{ padding: '1%' }}>
+                                {/* Product Discription */}
+                                <Col lg={6} md={6} sm={12} xs={12}>
+                                    <CardAccordion title={'Product Description'}>
+                                        <Form.Group>
+                                            <Form.Control
+                                                as="textarea"
+                                                placeholder="Enter Product Description"
+                                                name="description"
+                                                value={values.description}
+                                                rows="14"
+                                                onChange={handleChange}
+                                                isInvalid={errors.description && touched.description}
+                                            />
+                                            <Form.Control.Feedback type="invalid">
+                                                {errors.description}
+                                            </Form.Control.Feedback>
+                                        </Form.Group>
+                                    </CardAccordion>
+                                </Col>
+                                {/* Product Category */}
+                                <Col lg={6} md={6} sm={12} xs={12}>
                                     <CardAccordion title={'Product Categories'}>
                                         <Form.Group>
                                             <Form.Label style={styles.label}>Category</Form.Label>
@@ -475,6 +678,9 @@ class AddNew extends Component {
                                                     placeholder="Select Category"
                                                 />
                                             </div>
+                                            <Form.Label style={styles.label}>
+                                                <span>{this.state.categoryErrorDiv == 'RedBorderDiv' && 'Required *'}</span>
+                                            </Form.Label>
                                         </Form.Group>
                                         <Form.Group>
                                             <Form.Label style={styles.label}>Sub Category</Form.Label>
@@ -493,6 +699,9 @@ class AddNew extends Component {
                                                     isDisabled={this.state.subCategoryDisabled}
                                                 />
                                             </div>
+                                            <Form.Label style={styles.label}>
+                                                <span>{this.state.subCategoryErrorDiv == 'RedBorderDiv' && 'Required *'}</span>
+                                            </Form.Label>
                                             <div style={{ minHeight: '150px' }}></div>
                                         </Form.Group>
                                     </CardAccordion>
@@ -509,6 +718,19 @@ class AddNew extends Component {
                             </Row>
                             {/* End of Form Submit Btn Row */}
                         </Form>
+                        <style type="text/css">{`
+                            .card_toggle{
+                                background: ${theme.COLORS.ADMIN_MAIN};
+                                font-size: 13px;
+                                color: white;
+                                cursor: pointer;
+                                display: inline-flex;
+                                align-items: center;
+                            }
+                            .card_toggle:hover{
+                                background: ${theme.COLORS.SEC_HOVER};
+                            }
+                        `}</style>
                         <style jsx> {`
                             .RedBorderDiv{
                                 border: 0.5px solid #DC3545;
@@ -534,6 +756,32 @@ class AddNew extends Component {
                                 text-align: center; 
                                 margin: 0px;
                             }
+                            @media (max-width: 991px) {
+                                .linkName {
+                                    display: none
+                                }
+                            }
+                            div.show-image {
+                                position: relative;
+                                float:left;
+                                margin:5px;
+                            }
+                            div.show-image:hover img{
+                                opacity:0.5;
+                            }
+                            div.show-image:hover input {
+                                display: block;
+                            }
+                            div.show-image input {
+                                position:absolute;
+                                display:none;
+                            }
+                            div.show-image input.deleteImage {
+                                top:0;
+                                left:0;
+                                color: red;
+                                font-size: 13px
+                            }
                         `}</style>
                     </div>
                 )
@@ -546,7 +794,7 @@ class AddNew extends Component {
 const styles = {
     nav_link: {
         color: 'white',
-        fontSize: '13px',
+        fontSize: '12px',
         display: 'flex',
         alignItems: 'center',
         height: '45px',
@@ -557,12 +805,39 @@ const styles = {
     },
     card: {
         width: '100%',
-        border: '1px solid lightgray'
+        border: 'none',
+        background: theme.COLORS.SECONDARY,
     },
     card_header: {
+        display: 'flex',
         alignItems: 'center',
         fontSize: `${theme.SIZES.HEADER}`,
         background: `${theme.COLORS.ADMIN_MAIN}`,
+    },
+    label: {
+        fontSize: `${theme.SIZES.LABEL}`,
+    },
+    fontawesome: {
+        color: `${theme.COLORS.WHITE}`,
+        width: '15px',
+        height: '15px',
+        maxHeight: '15px',
+        maxWidth: '15px',
+    },
+    product_fontawesome: {
+        color: `${theme.COLORS.WHITE}`,
+        marginRight: '10%',
+        width: '15px',
+        height: '15px',
+        maxHeight: '15px',
+        maxWidth: '15px',
+    },
+    slider_fontawesome: {
+        color: 'white',
+        width: '15px',
+        height: '15px',
+        maxHeight: '15px',
+        maxWidth: '15px',
     },
     buttons: {
         background: `${theme.COLORS.MAIN}`,

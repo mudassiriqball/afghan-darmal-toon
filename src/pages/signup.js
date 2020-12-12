@@ -202,7 +202,6 @@ class Signup extends Component {
                                         resetForm();
                                         setSubmitting(false);
                                         Router.push('/');
-                                        return true;
                                     }).catch(function (error) {
                                         currentComponent.setState({ isLoading: false, serverErrorMsg: error.response.data.message })
                                         setSubmitting(false);
