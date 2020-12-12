@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 
 import DatePicker from "react-datepicker";
 import moment from "moment"
+import theme from '../constants/theme';
 
 export default function CardSearchAccordion(props) {
     const [options, setOptions] = useState([])
@@ -222,7 +223,7 @@ export default function CardSearchAccordion(props) {
                     display: block;
                 }
                 .card_toggle_header{
-                    background: #595c73;
+                    background: ${theme.COLORS.SEC};
                     font-size: 13px;
                     color: white;
                     display: inline-flex;
@@ -237,7 +238,7 @@ export default function CardSearchAccordion(props) {
                     margin: 0%;
                     border: none;
                     align-self: center;
-                    background: #595c73;
+                    background: ${theme.COLORS.SEC};
                     font-size: 13px;
                     cursor: pointer;
                     display: inline-flex;

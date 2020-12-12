@@ -29,7 +29,7 @@ const CardAccordion = props => (
         </Accordion>
         <style type="text/css">{`
             .accordion_card_toggle{
-                background: #595c73;
+                background: ${theme.COLORS.SEC};
                 font-size: 13px;
                 color: white;
                 cursor: pointer;
@@ -37,7 +37,7 @@ const CardAccordion = props => (
                 align-items: center;
             }
             .accordion_card_toggle:hover{
-                background: #4e5065;
+                background: ${theme.COLORS.SEC_HOVER};
             }
         `}</style>
     </>
@@ -52,7 +52,7 @@ const styles = {
         display: 'flex',
         alignItems: 'center',
         fontSize: `${theme.SIZES.HEADER}`,
-        background: `${theme.COLORS.HEADER_BACKGROUND}`,
+        background: `${theme.COLORS.MAIN}`,
     },
     slider_fontawesome: {
         color: 'white',

@@ -23,15 +23,17 @@ export default {
     BORDER_COLOR: '#E7E7E7',
     BLOCK: '#E7E7E7',
     ICON: '#172B4D',
-    HEADER: '#525F7F',
-    HEADER_BACKGROUND: '#525F7F',
+    HEADER: '#172B4D',
+    HEADER_BACKGROUND: '#172B4D',
     BORDER: '#CAD1D7',
     WHITE: '#FFFFFF',
     BLACK: '#000000',
     MAIN: '#EC0606',
     SEC: '#172B4D',
+    SEC_HOVER: '#12213b',
     LINK: 'blue',
 
     // Admin
-    ADMIN_MAIN: '#4e5065'
+    ADMIN_MAIN: '#172B4D',
+
 };

@@ -33,6 +33,48 @@ const Dashboard = props => {
     return (
         <div className='admin_dashboard'>
             <Tab.Container id="dashboard-tabs" defaultActiveKey="Vendors"  >
+                <Row style={{ width: '100%', margin: '0px', maxHeight: '7vh', minHeight: '7vh' }}>
+                    {/* Toolbar */}
+                    <Navbar collapseOnSelect expand="lg" style={styles.navbar} variant="light" className='p-2 m-0 w-100'>
+                        {/* Show/Hide bar btn while screen switches to Large to Small,Medium,Extra-Small Devices */}
+                        <div className="side_tab_toogle_btn mr-auto" style={styles.toolbar_btn_div}>
+                            <Button style={styles.toolbar_btn} onClick={props.drawerClickHandler}>
+                                <FontAwesomeIcon icon={faBars} style={styles.toolbar_fontawesomer} />
+                            </Button>
+                        </div>
+                        {/* Bars Btn to Show/Hide Tabs Sde Drawer in Large Devices */}
+                        <div className="wrapper_btn" style={styles.toolbar_btn_div}>
+                            <Button style={styles.toolbar_btn} onClick={props.wrapperBtnClickHandler} className='ml-1'>
+                                <FontAwesomeIcon icon={faBars} style={styles.toolbar_fontawesomer} />
+                            </Button>
+                        </div>
+                        {/* Account Setting Dropdown */}
+                        <div className="account_settig_dropdown ml-auto">
+                            <NavDropdown className='nav_dropdown' title={
+                                <FontAwesomeIcon icon={faCog} style={styles.cog_fontawesome} />
+                            } id="nav-dropdown" alignRight>
+                                <NavDropdown.Item onClick={() => Router.push('/user/profile')} className='profile_md_lg'>
+                                    <FontAwesomeIcon icon={faUserCircle} className='dropdown_fontawesome' />
+                                        Profile
+                                    </NavDropdown.Item>
+                                <NavDropdown.Item onClick={() => Router.push('/user/account')} className='profile_xs_sm'>
+                                    <FontAwesomeIcon icon={faUserCircle} className='dropdown_fontawesome' />
+                                        Profile
+                                    </NavDropdown.Item>
+                                <NavDropdown.Item className='dropdown_item'>
+                                    <FontAwesomeIcon icon={faHandsHelping} className='dropdown_fontawesome' />
+                                        Help?
+                                    </NavDropdown.Item>
+                                <NavDropdown.Divider />
+                                <NavDropdown.Item onClick={props.logout} className='dropdown_item'>
+                                    <FontAwesomeIcon icon={faPowerOff} className='dropdown_fontawesome' />
+                                        Logout
+                                </NavDropdown.Item>
+                            </NavDropdown>
+                        </div>
+                    </Navbar>
+                    {/* End of Toolbar */}
+                </Row>
                 <Row noGutters>
                     {/* Show/Hide Tabs & Tabs-Content when screen Switches to Large/Medium,Small,Extra-Small Devices*/}
                     <div className={wprapper_Casses} style={styles.wrapper_col}>
@@ -43,15 +85,6 @@ const Dashboard = props => {
                                     <Nav.Link style={styles.muhalik}> {props.full_name} </Nav.Link>
                                 </p>
                             </Nav.Item>
-                            {/* <Nav.Item>
-                                <div className="nav_link">
-                                    <Nav.Link eventKey="Dashboard" style={styles.nav_link} onClick={() => setShow_category(false)}>
-                                        <FontAwesomeIcon size="xs" icon={faTachometerAlt} style={styles.fontawesome} />
-                                        <div className="mr-auto"> Dashboard </div>
-                                        <FontAwesomeIcon icon={faChevronRight} style={styles.forword_fontawesome} />
-                                    </Nav.Link>
-                                </div>
-                            </Nav.Item> */}
                             <Nav.Item>
                                 <div className="nav_link">
                                     <Nav.Link eventKey="AddProduct" onClick={props.click} style={styles.nav_link}>
@@ -142,46 +175,6 @@ const Dashboard = props => {
                     </div>
                     {/* Toolbar & Tabs Contents */}
                     <Col>
-                        {/* Toolbar */}
-                        <Navbar collapseOnSelect expand="lg" style={styles.navbar} variant="dark" className='p-2 m-0'>
-                            {/* Show/Hide bar btn while screen switches to Large to Small,Medium,Extra-Small Devices */}
-                            <div className="side_tab_toogle_btn mr-auto" style={styles.toolbar_btn_div}>
-                                <Button style={styles.toolbar_btn} onClick={props.drawerClickHandler}>
-                                    <FontAwesomeIcon icon={faBars} style={styles.toolbar_fontawesomer} />
-                                </Button>
-                            </div>
-                            {/* Bars Btn to Show/Hide Tabs Sde Drawer in Large Devices */}
-                            <div className="wrapper_btn" style={styles.toolbar_btn_div}>
-                                <Button style={styles.toolbar_btn} onClick={props.wrapperBtnClickHandler} className='ml-1'>
-                                    <FontAwesomeIcon icon={faBars} style={styles.toolbar_fontawesomer} />
-                                </Button>
-                            </div>
-                            {/* Account Setting Dropdown */}
-                            <div className="account_settig_dropdown ml-auto">
-                                <NavDropdown className='nav_dropdown' title={
-                                    <FontAwesomeIcon icon={faCog} style={styles.cog_fontawesome} />
-                                } id="nav-dropdown" alignRight>
-                                    <NavDropdown.Item onClick={() => Router.push('/user/profile')} className='profile_md_lg'>
-                                        <FontAwesomeIcon icon={faUserCircle} className='dropdown_fontawesome' />
-                                        Profile
-                                    </NavDropdown.Item>
-                                    <NavDropdown.Item onClick={() => Router.push('/user/account')} className='profile_xs_sm'>
-                                        <FontAwesomeIcon icon={faUserCircle} className='dropdown_fontawesome' />
-                                        Profile
-                                    </NavDropdown.Item>
-                                    <NavDropdown.Item className='dropdown_item'>
-                                        <FontAwesomeIcon icon={faHandsHelping} className='dropdown_fontawesome' />
-                                        Help?
-                                    </NavDropdown.Item>
-                                    <NavDropdown.Divider />
-                                    <NavDropdown.Item onClick={props.logout} className='dropdown_item'>
-                                        <FontAwesomeIcon icon={faPowerOff} className='dropdown_fontawesome' />
-                                        Logout
-                                </NavDropdown.Item>
-                                </NavDropdown>
-                            </div>
-                        </Navbar>
-                        {/* End of Toolbar */}
                         {/* Tab Content for Large Devices */}
                         <div className="tab_content">
                             <Tab.Content style={{ height: `calc(100vh - 65px)`, overflowY: 'auto' }}>
@@ -189,7 +182,7 @@ const Dashboard = props => {
                                     <AdminDashboard />
                                 </Tab.Pane> */}
                                 <Tab.Pane eventKey="AddProduct">
-                                    <AddProduct />
+                                    <AddProduct title={'Add New Product'} />
                                 </Tab.Pane>
                                 <Tab.Pane eventKey="Customers">
                                     <Customers
@@ -320,7 +313,7 @@ const Dashboard = props => {
                 .wrapper.open{
                     backgroung:  ${theme.COLORS.ADMIN_MAIN};
                     display: block;
-                    height: 100vh;
+                    height: 93vh;
                     overflow-y: auto;
                 }
                 .nav_link {
@@ -330,7 +323,7 @@ const Dashboard = props => {
                     margin: 0px;
                 }
                 .nav_link:hover {
-                    background: #30313E;
+                    background: ${theme.COLORS.SEC_HOVER};
                 }
                 .limk_submenue {
                     background: ${theme.COLORS.ADMIN_MAIN};
@@ -339,7 +332,8 @@ const Dashboard = props => {
                     margin: 0% 0% 0% 6%;
                 }
                 .limk_submenue:hover {
-                    background: #30313E;
+                    background: ${theme.COLORS.SEC_HOVER};
+                    // background: #30313E;
                 }
                 .side_tab_toogle_btn {
                     margin: 0%
@@ -401,8 +395,7 @@ const styles = {
         background: `${theme.COLORS.ADMIN_MAIN}`,
     },
     navbar: {
-        borderBottom: `1px solid ${theme.COLORS.ADMIN_MAIN}`,
-        background: 'white',
+        background: theme.COLORS.ADMIN_MAIN,
         padding: '0.5% 1%',
     },
     toolbar_btn_div: {
@@ -419,11 +412,11 @@ const styles = {
         padding: '0px',
     },
     toolbar_fontawesomer: {
-        color: `${theme.COLORS.SECONDARY}`,
-        width: '18px',
-        height: '18px',
-        maxHeight: '18px',
-        maxWidth: '18px',
+        color: `${theme.COLORS.WHITE}`,
+        width: '25px',
+        height: '25px',
+        maxHeight: '25px',
+        maxWidth: '25px',
     },
 
     search_bar: {
@@ -445,7 +438,7 @@ const styles = {
     },
 
     fontawesome: {
-        color: `${theme.COLORS.SECONDARY}`,
+        color: `${theme.COLORS.WHITE}`,
         marginRight: '8%',
         width: '18px',
         height: '18px',
@@ -453,7 +446,7 @@ const styles = {
         maxWidth: '18px',
     },
     forword_fontawesome: {
-        color: `${theme.COLORS.SECONDARY}`,
+        color: `${theme.COLORS.WHITE}`,
         width: '10px',
         height: '10px',
         maxHeight: '10px',
@@ -461,7 +454,7 @@ const styles = {
     },
 
     cog_fontawesome: {
-        color: `${theme.COLORS.ADMIN_MAIN}`,
+        color: `${theme.COLORS.WHITE}`,
         margin: '0px',
         width: '18px',
         height: '18px',

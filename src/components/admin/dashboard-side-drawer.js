@@ -207,7 +207,7 @@ const DashboardSideDrawer = props => {
                     }
                     .tabs_side_drawer {
                         height: 100%;
-                        background: ${theme.COLORS.ADMIN_MAIN};
+                        background: ${theme.COLORS.SEC};
                         box-shadow: 1px 0px 7px rgba(0, 0, 0, 0.5);
                         position: fixed;
                         top: 0;
@@ -224,7 +224,7 @@ const DashboardSideDrawer = props => {
                         transform: translateX(0);
                     }
                     .product_submenu {
-                        background: ${theme.COLORS.ADMIN_MAIN};
+                        background: ${theme.COLORS.SEC};
                         // border-top: 0.5px solid #434556;
                         // border-bottom: 0.5px solid #434556;
                         margin: 0% 0% 0% 6%;
@@ -268,7 +268,7 @@ const styles = {
         maxHeight: '100px',
     },
     muhalik: {
-        color: `${theme.COLORS.ADMIN_MAIN}`,
+        color: `${theme.COLORS.SEC}`,
         fontSize: '14px',
         margin: '0%',
         padding: '1%',

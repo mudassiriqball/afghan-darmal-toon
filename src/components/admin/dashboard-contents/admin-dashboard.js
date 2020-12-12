@@ -90,7 +90,7 @@ const styles = {
         fontSize: '30px',
     },
     fontawesome: {
-        color: `${theme.COLORS.ADMIN_MAIN}`,
+        color: `${theme.COLORS.SEC}`,
         width: '50px',
         height: '50px',
         maxHeight: '50px',

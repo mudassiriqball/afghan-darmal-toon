@@ -832,7 +832,7 @@ const styles = {
     },
     label: {
         fontSize: `${theme.SIZES.LABEL}`,
-        color: `${theme.COLORS.ADMIN_MAIN}`,
+        color: `${theme.COLORS.SEC}`,
         marginRight: '2%'
     },
     row: {
@@ -848,7 +848,7 @@ const styles = {
         maxWidth: '30px',
     },
     fontawesome: {
-        color: `${theme.COLORS.ADMIN_MAIN}`,
+        color: `${theme.COLORS.SEC}`,
         marginRight: '10%',
         width: '17px',
         height: '17px',
@@ -862,7 +862,7 @@ const styles = {
     },
     field_label: {
         border: `1px solid ${theme.COLORS.SECONDARY}`,
-        color: `${theme.COLORS.ADMIN_MAIN}`,
+        color: `${theme.COLORS.SEC}`,
         margin: '0%',
         width: '100%',
         padding: '2px 5px'

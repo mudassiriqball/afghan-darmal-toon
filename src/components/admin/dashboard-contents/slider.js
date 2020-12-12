@@ -473,7 +473,7 @@ class Slider extends Component {
                                         margin: 2%;
                                     } 
                                     .slider .card_header{
-                                        background: ${theme.COLORS.HEADER_BACKGROUND};
+                                        background: ${theme.COLORS.SEC};
                                         font-size: ${theme.SIZES.HEADER};
                                     }
                                 `}</style>

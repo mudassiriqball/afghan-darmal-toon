@@ -280,7 +280,7 @@ class Customers extends React.Component {
                         border: none;
                     }
                     .customers .card_text {
-                        color: ${theme.COLORS.ADMIN_MAIN};
+                        color: ${theme.COLORS.SEC};
                         font-size: 17px;
                     }
                     .vendors .form_control:disabled {
@@ -597,7 +597,7 @@ function CustomerTableBody(props) {
 
 const styles = {
     fontawesome: {
-        color: `${theme.COLORS.ADMIN_MAIN} `,
+        color: `${theme.COLORS.SEC} `,
         width: '30px',
         height: '30px',
         maxHeight: '30px',
@@ -605,7 +605,7 @@ const styles = {
         float: 'right'
     },
     accordin_fontawesome: {
-        color: `${theme.COLORS.ADMIN_MAIN} `,
+        color: `${theme.COLORS.SEC} `,
         marginRight: '10%',
         width: '15px',
         height: '15px',
