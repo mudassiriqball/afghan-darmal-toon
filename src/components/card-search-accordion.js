@@ -77,26 +77,23 @@ export default function CardSearchAccordion(props) {
                 return [...new Set([...prevPro, { value: 'sub-category', name: 'Sub Category' }])]
             })
 
-        } else if (props.option == 'vendor') {
-            setOptions(prevPro => {
-                return [...new Set([...prevPro, { value: 'mobile', name: 'Mobile' }])]
-            })
-            setOptions(prevPro => {
-                return [...new Set([...prevPro, { value: 'full_name', name: 'Name' }])]
-            })
-            setOptions(prevPro => {
-                return [...new Set([...prevPro, { value: 'city', name: 'City' }])]
-            })
-            setOptions(prevPro => {
-                return [...new Set([...prevPro, { value: 'shop_name', name: 'Shop Name' }])]
-            })
-
         } else if (props.option == 'customer') {
             setOptions(prevPro => {
                 return [...new Set([...prevPro, { value: 'mobile', name: 'Mobile' }])]
             })
             setOptions(prevPro => {
-                return [...new Set([...prevPro, { value: 'full_name', name: 'Name' }])]
+                return [...new Set([...prevPro, { value: 'fullName', name: 'Name' }])]
+            })
+            setOptions(prevPro => {
+                return [...new Set([...prevPro, { value: 'city', name: 'City' }])]
+            })
+
+        } else if (props.option == 'deliveryBoy') {
+            setOptions(prevPro => {
+                return [...new Set([...prevPro, { value: 'mobile', name: 'Mobile' }])]
+            })
+            setOptions(prevPro => {
+                return [...new Set([...prevPro, { value: 'fullName', name: 'Name' }])]
             })
             setOptions(prevPro => {
                 return [...new Set([...prevPro, { value: 'city', name: 'City' }])]

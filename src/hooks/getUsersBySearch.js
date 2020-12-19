@@ -1,33 +1,39 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import urls from '../../utils/urls/index'
+import moment from 'moment'
+import urls from '../utils/urls/index'
 
-export default function usersPageLimit(token, refresh, url, pageNumber, limit) {
-    const [users_loading, setLoading] = useState(false)
-    const [users_error, setError] = useState('')
-    const [users, setUsers] = useState([])
-    const [users_pages, setPages] = useState(0)
-    const [users_total, setTotal] = useState(0)
+export default function getUsersBySearch(token, refresh, role, status, fieldName, query, pageNumber, limit, start_date, end_date) {
+    const [USERS_SEARCH_LOADING, setLoading] = useState(false)
+    const [USERS_SEARCH_ERROR, setError] = useState('')
+    const [USERS_SEARCH_USERS, setUsers] = useState([])
+    const [USERS_SEARCH_PAGES, setPages] = useState('')
+    const [USERS_SEARCH_TOTAL, setTotal] = useState(0)
 
     useEffect(() => {
         setUsers([])
-    }, [refresh])
+    }, [fieldName, query, refresh, start_date, end_date])
 
     useEffect(() => {
         let unmounted = true
         const CancelToken = axios.CancelToken;
         const source = CancelToken.source();
+
         const getData = () => {
-            if (token != null) {
+            if (query != null) {
                 setLoading(true)
                 setError(false)
+
                 axios({
                     method: 'GET',
-                    url: urls.GET_REQUEST.USER_PAGE_LIMIT + url,
+                    url: urls.GET_REQUEST.USERS_SEARCH_BY_STATUS + role,
                     headers: {
                         'authorization': token
                     },
-                    params: { page: pageNumber, limit: limit },
+                    params: {
+                        status: status, field: fieldName, q: query, page: pageNumber, limit: limit,
+                        start_date: moment(start_date).format('YYYY-MM-DD'), end_date: moment(end_date).format('YYYY-MM-DD')
+                    },
                     cancelToken: source.token
                 }).then(res => {
                     if (unmounted) {
@@ -52,7 +58,13 @@ export default function usersPageLimit(token, refresh, url, pageNumber, limit) {
             unmounted = false
             source.cancel();
         };
-    }, [url, pageNumber, refresh, token])
+    }, [fieldName, query, pageNumber, refresh, start_date, end_date])
 
-    return { users_loading, users_error, users, users_pages, users_total }
+    return {
+        USERS_SEARCH_LOADING,
+        USERS_SEARCH_ERROR,
+        USERS_SEARCH_USERS,
+        USERS_SEARCH_PAGES,
+        USERS_SEARCH_TOTAL
+    }
 }

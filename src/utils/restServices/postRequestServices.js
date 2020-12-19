@@ -7,3 +7,9 @@ export default function postRequestServices() {
         </div>
     )
 }
+
+// await axios.post(urls.POST_REQUEST.SIGNUP, values).then(function (res) {
+
+// }).catch(function (error) {
+//     console.log('Signup error:', error)
+// })

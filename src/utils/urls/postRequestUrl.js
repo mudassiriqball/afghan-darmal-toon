@@ -1,13 +1,18 @@
 import baseUrl from './baseUrl'
 
 export default {
-    LOGIN: baseUrl + '/api/users/auth/login-user',
-    SIGNUP: baseUrl + '/api/users//auth/register/register-user',
+    // Users
+    LOGIN: baseUrl + '/users/auth/login-user',
+    SIGNUP: baseUrl + '/users/auth/register/register-user',
+    CHANGE_CUSTOMER_STATUS: baseUrl + '/users/customer/status/change-customer-status/',
 
-    // Slider
+    // Sliders
     ADD_SLIDER: baseUrl + '/sliders/add-slider',
 
-    // Category
+    // Categories
     ADD_CATEGORY: baseUrl + '/categories/add/new/category-subcategory',
-    ADD_HOME_CATEGORY: baseUrl + '/categories/home-category'
+    ADD_HOME_CATEGORY: baseUrl + '/categories/home-category',
+
+    // orders
+    PLACE_ORDER: baseUrl + '/orders/place/order/user-order/',
 }

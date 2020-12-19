@@ -13,25 +13,21 @@ export async function getServerSideProps(context) {
     let sub_categories_list = []
     let home_categories_list = []
 
-    let admins_count = 0
-    let vendors_count = 5
-    let new_vendors_count = 0
-    let restricted_vendors_count = 0
-    let customers_count = 0
-    let restricted_customers_count = 0
+    let customers_count = 0;
+    let new_customers_count = 0;
+    let restricted_customers_count = 0;
+    let delivery_boy_count = 0;
 
-    let pending_orders_count = 0
-    let delivered_orders_count = 0
-    let cancelled_orders_count = 0
-    let returned_orders_count = 0
+    let pending_orders_count = 0;
+    let delivered_orders_count = 0;
+    let cancelled_orders_count = 0;
+    let returned_orders_count = 0;
 
     await axios.get(urls.GET_REQUEST.ALL_CUSTOMER_COUNT).then((res) => {
-        admins_count = res.data.admins_count
-        vendors_count = res.data.vendors_count
-        new_vendors_count = res.data.new_vendors_count
-        restricted_vendors_count = res.data.restricted_vendors_count
         customers_count = res.data.customers_count
+        new_customers_count = res.data.new_customers_count
         restricted_customers_count = res.data.restricted_customers_count
+        delivery_boy_count = res.data.delivery_boy_count
     }).catch((error) => {
     })
 
@@ -61,12 +57,10 @@ export async function getServerSideProps(context) {
 
     return {
         props: {
-            admins_count,
-            vendors_count,
-            new_vendors_count,
-            restricted_vendors_count,
             customers_count,
+            new_customers_count,
             restricted_customers_count,
+            delivery_boy_count,
 
             pending_orders_count,
             delivered_orders_count,
@@ -103,12 +97,10 @@ class Admin extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            admins_count: this.props.admins_count,
-            vendors_count: this.props.vendors_count,
-            new_vendors_count: this.props.new_vendors_count,
-            restricted_vendors_count: this.props.restricted_vendors_count,
             customers_count: this.props.customers_count,
+            new_customers_count: this.props.new_customers_count,
             restricted_customers_count: this.props.restricted_customers_count,
+            delivery_boy_count: this.props.delivery_boy_count,
 
             pending_orders_count: this.props.pending_orders_count,
             delivered_orders_count: this.props.delivered_orders_count,
@@ -266,12 +258,10 @@ class Admin extends Component {
         await axios.get(urls.GET_REQUEST.ALL_CUSTOMER_COUNT).then((res) => {
             if (currentComponent.unmounted) {
                 currentComponent.setState({
-                    admins_count: res.data.admins_count,
-                    vendors_count: res.data.vendors_count,
-                    new_vendors_count: res.data.new_vendors_count,
-                    restricted_vendors_count: res.data.restricted_vendors_count,
                     customers_count: res.data.customers_count,
+                    new_customers_count: res.data.new_customers_count,
                     restricted_customers_count: res.data.restricted_customers_count,
+                    delivery_boy_count: res.data.delivery_boy_count,
                 })
             }
         }).catch((error) => {
@@ -310,12 +300,10 @@ class Admin extends Component {
                     full_name={this.state.user.full_name}
                     avatar={this.state.user.avatar}
 
-                    admins_count={this.state.admins_count}
-                    vendors_count={this.state.vendors_count}
-                    new_vendors_count={this.state.new_vendors_count}
-                    restricted_vendors_count={this.state.restricted_vendors_count}
                     customers_count={this.state.customers_count}
+                    new_customers_count={this.state.new_customers_count}
                     restricted_customers_count={this.state.restricted_customers_count}
+                    delivery_boy_count={this.state.delivery_boy_count}
                     usersReloadCountHandler={this.reloadUsersCount.bind(this)}
 
                     pending_orders_count={this.state.pending_orders_count}
@@ -349,12 +337,10 @@ class Admin extends Component {
                     full_name={this.state.user.full_name}
                     avatar={this.state.user.avatar}
 
-                    admins_count={this.state.admins_count}
-                    vendors_count={this.state.vendors_count}
-                    new_vendors_count={this.state.new_vendors_count}
-                    restricted_vendors_count={this.state.restricted_vendors_count}
                     customers_count={this.state.customers_count}
+                    new_customers_count={this.state.new_customers_count}
                     restricted_customers_count={this.state.restricted_customers_count}
+                    delivery_boy_count={this.state.delivery_boy_count}
                     usersReloadCountHandler={this.reloadUsersCount.bind(this)}
 
                     pending_orders_count={this.state.pending_orders_count}

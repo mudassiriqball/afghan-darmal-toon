@@ -13,4 +13,7 @@ export default {
 
     // Sub Category
     UPDATE_SUB_CATEGORY: baseUrl + '/categories/sub-category/',
+
+    // Cart
+    CLEAR_CART: baseUrl + '/clear-cart-obj/id/clear-by-id/',
 }

@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { Formik } from 'formik'
-import { Form, InputGroup, Col, Row, ButtonGroup } from 'react-bootstrap';
+import { Form, InputGroup, Col, Row, ButtonGroup, Alert } from 'react-bootstrap';
 import * as yup from 'yup';
 import CustomButton from '../components/CustomButton';
 import theme from '../constants/theme';
@@ -64,6 +64,7 @@ class Signup extends Component {
         verificationLoading: false,
 
         licenseError: '',
+        showAlert: false,
     };
 
     componentDidMount() {
@@ -75,62 +76,67 @@ class Signup extends Component {
 
     async handleSenVerificationCode(mobileNumber) {
         this.setState({ phone: mobileNumber, sendCodeLoading: true, mobileError: '' })
-        const currentComponent = this
-        // await axios.get(urls.GET_REQUEST.VARIFY_MOBILE_NUMBER + `/${mobileNumber}`).then((response) => {
-        //     currentComponent.setState({
-        //         mobileError: 'Number Already Exists!,
-        //         feedback: '',
-        //         isCodeSended: false,
-        //         isCodeVerified: false,
-        //         sendCodeLoading: false,
-        //     })
-        // }).catch((error) => {
-        //     currentComponent.setState({
-        //         sendCodeLoading: false,
-        //         intervalTime: 60,
-        //         isResendCode: false,
-        //         feedback: '',
-        //     });
-
-        console.log('mobile', mobileNumber)
-        var appVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
-        firebase.auth().signInWithPhoneNumber(mobileNumber, appVerifier)
-            .then(function (confirmationResult) {
-                window.confirmationResult = confirmationResult;
-                console.log()
+        const currentComponent = this;
+        await axios.get(urls.GET_REQUEST.VARIFY_MOBILE_NUMBER + mobileNumber).then((res) => {
+            console.log('res.data:', res.data)
+            if (res.data.code == 201) {
                 currentComponent.setState({
-                    isCodeSended: true,
-                    mobileError: '',
-                    feedback: 'Code Sended',
+                    mobileError: 'Number Already Exists!',
+                    feedback: '',
+                    isCodeSended: false,
+                    isCodeVerified: false,
                     sendCodeLoading: false,
                 })
-                let interval = null
-                interval = setInterval(() => {
-                    currentComponent.setState({ intervalTime: currentComponent.state.intervalTime - 1 });
-                    if (currentComponent.state.intervalTime == 0) {
-                        currentComponent.setState({ isResendCode: true });
-                        clearInterval(interval)
-                    }
-                }, 1000)
-            }).catch(function (error) {
-                // currentComponent.setState({
-                //     mobileError: '',
-                //     verificationCodeError: '',
-                //     feedback: 'Number Verified',
-                //     isCodeSended: true,
-                //     isCodeVerified: true,
-                //     sendCodeLoading: false,
-                //     isResendCode: false
-                // })
+            } else {
                 currentComponent.setState({
-                    isCodeSended: false,
-                    mobileError: 'Code not Seded, Check your Number',
+                    sendCodeLoading: false,
+                    intervalTime: 60,
+                    isResendCode: false,
                     feedback: '',
-                    isCodeVerified: false,
-                })
-                console.log('eror:', error)
-            });
-        // })
+                });
+                // Send code to number
+                var appVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
+                firebase.auth().signInWithPhoneNumber(mobileNumber, appVerifier)
+                    .then(function (confirmationResult) {
+                        window.confirmationResult = confirmationResult;
+                        console.log()
+                        currentComponent.setState({
+                            isCodeSended: true,
+                            mobileError: '',
+                            feedback: 'Code Sended',
+                            sendCodeLoading: false,
+                        })
+                        let interval = null
+                        interval = setInterval(() => {
+                            currentComponent.setState({ intervalTime: currentComponent.state.intervalTime - 1 });
+                            if (currentComponent.state.intervalTime == 0) {
+                                currentComponent.setState({ isResendCode: true });
+                                clearInterval(interval)
+                            }
+                        }, 1000)
+                    }).catch(function (error) {
+
+                        if (error.code == 'auth/too-many-requests') {
+                            currentComponent.setState({
+                                isCodeSended: false,
+                                mobileError: 'To Many Request, Please try later',
+                                feedback: '',
+                                isCodeVerified: false,
+                            })
+                        } else {
+                            currentComponent.setState({
+                                isCodeSended: false,
+                                mobileError: 'Code not Seded, Check your Number',
+                                feedback: '',
+                                isCodeVerified: false,
+                            })
+                        }
+                        console.log('send code error:', error)
+                    });
+            }
+        }).catch((error) => {
+            console.log('error number exist check:', error)
+        })
     }
 
 
@@ -172,6 +178,7 @@ class Signup extends Component {
                 <Formik
                     validationSchema={schema}
                     onSubmit={(values, { setSubmitting, resetForm }) => {
+                        const currentComponent = this;
                         values.mobile = this.state.phone;
                         console.log('values:', values)
                         if (values.role === 'customer' && values.licenseNo === '') {
@@ -181,7 +188,7 @@ class Signup extends Component {
                             this.setState({ licenseError: '' });
                             setTimeout(async () => {
                                 if (this.state.isCodeVerified && this.state.isCodeSended) {
-                                    await axios.post(urls.POST_REQUEST.SIGNUP, values).then(function (response) {
+                                    await axios.post(urls.POST_REQUEST.SIGNUP, values).then(function (res) {
                                         currentComponent.setState({
                                             hide: true,
                                             isLoading: false,
@@ -198,12 +205,14 @@ class Signup extends Component {
                                             isCodeVerified: false,
                                             verificationLoading: false,
                                             licenseError: '',
+                                            showAlert: true,
                                         });
                                         resetForm();
                                         setSubmitting(false);
-                                        Router.push('/');
+                                        // Router.push('/');
                                     }).catch(function (error) {
-                                        currentComponent.setState({ isLoading: false, serverErrorMsg: error.response.data.message })
+                                        console.log('Signup error:', error)
+                                        currentComponent.setState({ isLoading: false, serverErrorMsg: 'Signup Failed, Please try again' })
                                         setSubmitting(false);
                                     })
                                 } else {
@@ -230,8 +239,13 @@ class Signup extends Component {
                         setFieldValue
                     }) => (
                         <div className='container'>
+                            {this.state.showAlert && <Alert variant='success' onClose={() => this.setState({ showAlert: false })} dismissible>
+                                {'Account Created Successfully, Go to '}
+                                <Alert.Link href="/">Home</Alert.Link>
+                                {' and login'}
+                            </Alert>
+                            }
                             <Form noValidate onSubmit={handleSubmit}>
-
                                 {values.role === '' &&
                                     <>
                                         <Form.Row>
@@ -318,7 +332,7 @@ class Signup extends Component {
                                         </Form.Row>
                                     </>
                                 }
-                                {values.role == '' && <Row>
+                                {values.role == '' && this.state.isCodeVerified && <Row>
                                     <Row className='w-100'><label style={{ fontSize: '20px', width: '100%', textAlign: 'center' }}>Signup as ?</label></Row>
                                     <Col lg='6' md='6' sm='12' xs='12' className='mb-1'>
                                         <CustomButton
@@ -412,7 +426,7 @@ class Signup extends Component {
                                                             placeholder="Enter License Number"
                                                             name="licenseNo"
                                                             value={values.licenseNo}
-                                                            onChange={(e) => { handleChange(e.target.value), this.setState({ licenseError: '' }) }}
+                                                            onChange={(e) => { setFieldValue('licenseNo', e.target.value), this.setState({ licenseError: '' }) }}
                                                             isInvalid={this.state.licenseError}
                                                         />
                                                         <Form.Control.Feedback type="invalid">
@@ -495,11 +509,12 @@ class Signup extends Component {
                                                 </InputGroup>
                                             </Form.Group>
                                         </Form.Row>
-
-
                                         <Form.Group>
                                             <label className='w-100' style={{ textAlign: 'center', fontSize: 12, color: theme.COLORS.SEC }}>By Signing up you are agree to Terms & Condition and Privacy Statement</label>
                                         </Form.Group>
+                                        <Form.Label style={{ fontSize: theme.SIZES.LABEL, color: theme.COLORS.ERROR }}>
+                                            <span>{this.state.serverErrorMsg}</span>
+                                        </Form.Label>
                                         <Row>
                                             <Col>
                                                 <CustomButton
@@ -612,7 +627,7 @@ class Signup extends Component {
                         font-family: Roboto, Helvetica Neue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
                     }
                 `}</style>
-            </div >
+            </div>
         );
     }
 }

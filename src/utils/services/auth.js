@@ -1,8 +1,8 @@
 
 // export default AuthenticationService;
-import * as jwt_decode from 'jwt-decode'
-import Router from 'next/router'
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlzX2RlbGV0ZWQiOjAsIl9pZCI6IjVmMmM3M2VhNjYwZDIzMGIwOGNmZDY4NyIsIm1vYmlsZSI6Iis5MjM0MjE1NTYwMjgiLCJmdWxsX25hbWUiOiJNdWRhc3NpciBJcWJhbCIsImVtYWlsIjoibXVkYXNzaXIuaXFiYWxsQGhvdG1haWwuY29tIiwiY291bnRhcnkiOiJLU0EiLCJjaXR5IjoiSXNsYW1hYmFkZCIsInJvbGUiOiJhZG1pbiIsImFkZHJlc3MiOiJEYXJ5YSBraGFuIiwiZ2VuZGVyIjoiTWFsZSIsImVudHJ5X2RhdGUiOiIyMDIwLTA4LTA2VDIxOjE5OjM4LjIzMloiLCJzdGF0dXMiOiJhcHByb3ZlZCIsImNhcnQiOltdLCJfX3YiOjAsImF2YXRhciI6Imh0dHBzOi8vc2xpZGVyLWltYWdlcy5zMy5tZS1zb3V0aC0xLmFtYXpvbmF3cy5jb20vMTU5NzQzNDg2NDA1MyIsIndpc2hfbGlzdCI6W119LCJyb2xlIjoiVXNlciIsImlhdCI6MTYwNzQ1MzE0MywiZXhwIjoxNjA4MDU3OTQzfQ.GXlHn36mvDcVcgI20E3GWioCsQERSbER1mRwU8vwP-A'
+import jwt_decode from 'jwt-decode';
+import Router from 'next/router';
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlzX2RlbGV0ZWQiOjAsIl9pZCI6IjVmZGNlZDQ3MDljMWQ4MGM3YzMwNzYyZiIsIm1vYmlsZSI6Iis5MjM0MjE1NTYwMjgiLCJmdWxsTmFtZSI6Ik11ZGFzc2lyIElxYmFsIiwiZW1haWwiOiJhZmdoYW5kYXJtYWx0b29uQGdtYWlsLmNvbSIsImNpdHkiOiJJc2xhbWFiYWQiLCJyb2xlIjoiYWRtaW4iLCJhZGRyZXNzIjoiSXNsYW1pYyBVbml2ZXJzaXR5IElzbGFtYWJhZCIsImxpY2Vuc2VObyI6IjEyMzQ1Njc4OTAiLCJlbnRyeV9kYXRlIjoiMjAyMC0xMi0xOFQxNzo1NjoyMy4wODlaIiwic3RhdHVzIjoiYXBwcm92ZWQiLCJfX3YiOjB9LCJyb2xlIjoiVXNlciIsImlhdCI6MTYwODMxNzcyNywiZXhwIjoxNjA4OTIyNTI3fQ.FR5xU7WTsU377G-9vAs0tWvk3uuaRIXlOGbst5rmfUM';
 
 const AuthenticationService = () => (
     <div></div>
@@ -12,7 +12,7 @@ export async function saveTokenToStorage(token) {
     await localStorage.setItem('token', token)
 }
 export function getDecodedTokenFromStorage() {
-    // const token = localStorage.getItem('token')
+    // const token = localStorage.getItem('token');
     if (token) {
         const decodedToken = jwt_decode(token);
         return decodedToken.data;
@@ -21,8 +21,7 @@ export function getDecodedTokenFromStorage() {
 }
 
 export function getTokenFromStorage() {
-    // return localStorage.getItem('token');
-    return token;
+    return localStorage.getItem('token');
 }
 
 export async function removeTokenFromStorage() {
@@ -36,7 +35,7 @@ export async function removeTokenFromStorage() {
 
 
 export function checkTokenExpAuth() {
-    // const token = localStorage.getItem('token')
+    // const token = localStorage.getItem('token');
     if (token != null) {
         const decodedToken = jwt_decode(token);
         console.log('token:', decodedToken)
@@ -52,7 +51,7 @@ export function checkTokenExpAuth() {
 }
 
 export function checkAuth(current_role) {
-    // const token = localStorage.getItem('token')
+    // const token = localStorage.getItem('token');
     if (token == null) {
         if (current_role == '/login' || current_role == '/signup' || current_role == '/vendor-signup') {
             Router.replace(current_role)

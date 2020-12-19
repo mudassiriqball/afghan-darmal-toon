@@ -11,8 +11,8 @@ import { faEdit, faUserCircle } from '@fortawesome/free-regular-svg-icons'
 import { faProductHunt } from '@fortawesome/free-brands-svg-icons';
 
 import AddProduct from './dashboard-contents/add-product/add-new-product'
-import Vendors from './dashboard-contents/vendors';
 import Customers from './dashboard-contents/customers';
+import DeliveryBoy from './dashboard-contents/deliveryBoy';
 import Slider from './dashboard-contents/slider';
 // Category
 import AddCategory from './dashboard-contents/category-contents/add-category'
@@ -32,7 +32,7 @@ const Dashboard = props => {
 
     return (
         <div className='admin_dashboard'>
-            <Tab.Container id="dashboard-tabs" defaultActiveKey="Vendors"  >
+            <Tab.Container id="dashboard-tabs" defaultActiveKey="Customers"  >
                 <Row style={{ width: '100%', margin: '0px', maxHeight: '7vh', minHeight: '7vh' }}>
                     {/* Toolbar */}
                     <Navbar collapseOnSelect expand="lg" style={styles.navbar} variant="light" className='p-2 m-0 w-100'>
@@ -87,27 +87,18 @@ const Dashboard = props => {
                             </Nav.Item>
                             <Nav.Item>
                                 <div className="nav_link">
-                                    <Nav.Link eventKey="AddProduct" onClick={props.click} style={styles.nav_link}>
-                                        <FontAwesomeIcon size="xs" icon={faTachometerAlt} style={styles.fontawesome} />
-                                        <div className="mr-auto">Add Product</div>
-                                        <FontAwesomeIcon icon={faChevronRight} style={styles.forword_fontawesome} />
-                                    </Nav.Link>
-                                </div>
-                            </Nav.Item>
-                            <Nav.Item>
-                                <div className="nav_link">
-                                    <Nav.Link eventKey="Vendors" style={styles.nav_link} onClick={() => setShow_category(false)}>
-                                        <FontAwesomeIcon size="xs" icon={faPersonBooth} style={styles.fontawesome} />
-                                        <div className="mr-auto">Vendors</div>
-                                        <FontAwesomeIcon icon={faChevronRight} style={styles.forword_fontawesome} />
-                                    </Nav.Link>
-                                </div>
-                            </Nav.Item>
-                            <Nav.Item>
-                                <div className="nav_link">
                                     <Nav.Link eventKey="Customers" style={styles.nav_link} onClick={() => setShow_category(false)}>
-                                        <FontAwesomeIcon icon={faUsers} style={styles.fontawesome} />
+                                        <FontAwesomeIcon size="xs" icon={faPersonBooth} style={styles.fontawesome} />
                                         <div className="mr-auto">Customers</div>
+                                        <FontAwesomeIcon icon={faChevronRight} style={styles.forword_fontawesome} />
+                                    </Nav.Link>
+                                </div>
+                            </Nav.Item>
+                            <Nav.Item>
+                                <div className="nav_link">
+                                    <Nav.Link eventKey="DeliveryBoys" style={styles.nav_link} onClick={() => setShow_category(false)}>
+                                        <FontAwesomeIcon icon={faUsers} style={styles.fontawesome} />
+                                        <div className="mr-auto">Delivery Boys</div>
                                         <FontAwesomeIcon icon={faChevronRight} style={styles.forword_fontawesome} />
                                     </Nav.Link>
                                 </div>
@@ -117,6 +108,15 @@ const Dashboard = props => {
                                     <Nav.Link eventKey="Inventory" style={styles.nav_link} onClick={() => setShow_category(false)}>
                                         <FontAwesomeIcon icon={faWarehouse} style={styles.fontawesome} />
                                         <div className="mr-auto">Inventory</div>
+                                        <FontAwesomeIcon icon={faChevronRight} style={styles.forword_fontawesome} />
+                                    </Nav.Link>
+                                </div>
+                            </Nav.Item>
+                            <Nav.Item>
+                                <div className="nav_link">
+                                    <Nav.Link eventKey="AddProduct" onClick={props.click} style={styles.nav_link}>
+                                        <FontAwesomeIcon size="xs" icon={faTachometerAlt} style={styles.fontawesome} />
+                                        <div className="mr-auto">Add Product</div>
                                         <FontAwesomeIcon icon={faChevronRight} style={styles.forword_fontawesome} />
                                     </Nav.Link>
                                 </div>
@@ -178,14 +178,13 @@ const Dashboard = props => {
                         {/* Tab Content for Large Devices */}
                         <div className="tab_content">
                             <Tab.Content style={{ height: `calc(100vh - 65px)`, overflowY: 'auto' }}>
-                                {/* <Tab.Pane eventKey="Dashboard">
-                                    <AdminDashboard />
-                                </Tab.Pane> */}
-                                <Tab.Pane eventKey="AddProduct">
-                                    <AddProduct title={'Add New Product'} />
-                                </Tab.Pane>
                                 <Tab.Pane eventKey="Customers">
                                     <Customers
+                                        {...props}
+                                    />
+                                </Tab.Pane>
+                                <Tab.Pane eventKey="DeliveryBoys">
+                                    <DeliveryBoy
                                         {...props}
                                     />
                                 </Tab.Pane>
@@ -199,6 +198,9 @@ const Dashboard = props => {
                                     <Orders
                                         {...props}
                                     />
+                                </Tab.Pane>
+                                <Tab.Pane eventKey="AddProduct">
+                                    <AddProduct title={'Add New Product'} />
                                 </Tab.Pane>
                                 <Tab.Pane eventKey="AddCategory">
                                     <AddCategory

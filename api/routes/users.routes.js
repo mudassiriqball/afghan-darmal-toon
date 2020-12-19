@@ -5,7 +5,7 @@ const checkAuth = require('../middleware/check-auth');
 
 // post Requests
 router.post("/auth/login-user", UserController.loginUser);
-router.post("'/auth/register/register-user", UserController.registerUser);
+router.post("/auth/register/register-user", UserController.registerUser);
 
 // router.post("/",UserController.addUser);
 

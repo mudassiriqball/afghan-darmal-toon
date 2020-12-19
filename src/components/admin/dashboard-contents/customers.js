@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Row, Col, Card, Nav, Table, Form, Button, InputGroup } from 'react-bootstrap'
-import { faUsers, faUserPlus, faPersonBooth, faBan } from '@fortawesome/free-solid-svg-icons';
+import { faUsers, faUserPlus, faPersonBooth, faBan, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faThumbsUp, faCheckCircle } from '@fortawesome/free-regular-svg-icons';
 
-import theme from '../../../constants/theme'
+import theme from '../../../constants/theme';
 import TitleRow from '../../title-row';
-import ConfirmModal from '../../confirm-modal'
-import AlertModal from '../../alert-modal'
-import urls from '../../../utils/urls/index'
-import CardSearchAccordion from '../../card-search-accordion';
-import PaginationRow from '../../pagination-row'
-import Loading from '../../loading'
-import CountColoredCard from '../../count-colored-card';
+import ConfirmModal from '../../confirm-modal';
+import AlertModal from '../../alert-modal';
 
-import getUserPageLimit from '../../../hooks/customer/getUserPageLimit'
-import getUsersBySearching from '../../../hooks/customer/getUsersBySearching'
+import PaginationRow from '../../pagination-row'
+import CardSearchAccordion from '../../card-search-accordion';
+
+import getUsersPageLimit from '../../../hooks/getUsersPageLimit';
+import getUsersBySearch from '../../../hooks/getUsersBySearch';
+
+import Loading from '../../loading';
+import CountColoredCard from '../../count-colored-card';
+import urls from '../../../utils/urls';
 
 class Customers extends React.Component {
     constructor(props) {
@@ -24,6 +26,7 @@ class Customers extends React.Component {
             refresh_count: 0,
             isViewUser: false,
             isNewUser: false,
+
             single_user: {},
 
             method: '',
@@ -38,17 +41,37 @@ class Customers extends React.Component {
         }
     }
 
-    // UNSAFE_componentWillReceiveProps(nextProps) {
-    //     this.setState({
-    //         token: nextProps.token
-    //     });
-    // }
-
     async handleViewModalConfirmed() {
         this.setState({ viewConfirmModalLoading: true })
         const currentComponent = this
         let data = []
-        if (this.state.method == 'Restricted') {
+        if (this.state.method == 'Approved') {
+            data = {
+                status: 'approved'
+            }
+        } else if (this.state.method == 'Discarded') {
+            setConfirmModalLoading(true)
+            await axios.delete(urls.DELETE_REQUEST.DISCARD_NEW_CUSTOMER + this.state.single_user._id, {
+                headers: { 'authorization': currentComponent.props.token }
+            }).then(function (res) {
+                currentComponent.setState({
+                    viewConfirmModalLoading: false,
+                    showViewConfirmModal: false,
+                    viewAlertModalMsg: 'New Vendor Discarded Successfully',
+                    viewShowAlertModal: true,
+                    refresh_count: currentComponent.state.refresh_count + 1,
+                    isViewUser: false,
+                })
+                currentComponent.props.usersReloadCountHandler()
+            }).catch((err) => {
+                currentComponent.setState({
+                    viewConfirmModalLoading: false,
+                    showViewConfirmModal: false,
+                })
+                alert('Error');
+            });
+            return
+        } else if (this.state.method == 'Restricted') {
             data = {
                 status: 'restricted'
             }
@@ -57,13 +80,14 @@ class Customers extends React.Component {
                 status: 'approved'
             }
         }
-        await axios.put(urls.PUT_REQUEST.UPDATE_USER_STATUS + currentComponent.state.single_user._id, data, {
+
+        await axios.put(urls.PUT_REQUEST.CHANGE_CUSTOMER_STATUS + currentComponent.state.single_user._id, data, {
             headers: { 'authorization': currentComponent.props.token }
         }).then((res) => {
             currentComponent.setState({
                 viewConfirmModalLoading: false,
                 showViewConfirmModal: false,
-                viewAlertModalMsg: `Customer ${currentComponent.state.method}  successfully`,
+                viewAlertModalMsg: `Vendor ${currentComponent.state.method}  successfully`,
                 viewShowAlertModal: true,
                 refresh_count: currentComponent.state.refresh_count + 1
             })
@@ -77,9 +101,15 @@ class Customers extends React.Component {
                 viewConfirmModalLoading: false,
                 showViewConfirmModal: false,
             })
-            alert('Error')
+            alert('Error'); console.log('jjj:', err)
         });
     }
+
+    // UNSAFE_componentWillReceiveProps(nextProps) {
+    //     this.setState({
+    //         token: nextProps.token
+    //     });
+    // }
 
     render() {
         return (
@@ -104,26 +134,34 @@ class Customers extends React.Component {
                     color={'green'}
                 />
                 {!this.state.isViewUser ?
-                    <div >
+                    <div>
                         <TitleRow icon={faUsers} title={' Admin Dashboard / Customers'} />
                         <Row className='Card' noGutters>
-                            <Col lg={4} md={4} sm={12} xs={12} style={styles.col} className='p-0 m-0'>
+                            <Col lg={12} md={12} sm={12} xs={12} className='p-0 m-0'>
                                 <CountColoredCard
                                     count={this.props.customers_count}
                                     header={'All Customers'}
                                     background={'lightblue'}
-                                    iconname={faUserPlus}
+                                    iconname={faUsers}
                                 />
                             </Col>
-                            <Col lg={4} md={4} sm={6} xs={12} className='p-0 m-0'>
+                            <Col lg={4} md={4} sm={12} xs={12} className='p-0 m-0'>
                                 <CountColoredCard
-                                    count={this.props.customers_count - this.props.restricted_customers_count}
+                                    count={this.props.customers_count - this.props.restricted_customers_count - this.props.new_customers_count}
                                     header={'Unrestricted Customers'}
                                     background={'lightblue'}
                                     iconname={faUsers}
                                 />
                             </Col>
-                            <Col lg={4} md={4} sm={6} xs={12} style={styles.col} className='p-0 m-0'>
+                            <Col lg={4} md={4} sm={12} xs={12} className='p-0 m-0'>
+                                <CountColoredCard
+                                    count={this.props.new_customers_count}
+                                    header={'New Customers'}
+                                    background={'lightgreen'}
+                                    iconname={faUserPlus}
+                                />
+                            </Col>
+                            <Col lg={4} md={4} sm={12} xs={12} className='p-0 m-0'>
                                 <CountColoredCard
                                     count={this.props.restricted_customers_count}
                                     header={'Restriced Customers'}
@@ -132,7 +170,9 @@ class Customers extends React.Component {
                                 />
                             </Col>
                         </Row>
-                        <CustomerTable
+
+
+                        <CustomersTable
                             header={'All Customers'}
                             rank={true}
                             setView={(element) => this.setState({
@@ -141,14 +181,27 @@ class Customers extends React.Component {
                                 single_user: element,
                             })}
                             token={this.props.token}
-                            url={'customers'}
-                            role={'customer'}
                             status={'approved'}
                             refresh={this.state.refresh_count}
                             setRefresh={() => this.setState({ refresh_count: this.state.refresh_count + 1 })}
                             usersReloadCountHandler={this.props.usersReloadCountHandler}
                         />
-                        <CustomerTable
+
+                        <CustomersTable
+                            header={'New Customers'}
+                            rank={false}
+                            setView={(element) => this.setState({
+                                isViewUser: true,
+                                isNewUser: true,
+                                single_user: element,
+                            })}
+                            token={this.props.token}
+                            status={'disapproved'}
+                            refresh={this.state.refresh_count}
+                            setRefresh={() => this.setState({ refresh_count: this.state.refresh_count + 1 })}
+                            usersReloadCountHandler={this.props.usersReloadCountHandler}
+                        />
+                        <CustomersTable
                             header={'Restricted Customers'}
                             rank={true}
                             setView={(element) => this.setState({
@@ -157,8 +210,6 @@ class Customers extends React.Component {
                                 single_user: element,
                             })}
                             token={this.props.token}
-                            url={'restricted-customers'}
-                            role={'customer'}
                             status={'restricted'}
                             refresh={this.state.refresh_count}
                             setRefresh={() => this.setState({ refresh_count: this.state.refresh_count + 1 })}
@@ -166,24 +217,43 @@ class Customers extends React.Component {
                         />
                     </div>
                     :
-                    <div>
+                    <>
                         <TitleRow icon={faPersonBooth} title={`Admin Dashboard / Customers / ${this.state.single_user.full_name}`} />
                         <Form.Row style={{ margin: ' 0% 2%', display: 'flex', alignItems: 'center' }} >
-                            <Button size='sm' variant='outline-primary' className="mr-auto mt-2" onClick={() => this.setState({ isViewUser: false })}> Back </Button>
-                            {this.state.single_user.status != 'restricted' ?
-                                <Button size='sm' variant='outline-danger' className='ml-2 mt-2 mb-2'
-                                    onClick={() => this.setState({
-                                        showViewConfirmModal: true, viewConfirmModalMsg: 'Restrict Customer?', method: 'Restricted',
-                                        viewConfirmModalColor: 'red', viewModalIconname: faCheckCircle
-                                    })}
-                                > Restrict </Button>
+                            <Button size='sm' variant='outline-primary' className="mr-auto" onClick={() => this.setState({ isViewUser: false })}> Back </Button>
+                            {this.state.isNewUser ?
+                                <>
+                                    <Button size='sm' variant='outline-success' className='m2'
+                                        onClick={() => this.setState({
+                                            showViewConfirmModal: true, viewConfirmModalMsg: 'Approve New Vendor?', method: 'Approved',
+                                            viewConfirmModalColor: 'green', viewModalIconname: faCheckCircle
+                                        })}
+                                    > Approve </Button>
+                                    <Button size='sm' variant='outline-danger' className=''
+                                        onClick={() => this.setState({
+                                            showViewConfirmModal: true, viewConfirmModalMsg: 'Discard New Vendor?', method: 'Discarded',
+                                            viewConfirmModalColor: 'red', viewModalIconname: faCheckCircle
+                                        })}
+                                    > Discard </Button>
+                                </>
                                 :
-                                <Button size='sm' variant='outline-success' className='ml-2 mt-2 mb-2'
-                                    onClick={() => this.setState({
-                                        showViewConfirmModal: true, viewConfirmModalMsg: 'Unrestrict Customer?', method: 'Unrestricted',
-                                        viewConfirmModalColor: 'blue', viewModalIconname: faCheckCircle,
-                                    })}
-                                > Unrestrict </Button>
+                                <>
+                                    {this.state.single_user.status != 'restricted' ?
+                                        <Button size='sm' variant='outline-danger' className='ml-2 mt-2 mb-2'
+                                            onClick={() => this.setState({
+                                                showViewConfirmModal: true, viewConfirmModalMsg: 'Restrict Vendor?', method: 'Restricted',
+                                                viewConfirmModalColor: 'red', viewModalIconname: faCheckCircle
+                                            })}
+                                        > Restrict </Button>
+                                        :
+                                        <Button size='sm' variant='outline-success' className='ml-2  mt-2 mb-2'
+                                            onClick={() => this.setState({
+                                                showViewConfirmModal: true, viewConfirmModalMsg: 'Unrestrict Vendor?', method: 'Unrestricted',
+                                                viewConfirmModalColor: 'blue', viewModalIconname: faCheckCircle,
+                                            })}
+                                        > Unrestrict </Button>
+                                    }
+                                </>
                             }
                         </Form.Row>
                         <Card className='view_user'>
@@ -226,105 +296,116 @@ class Customers extends React.Component {
                                             <Form.Control type="text" disabled={true} size="sm" value={this.state.single_user.city} className='form_control' />
                                         </InputGroup>
                                     </Form.Group>
+
+                                    <p className='p' style={{ marginTop: '50px' }}><span>Shop Info</span></p>
                                     <Form.Group as={Col} lg={4} md={6} sm={6} xs={12}>
-                                        <Form.Label className='form_label'>Gender</Form.Label>
+                                        <Form.Label className='form_label'>Shop Name</Form.Label>
                                         <InputGroup>
-                                            <Form.Control type="text" disabled={true} size="sm" value={this.state.single_user.gender} className='form_control' />
+                                            <Form.Control type="text" disabled={true} size="sm" value={this.state.single_user.shop_name} className='form_control' />
+                                        </InputGroup>
+                                    </Form.Group>
+                                    <Form.Group as={Col} lg={4} md={6} sm={6} xs={12}>
+                                        <Form.Label className='form_label'>Shop Category</Form.Label>
+                                        <InputGroup>
+                                            <Form.Control type="text" disabled={true} size="sm" value={this.state.single_user.shop_category} className='form_control' />
                                         </InputGroup>
                                     </Form.Group>
                                     <Form.Group as={Col} lg={4} md={6} sm={6} xs={12}>
                                         <Form.Label className='form_label'>Date</Form.Label>
                                         <InputGroup>
-                                            <Form.Control type="text" disabled={true} size="sm" value={this.state.single_user.entery_date} className='form_control' />
+                                            <Form.Control type="text" disabled={true} size="sm" value={this.state.single_user.entry_date.substring(0, 10)} className='form_control' />
                                         </InputGroup>
                                     </Form.Group>
                                     <Form.Group as={Col} lg={12} md={12} sm={12} xs={12}>
-                                        <Form.Label className='form_label'>Address</Form.Label>
+                                        <Form.Label className='form_label'>Shop Address</Form.Label>
                                         <InputGroup>
-                                            <Form.Control type="text" disabled={true} size="sm" value={this.state.single_user.address} className='form_control' />
+                                            <Form.Control type="text" disabled={true} size="sm" value={this.state.single_user.shop_address} className='form_control' />
                                         </InputGroup>
                                     </Form.Group>
                                 </Row>
                             </Card.Body>
                         </Card>
-                    </div>
+                    </>
                 }
                 <style type="text/css">
                     {`
-                    .customers .Card{
-                        margin: 1%;
-                    }
-                    .customers .view_user{
-                        margin: 1% 2%;
-                    }
-                    .customers .p {
-                        width: 100%;
-                        text-align: center;
-                        border-bottom: 1px solid lightgray;
-                        line-height: 0.1em;
-                        margin: 20px 20px;
-                    }
+                        .customers .Card{
+                            margin: 1%;
+                        }
+                        .customers .view_user{
+                            margin: 1% 2%;
+                        }
+                        .customers .p {
+                            width: 100%; 
+                            text-align: center; 
+                            border-bottom: 1px solid lightgray; 
+                            line-height: 0.1em;
+                            margin: 20px 20px;
+                        } 
 
-                    .customers .p span {
-                        font-size: 13px;
-                        color: gray;
-                        background: white;
-                        padding:0 10px;
-                    }
-                    .customers .form_label{
-                        color: gray;
-                        font-size: ${theme.SIZES.LABEL};
-                    }
-                    .customers .card_header {
-                        font-size: ${theme.SIZES.HEADER};
-                        border: none;
-                    }
-                    .customers .card_text {
-                        color: ${theme.COLORS.SEC};
-                        font-size: 17px;
-                    }
-                    .vendors .form_control:disabled {
-                        background: none;
-                        // border: none;
-                        // padding-left: 0%;
-                        // padding-top: 0%;
-                        font-size: 14px;
-                        font-weight: bold;
-                    }
-                `}
+                        .customers .p span {
+                            font-size: 13px;
+                            color: gray;
+                            background: white;
+                            padding:0 10px;
+                        }
+                        .customers .form_label{
+                            color: gray;
+                            font-size: ${theme.SIZES.LABEL};
+                        }
+                        .customers .card_header {
+                            font-size: ${theme.SIZES.HEADER};
+                            border: none;
+                        }
+                        .customers .card_text {
+                            color: ${theme.admin_primry_color};
+                            font-size: 17px;
+                        }
+                        .customers .form_control:disabled {
+                            background: none;
+                            // border: none;
+                            // padding-left: 0%;
+                            // padding-top: 0%;
+                            font-size: 14px;
+                            font-weight: bold;
+                        }
+                    `}
                 </style>
             </div>
         )
     }
 }
 
-function CustomerTable(props) {
+function CustomersTable(props) {
     const [page, setPage] = useState(1)
     const [queryPage, setQueryPage] = useState(1)
     const [pageNumber, setpageNumber] = useState(1)
     const [queryPageNumber, setQueryPageNumber] = useState(1)
     const [isSearch, setIsSearch] = useState(false)
     const [fieldName, setFieldName] = useState('')
-    const [query, setQuery] = useState(null)
+    const [query, setQuery] = useState('')
 
-    const [single_user, setSingle_customer] = useState({})
+    const [single_user, setSingle_vendor] = useState({})
     // Confirm Modal
     const [method, setMethod] = useState('')
     const [showConfirmModal, setShowConfirmModal] = useState(false)
     const [confirmModalMsg, setConfirmModalMsg] = useState('')
-    const [iconname, setIconname] = useState(null)
     const [confirmModalColor, setConfirmModalColor] = useState('green')
     const [confirmModalLoading, setConfirmModalLoading] = useState(false)
 
     const [showAlertModal, setShowAlertModal] = useState(false)
     const [alertModalMsg, setAlertModalMsg] = useState(false)
 
-    const [start_date, setStart_date] = useState(new Date("2020/01/01"))
+    const [iconname, setIconname] = useState(null)
+
+    const [start_date, setStart_date] = useState(new Date("2020/12/12"))
     const [end_date, setEnd_date] = useState(new Date())
 
-    const { users_loading, users_error, users, users_pages, users_total } = getUserPageLimit(props.token, props.refresh, props.url, pageNumber, '20')
-    const { users_query_loading, users_query_error, query_users, users_query_pages, users_query_total } =
-        getUsersBySearching(props.token, props.refresh, props.role, props.status, fieldName, query, queryPageNumber, '20', start_date, end_date)
+
+    const { USERS_PAGE_LOADING, USERS_PAGE_ERROR, USERS_PAGE_USERS, USERS_PAGE_PAGES, USERS_PAGE_TOTAL } =
+        getUsersPageLimit(props.token, props.refresh, props.staus, pageNumber, '20', 'customer')
+    const { USERS_SEARCH_LOADING, USERS_SEARCH_ERROR, USERS_SEARCH_USERS, USERS_SEARCH_PAGES, USERS_SEARCH_TOTAL } =
+        getUsersBySearch(props.token, props.refresh, props.status, fieldName, query, queryPageNumber, '20', start_date, end_date, 'customer')
 
     async function handleSearch(type, value, start, end) {
         if (value != '') {
@@ -358,7 +439,34 @@ function CustomerTable(props) {
 
     async function handleConfirmed() {
         let data = []
-        if (method == 'Restricted') {
+        if (method == 'Approved') {
+            setConfirmModalLoading(true)
+            data = {
+                status: 'approved'
+            }
+        } else if (method == 'Discarded') {
+            setConfirmModalLoading(true)
+            await axios.delete(urls.DELETE_REQUEST.DISCARD_NEW_CUSTOMER + single_user._id, {
+                headers: { 'authorization': props.token }
+            }).then(function (res) {
+                setConfirmModalLoading(false)
+                setShowConfirmModal(false)
+                setAlertModalMsg('Vendor deleted successfully')
+                setShowAlertModal(true)
+                setpageNumber(1)
+                setQueryPageNumber(1)
+                setPage(1)
+                setQueryPage(1)
+                props.setRefresh()
+                props.usersReloadCountHandler()
+            }).catch(function (err) {
+                setConfirmModalLoading(false)
+                setShowConfirmModal(false)
+                alert('User Discard Failed: ');
+                console.log('User Discard Failed:', err)
+            });
+            return
+        } else if (method == 'Restricted') {
             setConfirmModalLoading(true)
             data = {
                 status: 'restricted'
@@ -369,12 +477,13 @@ function CustomerTable(props) {
                 status: 'approved'
             }
         }
-        await axios.put(urls.PUT_REQUEST.UPDATE_USER_STATUS + single_user._id, data, {
+
+        await axios.put(urls.PUT_REQUEST.CHANGE_CUSTOMER_STATUS + single_user._id, data, {
             headers: { 'authorization': props.token }
-        }).then(function (response) {
+        }).then(function (res) {
             setConfirmModalLoading(false)
             setShowConfirmModal(false)
-            setAlertModalMsg(`Customer ${method}  successfully`)
+            setAlertModalMsg(`Vendor ${method}  successfully`)
             setShowAlertModal(true)
             setpageNumber(1)
             setQueryPageNumber(1)
@@ -382,71 +491,89 @@ function CustomerTable(props) {
             setQueryPage(1)
             props.setRefresh()
             props.usersReloadCountHandler()
-        }).catch(function (error) {
+        }).catch(function (err) {
             setConfirmModalLoading(false)
             setShowConfirmModal(false)
-            alert('Error')
+            alert(`User ${method} failed: `);
+            console.log(`User ${method} failed: `, err)
         });
     }
 
     return (
-        <div className='customers'>
+        <div className='vendors_table'>
+            <ConfirmModal
+                onHide={() => { setShowConfirmModal(false), setConfirmModalLoading(false) }}
+                show={showConfirmModal}
+                title={confirmModalMsg}
+                iconname={iconname}
+                color={confirmModalColor}
+                _id={single_user._id}
+                name={single_user.full_name}
+                confirm={handleConfirmed}
+                loading={confirmModalLoading}
+            />
+            <AlertModal
+                onHide={(e) => setShowAlertModal(false)}
+                show={showAlertModal}
+                header={'Success'}
+                message={alertModalMsg}
+                iconname={faThumbsUp}
+                color={'green'}
+            />
+
             <CardSearchAccordion
                 title={props.header}
-                option={'customer'}
+                option={'vendor'}
                 handleSearch={handleSearch}
                 setIsSearch={() => setIsSearch(false)}
             >
-                <ConfirmModal
-                    onHide={() => { setShowConfirmModal(false), setConfirmModalLoading(false) }}
-                    show={showConfirmModal}
-                    title={confirmModalMsg}
-                    iconname={iconname}
-                    color={confirmModalColor}
-                    _id={single_user._id}
-                    name={single_user.full_name}
-                    confirm={handleConfirmed}
-                    loading={confirmModalLoading}
-                />
-                <AlertModal
-                    onHide={(e) => setShowAlertModal(false)}
-                    show={showAlertModal}
-                    header={'Success'}
-                    message={alertModalMsg}
-                    iconname={faThumbsUp}
-                    color={'green'}
-                />
                 {!isSearch ?
-                    users_loading ?
+                    USERS_PAGE_LOADING ?
                         <Loading />
                         :
-                        users_total > 0 ?
+                        USERS_PAGE_TOTAL > 0 ?
                             <>
-                                <CustomerTableBody
+                                <VendorTableBody
                                     pageNumber={page}
-                                    list={users}
+                                    list={USERS_PAGE_USERS}
                                     rank={props.rank}
                                     setView={props.setView}
+                                    setApprove={(element) => {
+                                        setMethod('Approved')
+                                        setSingle_vendor(element)
+                                        setShowConfirmModal(true)
+                                        setConfirmModalMsg('Approve Vendor?')
+                                        setConfirmModalColor('green')
+                                        setIconname(faCheckCircle)
+                                    }}
+                                    setDiscard={(element) => {
+                                        setMethod('Discarded')
+                                        setSingle_vendor(element)
+                                        setShowConfirmModal(true)
+                                        setConfirmModalMsg('Discard New Vendor?')
+                                        setConfirmModalColor('red')
+                                        setIconname(faTrash)
+                                    }}
                                     setRestrict={(element) => {
                                         setMethod('Restricted')
-                                        setSingle_customer(element)
+                                        setSingle_vendor(element)
                                         setShowConfirmModal(true)
-                                        setConfirmModalMsg('Restrict Customer?')
+                                        setConfirmModalMsg('Restrict Vendor?')
                                         setConfirmModalColor('red')
                                         setIconname(faBan)
                                     }}
                                     setUnrestrict={(element) => {
                                         setMethod('Unrestricted')
-                                        setSingle_customer(element)
+                                        setSingle_vendor(element)
                                         setShowConfirmModal(true)
-                                        setConfirmModalMsg('Unrestrict/Unblock Customer?')
+                                        setConfirmModalMsg('Unrestrict/Unblock Vendor?')
                                         setConfirmModalColor('blue')
                                         setIconname(faCheckCircle)
                                     }}
                                 />
                                 <hr />
                                 <PaginationRow
-                                    totalPages={users_pages}
+                                    totalPages={USERS_PAGE_PAGES}
                                     activePageNumber={page}
                                     setActivePageNumber={(ppage) => handleSetPage(ppage)}
                                 />
@@ -454,36 +581,52 @@ function CustomerTable(props) {
                             :
                             <Row className='no_data'>No Data Found</Row>
                     :
-                    users_query_loading ?
+                    USERS_SEARCH_LOADING ?
                         <Loading />
                         :
-                        users_query_total ?
+                        USERS_SEARCH_TOTAL ?
                             <>
-                                <CustomerTableBody
+                                <VendorTableBody
                                     pageNumber={queryPage}
-                                    list={query_users}
+                                    list={USERS_SEARCH_USERS}
                                     rank={props.rank}
                                     setView={props.setView}
+                                    setApprove={(element) => {
+                                        setMethod('Approved')
+                                        setSingle_vendor(element)
+                                        setShowConfirmModal(true)
+                                        setConfirmModalMsg('Approve Vendor?')
+                                        setConfirmModalColor('green')
+                                        setIconname(faCheckCircle)
+                                    }}
+                                    setDiscard={(element) => {
+                                        setMethod('Discarded')
+                                        setSingle_vendor(element)
+                                        setShowConfirmModal(true)
+                                        setConfirmModalMsg('Discard New Vendor?')
+                                        setConfirmModalColor('red')
+                                        setIconname(faTrash)
+                                    }}
                                     setRestrict={(element) => {
                                         setMethod('Restricted')
-                                        setSingle_customer(element)
+                                        setSingle_vendor(element)
                                         setShowConfirmModal(true)
-                                        setConfirmModalMsg('Restrict Customer?')
+                                        setConfirmModalMsg('Restrict Vendor?')
                                         setConfirmModalColor('red')
                                         setIconname(faBan)
                                     }}
                                     setUnrestrict={(element) => {
                                         setMethod('Unrestricted')
-                                        setSingle_customer(element)
+                                        setSingle_vendor(element)
                                         setShowConfirmModal(true)
-                                        setConfirmModalMsg('Unrestrict/Unblock Customer?')
+                                        setConfirmModalMsg('Unrestrict/Unblock Vendor?')
                                         setConfirmModalColor('blue')
                                         setIconname(faCheckCircle)
                                     }}
                                 />
                                 <hr />
                                 <PaginationRow
-                                    totalPages={users_query_pages}
+                                    totalPages={USERS_SEARCH_PAGES}
                                     activePageNumber={queryPage}
                                     setActivePageNumber={(ppage) => handleSetQueryPage(ppage)}
                                 />
@@ -493,7 +636,7 @@ function CustomerTable(props) {
                 }
             </CardSearchAccordion>
             <style type="text/css">{`
-                .customers .no_data {
+                .vendors_table .no_data {
                     width: 100%;
                     display: flex;
                     align-items: center;
@@ -505,7 +648,8 @@ function CustomerTable(props) {
     )
 }
 
-function CustomerTableBody(props) {
+function VendorTableBody(props) {
+
     const [lower_limit, setlower_limit] = useState(0)
     const [upper_limit, setupper_limit] = useState(0)
 
@@ -515,7 +659,7 @@ function CustomerTableBody(props) {
     }, [props.pageNumber])
 
     return (
-        <div className='customer_table'>
+        <div className='vendor_table'>
             <Table responsive bordered hover size="sm">
                 <thead>
                     <tr>
@@ -523,10 +667,10 @@ function CustomerTableBody(props) {
                         <th>ID</th>
                         <th>Mobile</th>
                         <th>Name</th>
-                        <th>Gender</th>
                         <th>Countary</th>
                         <th>City</th>
-                        <th>Address</th>
+                        <th>Shop Name</th>
+                        <th>Shop Location</th>
                         {props.rank ?
                             <th>Rank</th>
                             : null
@@ -541,36 +685,47 @@ function CustomerTableBody(props) {
                             <td>
                                 {element._id}
                                 <div className="td">
-                                    <Nav.Link style={styles.nav_link} className='pt-0' onClick={() => props.setView(element)} > View </Nav.Link>
-                                    {element.status == 'restricted' ?
-                                        <Nav.Link style={styles.nav_link} className='pt-0' onClick={() => props.setUnrestrict(element)}>Unrestrict</Nav.Link>
+                                    <Nav.Link className='pt-0' onClick={() => props.setView(element)} > View </Nav.Link>
+                                    {props.rank ?
+                                        <>
+                                            {element.status == 'restricted' ?
+                                                <Nav.Link className='pt-0' onClick={() => props.setUnrestrict(element)}>Unrestrict</Nav.Link>
+                                                :
+                                                <Nav.Link className='pt-0 delete' onClick={() => props.setRestrict(element)}>Restrict</Nav.Link>
+                                            }
+                                        </>
                                         :
-                                        <Nav.Link style={styles.nav_link} className='pt-0 delete' onClick={() => props.setRestrict(element)}>Restrict</Nav.Link>
+                                        <>
+                                            <Nav.Link className='pt-0' onClick={() => props.setApprove(element)}>Approve</Nav.Link>
+                                            <Nav.Link className='pt-0 delete' onClick={() => props.setDiscard(element)}>Discard</Nav.Link>
+                                        </>
                                     }
                                 </div>
                             </td>
                             <td align="center" >{element.mobile}</td>
                             <td align="center" >{element.full_name}</td>
-                            <td align="center" >{element.gender}</td>
                             <td align="center" >{element.countary}</td>
                             <td align="center" >{element.city}</td>
-                            <td align="center" >{element.address}</td>
+                            <td align="center" >{element.shop_name}</td>
+                            <td align="center" >{element.shop_address}</td>
                             {props.rank ?
                                 <td align="center" >{element.rank || '-'}</td>
-                                : null
+                                :
+                                null
                             }
                             <td align="center" >{element.entry_date.substring(0, 10)}</td>
                         </tr>
                     )}
                 </tbody>
             </Table>
-            <style jsx>{`
-               th {
+            <style jsx>
+                {`
+                th {
                     text-align: center;
                     font-size: 14px;
                     white-space: nowrap;
                 }
-                .td {
+                .vendor_table .td {
                     display: flex;
                     flex-direction: row;
                     font-size: 12px;
@@ -578,15 +733,16 @@ function CustomerTableBody(props) {
                     padding: 0%;
                     margin: 0%;
                 }
-                td {
+                .vendor_table td {
                     font-size: 12px;
                 }
-            `} </style>
+            `}
+            </style>
             <style type="text/css">{`
-                .customer_table .delete{
+                .vendor_table .delete{
                     color: #ff4d4d;
                 }
-                .customer_table .delete:hover{
+                .vendor_table .delete:hover{
                     color: #cc0000;
                 }
             `}</style>
@@ -597,7 +753,7 @@ function CustomerTableBody(props) {
 
 const styles = {
     fontawesome: {
-        color: `${theme.COLORS.SEC} `,
+        color: `${theme.admin_primry_color}`,
         width: '30px',
         height: '30px',
         maxHeight: '30px',
@@ -605,7 +761,7 @@ const styles = {
         float: 'right'
     },
     accordin_fontawesome: {
-        color: `${theme.COLORS.SEC} `,
+        color: `${theme.admin_primry_color}`,
         marginRight: '10%',
         width: '15px',
         height: '15px',
@@ -615,3 +771,4 @@ const styles = {
 }
 
 export default Customers;
+
