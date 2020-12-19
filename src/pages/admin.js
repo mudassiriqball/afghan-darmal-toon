@@ -130,8 +130,8 @@ class Admin extends Component {
 
             token: null,
             user: {
-                _id: null, role: '', mobile: '', full_name: '', gender: '', countary: '', city: '', address: '',
-                email: '', shop_name: '', shop_category: '', shop_address: '', avatar: '', status: ''
+                _id: '', fullName: '', mobile: '', city: '', licenseNo: '', address: '',
+                email: '', status: '', role: '', wishList: '', cart: '', entryDate: ''
             }
         }
     }
@@ -141,18 +141,19 @@ class Admin extends Component {
     source = this.CancelToken.source();
 
     async componentDidMount() {
-        // this.getFields()
-        // const _decodedToken = await checkTokenExpAuth()
-        // if (_decodedToken != null) {
-        //     await this.authUser(_decodedToken.role)
-        //     this.setState({ user: _decodedToken })
-        //     this.getUser(_decodedToken._id)
-
-        //     const _token = await getTokenFromStorage()
-        //     this.setState({ token: _token })
-        // } else {
-        //     Router.push('/')
-        // }
+        const _decodedToken = await checkTokenExpAuth()
+        if (_decodedToken != null) {
+            await this.authUser(_decodedToken.role);
+            this.setState({ user: _decodedToken });
+            this.getUser(_decodedToken._id);
+            // Token
+            const _token = await getTokenFromStorage();
+            this.setState({ token: _token });
+            // Get Categories
+            await this.getCategories();
+        } else {
+            Router.push('/')
+        }
     }
 
     async authUser(role) {
@@ -215,9 +216,7 @@ class Admin extends Component {
         this.setState({ sideDrawerOpen: false });
     };
 
-
-
-    async reloadCategories() {
+    async getCategories() {
         let currentComponent = this
         await axios.get(urls.GET_REQUEST.CATEGORIES, { cancelToken: this.source.token }).then((res) => {
             if (currentComponent.unmounted) {
@@ -314,7 +313,7 @@ class Admin extends Component {
 
                     categories_list={this.state.categories_list}
                     sub_categories_list={this.state.sub_categories_list}
-                    categoriesReloadHandler={this.reloadCategories.bind(this)}
+                    categoriesReloadHandler={this.getCategories.bind(this)}
                     home_categories_list={this.state.home_categories_list}
                     homeCategoriesReloadHandler={this.reloadHomeCategories.bind(this)}
 
@@ -352,7 +351,7 @@ class Admin extends Component {
                     categories_list={this.state.categories_list}
                     home_categories_list={this.state.home_categories_list}
                     sub_categories_list={this.state.sub_categories_list}
-                    categoriesReloadHandler={this.reloadCategories.bind(this)}
+                    categoriesReloadHandler={this.getCategories.bind(this)}
                     homeCategoriesReloadHandler={this.reloadHomeCategories.bind(this)}
 
                     fields_list={this.state.fields_list}

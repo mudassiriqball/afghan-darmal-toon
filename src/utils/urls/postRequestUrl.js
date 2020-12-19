@@ -1,18 +1,21 @@
 import baseUrl from './baseUrl'
 
 export default {
-    // Users
+    // USERS
     LOGIN: baseUrl + '/users/auth/login-user',
     SIGNUP: baseUrl + '/users/auth/register/register-user',
     CHANGE_CUSTOMER_STATUS: baseUrl + '/users/customer/status/change-customer-status/',
 
-    // Sliders
+    // PRODUCTS
+    NEW_PRODUCT: baseUrl + '/products//add-new/product/',
+
+    // SLIDERS
     ADD_SLIDER: baseUrl + '/sliders/add-slider',
 
-    // Categories
+    // CATEGORIES
     ADD_CATEGORY: baseUrl + '/categories/add/new/category-subcategory',
     ADD_HOME_CATEGORY: baseUrl + '/categories/home-category',
 
-    // orders
+    // ORDERS
     PLACE_ORDER: baseUrl + '/orders/place/order/user-order/',
 }

@@ -13,6 +13,7 @@ export default {
 
     // CATEGORIES
     CATEGORIES: baseUrl + '/categories/get-all/categories-subcategories',
+    ADD_NEW_CATEGORY: baseUrl + '',
 
     ALL_CUSTOMER_COUNT: baseUrl + '/users/all/user/count',
     ALL_ORDERS_COUNT: baseUrl + '/orders/all-orders-count',

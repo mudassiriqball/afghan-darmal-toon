@@ -47,35 +47,57 @@ class AddCategory extends Component {
     }
 
     async addCategory(values, currentComponent) {
-        let formData = new FormData()
-        formData.append('category', this.state.category.value)
-        formData.append('sub_category', this.state.subCategory.value)
-        formData.append('myImage', this.state.img)
+        let formData = new FormData();
+        formData.append('category', this.state.category.value);
+        formData.append('sub_category', this.state.subCategory.value);
+        this.setState({ isLoading: true });
 
-        await axios.post(urls.POST_REQUEST.ADD_CATEGORY, formData, {
-            headers: {
-                'content-type': 'multipart/form-data',
-                'authorization': currentComponent.state.token,
-            }
-        }).then(function (res) {
-            currentComponent.setState({
-                isLoading: false,
-                showToast: true,
-                isCategoryNew: false,
-                isSubCategoryNew: false,
-                category: '',
-                subCategory: '',
-                imgError: '',
-            })
-            currentComponent.categoriesReloadHandler()
-        }).catch(function (error) {
-            currentComponent.setState({ isLoading: false });
-            try {
-                alert('Error: ', error.res.data.message);
-            } catch (err) {
-                console.log('Request Failed:', error)
-            }
-        });
+        let uploaded = false;
+        let secure_url = '';
+        const data = new FormData();
+        data.append('file', this.state.img);
+        data.append('upload_preset', 'afghandarmaltoon');
+        fetch('https://api.cloudinary.com/v1_1/dhm7n3lg7/image/upload', {
+            method: 'POST',
+            body: data,
+        }).then(async res => {
+            uploaded = true;
+            let dataa = await res.json();
+            secure_url = dataa.secure_url;
+            console.log('ImageUrl:', dataa.secure_url)
+            this.setState({ isLoading: false });
+        }).catch(err => {
+            uploaded = false;
+            console.log('error:', err)
+            this.setState({ isLoading: false });
+            alert("Error", "An Error Occured While Uploading")
+            return;
+        })
+        if (uploaded) {
+            await axios.post(urls.POST_REQUEST.ADD_CATEGORY, {
+                category: this.state.category.value,
+                sub_category: this.state.subCategory.value,
+                imageUrl: secure_url,
+            }, {
+                headers: {
+                    'authorization': currentComponent.state.token,
+                }
+            }).then(function (res) {
+                currentComponent.setState({
+                    isLoading: false,
+                    showToast: true,
+                    isCategoryNew: false,
+                    isSubCategoryNew: false,
+                    category: '',
+                    subCategory: '',
+                    imgError: '',
+                })
+                currentComponent.categoriesReloadHandler()
+            }).catch(function (error) {
+                currentComponent.setState({ isLoading: false });
+                alert('Error: ', 'Add Category Failed!\nPlease try again.');
+            });
+        }
     }
     handleCategoryChange = (e) => {
         this.setState({ categoryError: '' })

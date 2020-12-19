@@ -122,11 +122,6 @@ class AllCategories extends React.Component {
     //     this.setState({ categoryRequestList: copyArray, showModalMessage: 'Product Category Deleted', showModal: true })
     // }
 
-
-
-
-
-
     // All categories
     handleFilterStrChange(e) {
         this.setState({ filterStr: e.target.value });
