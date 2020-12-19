@@ -50,7 +50,6 @@ usersController.loginUser = async (req, res) => {
 
 usersController.registerUser = async (req, res) => {
   try {
-      console.log("yes",req.body);
     const body = req.body;
 
     const result = await Users.findOne({ mobile: body.mobile });
@@ -60,7 +59,6 @@ usersController.registerUser = async (req, res) => {
         code: 500,
       });
     } else {
-        console.log("yes1");
       var datetime = new Date();
       body.entry_date = datetime;
       const password = body.password;
@@ -70,7 +68,7 @@ usersController.registerUser = async (req, res) => {
       if (body.role === "vendor") {
         body.status = "disapproved";
       } else if (body.role === "customer") {
-        body.status = "approved";
+        body.status = "disapproved";
       }
       const user = new Users(body);
       const result1 = await user.save();
@@ -187,7 +185,7 @@ usersController.check_mobile = async (req, res) => {
     user = await Users.findOne({ mobile: req.params._mobile }, { _id: 1 });
     if (user) {
       res.status(200).send({
-        code: 200,
+        code: 201,
         message: "Mobile Number Already Exists",
       });
     } else {

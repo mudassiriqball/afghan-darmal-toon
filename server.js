@@ -128,10 +128,14 @@ app
     app.use(accessControls);
 
     const UsersRoutes = require("./api/routes/users.routes");
+    const CategoryRoutes = require("./api/routes/categories.routes");
+
 
 
 
     app.use("/api/users", UsersRoutes);
+    app.use("/api/category", CategoryRoutes);
+
 
     
     app.get("*", (req, res) => {
