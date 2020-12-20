@@ -980,7 +980,7 @@ productsController.get_product_by_id = async (req, res) => {
       {
         $lookup: {
           from: "categories",
-          localField: "category",
+          localField: "categoryId",
           foreignField: "_id",
           as: "category",
         },
@@ -989,7 +989,7 @@ productsController.get_product_by_id = async (req, res) => {
       {
         $lookup: {
           from: "sub_categories",
-          localField: "sub_category",
+          localField: "subCategoryId",
           foreignField: "_id",
           as: "sub_category",
         },

@@ -104,17 +104,17 @@ usersController.set_avatar = async (req, res) => {
   const _id = req.params._id;
   try {
     const user = await Users.findOne({ _id: _id });
-    if(user.avatar){	
-    const token = user.avatar
-    const filenameToRemove = token.split("/").slice(-1)[0];
-    s3.deleteObject(
-      {
-        Bucket: "slider-images",
-        Key: filenameToRemove,
-      },
-      function (err, data) { }
-    );
-}
+    if (user.avatar) {
+      const token = user.avatar;
+      const filenameToRemove = token.split("/").slice(-1)[0];
+      s3.deleteObject(
+        {
+          Bucket: "slider-images",
+          Key: filenameToRemove,
+        },
+        function (err, data) {}
+      );
+    }
     const url = req.files[0].location;
     Users.findOneAndUpdate(
       { _id: _id },
@@ -418,106 +418,152 @@ usersController.get_cart = async (req, res) => {
 };
 
 usersController.get_total_specific_users = async (req, res) => {
-  const admins_count = await Users.countDocuments({ role: "admin" });
-  const vendors_count = await Users.countDocuments({ role: "vendor" });
-  const new_vendors_count = await Users.countDocuments({
-    role: "vendor",
+  const delivery_boy_count = await Users.countDocuments({ role: "delivery" });
+  const customers_count = await Users.countDocuments({ role: "customer" });
+
+  const new_customers_count = await Users.countDocuments({
+    role: "customer",
     status: "disapproved",
   });
-  const restricted_vendors_count = await Users.countDocuments({
-    role: "vendor",
-    status: "restricted",
-  });
-  const customers_count = await Users.countDocuments({ role: "customer" });
   const restricted_customers_count = await Users.countDocuments({
     role: "customer",
     status: "restricted",
   });
+
   res.status(200).send({
     code: 200,
     message: "OK",
-    admins_count,
-    vendors_count,
-    new_vendors_count,
-    restricted_vendors_count,
+    delivery_boy_count,
     customers_count,
+    new_customers_count,
     restricted_customers_count,
   });
 };
 
 usersController.get_users_by_query = async (req, res) => {
   let user;
-  const startdate = req.query.start_date;
-  const enddate = req.query.end_date + "T23:59:59Z";
-
   try {
-    if (req.query.field === "_id") {
-      var ObjectId = mongoose.Types.ObjectId;
-      let _id = 0;
-      try {
-        _id = new ObjectId(req.query.q);
-      } catch (err) {
-        res.status(200).send({
-          code: 200,
-          message: "Successful",
-          data: { docs: [], total: 0, pages: 0 },
-        });
-        return
-      }
+    if (req.params._role === "customer") {
+      if (req.query.field === "_id") {
+        var ObjectId = mongoose.Types.ObjectId;
+        let _id = 0;
+        try {
+          _id = new ObjectId(req.query.q);
+        } catch (err) {
+          res.status(200).send({
+            code: 200,
+            message: "Successful",
+            data: { docs: [], total: 0, pages: 0 },
+          });
+          return;
+        }
 
-      user = await Users.paginate(
-        {
-          role: req.params._role,
-          _id: _id,
-          status: req.query.status,
-          entry_date: {
-            $gte: new Date(startdate),
-            $lte: new Date(enddate),
+        user = await Users.paginate(
+          {
+            role: req.params._role,
+            _id: _id,
+            status: req.query.status,
           },
-        },
-        {
+          {
+            limit: parseInt(req.query.limit),
+            page: parseInt(req.query.page),
+          }
+        );
+        if (user) {
+          res.status(200).send({
+            code: 200,
+            message: "Successful",
+            data: user,
+          });
+        } else {
+          res.status(500).send({
+            code: 500,
+            message: "Does Not Exist",
+          });
+        }
+      } else {
+        const field = req.query.field;
+        const search = {};
+        search[field] = req.query.q;
+        search["role"] = req.params._role;
+        search["status"] = req.query.status;
+
+        user = await Users.paginate(search, {
           limit: parseInt(req.query.limit),
           page: parseInt(req.query.page),
+        });
+        if (user) {
+          res.status(200).send({
+            code: 200,
+            message: "Successful",
+            data: user,
+          });
+        } else {
+          res.status(500).send({
+            code: 500,
+            message: "Does Not Exist",
+          });
         }
-      );
-      if (user) {
-        res.status(200).send({
-          code: 200,
-          message: "Successful",
-          data: user,
-        });
-      } else {
-        res.status(500).send({
-          code: 500,
-          message: "Does Not Exist",
-        });
       }
     } else {
-      const field = req.query.field;
-      const search = {};
-      search[field] = req.query.q;
-      search["role"] = req.params._role;
-      search["status"] = req.query.status;
+      if (req.query.field === "_id") {
+        var ObjectId = mongoose.Types.ObjectId;
+        let _id = 0;
+        try {
+          _id = new ObjectId(req.query.q);
+        } catch (err) {
+          res.status(200).send({
+            code: 200,
+            message: "Successful",
+            data: { docs: [], total: 0, pages: 0 },
+          });
+          return;
+        }
 
-      search["entry_date"] = { $gte: new Date(startdate), $lte: new Date(enddate) };
-      user = await Users.paginate(
-        search,
-        {
+        user = await Users.paginate(
+          {
+            role: req.params._role,
+            _id: _id,
+          },
+          {
+            limit: parseInt(req.query.limit),
+            page: parseInt(req.query.page),
+          }
+        );
+        if (user) {
+          res.status(200).send({
+            code: 200,
+            message: "Successful",
+            data: user,
+          });
+        } else {
+          res.status(500).send({
+            code: 500,
+            message: "Does Not Exist",
+          });
+        }
+      } else {
+        const field = req.query.field;
+        const search = {};
+        search[field] = req.query.q;
+        search["role"] = req.params._role;
+
+        user = await Users.paginate(search, {
           limit: parseInt(req.query.limit),
           page: parseInt(req.query.page),
+        });
+        if (user) {
+          res.status(200).send({
+            code: 200,
+            message: "Successful",
+            data: user,
+          });
+        } else {
+          res.status(500).send({
+            code: 500,
+            message: "Does Not Exist",
+          });
         }
-      );
-      if (user) {
-        res.status(200).send({
-          code: 200,
-          message: "Successful",
-          data: user,
-        });
-      } else {
-        res.status(500).send({
-          code: 500,
-          message: "Does Not Exist",
-        });
       }
     }
   } catch (error) {
