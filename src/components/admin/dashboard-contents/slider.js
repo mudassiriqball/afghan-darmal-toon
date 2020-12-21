@@ -45,41 +45,6 @@ class Slider extends Component {
         slidersArray = nextProps.sliders_list
     }
 
-    async addCategory(values, currentComponent) {
-        let formData = new FormData()
-
-        formData.append('category', this.state.category.value)
-        formData.append('sub_category', this.state.sub_category.value)
-        formData.append('myImage', this.state.img)
-
-        await axios.post(urls.POST_REQUEST.ADD_SLIDER, formData, {
-            headers: {
-                'content-type': 'multipart/form-data',
-                'authorization': currentComponent.props.token,
-            }
-        }).then(function (response) {
-            currentComponent.setState({
-                isLoading: false,
-                showToast: true,
-                toastMsg: 'Category Added Successfully',
-                sub_categories: [],
-                category: '',
-                sub_category: '',
-                sub_categoryDisabled: true,
-                img: '',
-            })
-            currentComponent.props.sliderReloadHandler()
-            return true
-        }).catch(function (error) {
-            currentComponent.setState({ isLoading: false });
-            try {
-                alert('Error: ', error.response.data.message);
-            } catch (err) {
-                console.log('Request Failed:', error)
-            }
-            return false
-        });
-    }
     handleCategoryChange = (e) => {
         let search
         if (e != null) {
@@ -236,7 +201,7 @@ class Slider extends Component {
         }).then(function (response) {
             currentComponent.setState({
                 showToast: true,
-                toastMsg: 'Category Deleted Successfully'
+                toastMsg: 'Slider Deleted Successfully'
             })
             currentComponent.props.sliderReloadHandler()
         }).catch(function (error) {
@@ -244,11 +209,7 @@ class Slider extends Component {
             currentComponent.setState({
                 sliders_list: copyArray,
             });
-            try {
-                alert('Error: ', error.response.data.message);
-            } catch (err) {
-                alert('Category Update Failed');
-            }
+            alert('Slider Delete Failed !\nPlease try again.');
             console.log('Request Failed:', error)
         });
     }
@@ -274,8 +235,54 @@ class Slider extends Component {
                         this.setState({ isLoading: true });
                         setSubmitting(true);
                         setTimeout(() => {
-                            if (this.addCategory(values, this)) {
-                                resetForm()
+                            let uploaded = false;
+                            let secure_url = '';
+                            const data = new FormData();
+                            data.append('file', this.state.img);
+                            data.append('upload_preset', 'afghandarmaltoon');
+                            fetch('https://api.cloudinary.com/v1_1/dhm7n3lg7/image/upload', {
+                                method: 'POST',
+                                body: data,
+                            }).then(async res => {
+                                uploaded = true;
+                                let dataa = await res.json();
+                                secure_url = dataa.secure_url;
+                                console.log('ImageUrl:', dataa.secure_url)
+                                this.setState({ isLoading: false });
+                            }).catch(err => {
+                                uploaded = false;
+                                console.log('error:', err)
+                                this.setState({ isLoading: false });
+                                alert("Error", "An Error Occured While Uploading")
+                                return;
+                            })
+                            if (uploaded) {
+                                axios.post(urls.POST_REQUEST.ADD_SLIDER,
+                                    {
+                                        category: this.state.category.value,
+                                        sub_category: this.state.sub_category.value,
+                                        imageUrl: secure_url
+                                    }, {
+                                    headers: {
+                                        'authorization': currentComponent.props.token,
+                                    }
+                                }).then(function (response) {
+                                    resetForm();
+                                    currentComponent.setState({
+                                        isLoading: false,
+                                        showToast: true,
+                                        toastMsg: 'Category Added Successfully',
+                                        sub_categories: [],
+                                        category: '',
+                                        sub_category: '',
+                                        sub_categoryDisabled: true,
+                                        img: '',
+                                    })
+                                    currentComponent.props.sliderReloadHandler()
+                                }).catch(function (error) {
+                                    currentComponent.setState({ isLoading: false });
+                                    alert('Error: ', 'Add Slider Failed!\nPlease try again later');
+                                });
                             }
                             setSubmitting(false);
                         }, 500);
@@ -439,7 +446,7 @@ class Slider extends Component {
                                                     null
                                                 }
                                                 <Row>
-                                                    <Form.Group as={Col} lg="auto" md="auto" sm="auto" xs="auto">
+                                                    {/* <Form.Group as={Col} lg="auto" md="auto" sm="auto" xs="auto">
                                                         <Button type="submit" className='d-inline-flex' variant={!element.isEdit ? "outline-primary" : "outline-success"} size="sm"
                                                             onClick={!element.isEdit ? () => this.handleEditClick(index) : () => this.handleUpdateClick(index)}
                                                             disabled={!element.isEdit ? false : element.error}
@@ -447,8 +454,7 @@ class Slider extends Component {
                                                             {!element.isEdit ? ' Edit ' : ' Update '}
                                                             {!element.isEdit ? null : element.isLoading ? <Spinner animation="grow" size="sm" /> : null}
                                                         </Button>
-                                                    </Form.Group>
-
+                                                    </Form.Group> */}
                                                     <Form.Group as={Col} lg="auto" md="auto" sm="auto" xs="auto">
                                                         <Button type="submit" variant={!element.isEdit ? "outline-danger" : "outline-primary"}
                                                             size="sm" block style={styles.submit_btn}

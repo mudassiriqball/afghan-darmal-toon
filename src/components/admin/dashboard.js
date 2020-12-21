@@ -17,7 +17,6 @@ import Slider from './dashboard-contents/slider';
 // Category
 import AddCategory from './dashboard-contents/category-contents/add-category'
 import AllCategories from './dashboard-contents/category-contents/all-categories'
-import HomeScreenCategories from './dashboard-contents/category-contents/home-screen-categories'
 
 import Inventory from './dashboard-contents/inventory';
 import Orders from './dashboard-contents/orders'
@@ -82,7 +81,7 @@ const Dashboard = props => {
                             <Nav.Item style={styles.image_div}>
                                 <p>
                                     <Image src={props.avatar} roundedCircle thumbnail fluid style={styles.image} />
-                                    <Nav.Link style={styles.muhalik}> {props.full_name} </Nav.Link>
+                                    <Nav.Link style={styles.muhalik}> {props.fullName} </Nav.Link>
                                 </p>
                             </Nav.Item>
                             <Nav.Item>
@@ -162,13 +161,6 @@ const Dashboard = props => {
                                         <FontAwesomeIcon icon={faChevronRight} style={styles.forword_fontawesome} />
                                     </Nav.Link>
                                 </div>
-                                <div className="limk_submenue">
-                                    <Nav.Link eventKey="HomeScreenCategories" style={styles.submenu_link} >
-                                        <FontAwesomeIcon size="xs" icon={faTh} style={styles.fontawesome} />
-                                        <div className="mr-auto"> Home Screen Categories</div>
-                                        <FontAwesomeIcon icon={faChevronRight} style={styles.forword_fontawesome} />
-                                    </Nav.Link>
-                                </div>
                             </div>
                         </Nav>
                         {/* End Tabs Side Drawer */}
@@ -209,11 +201,6 @@ const Dashboard = props => {
                                 </Tab.Pane>
                                 <Tab.Pane eventKey="AllCategories">
                                     <AllCategories
-                                        {...props}
-                                    />
-                                </Tab.Pane>
-                                <Tab.Pane eventKey="HomeScreenCategories">
-                                    <HomeScreenCategories
                                         {...props}
                                     />
                                 </Tab.Pane>

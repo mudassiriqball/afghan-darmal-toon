@@ -3,7 +3,7 @@ import baseUrl from './baseUrl'
 export default {
     // Customers
     DISCARD_NEW_CUSTOMER: baseUrl + '/users/discard/new-customer/by-id/',
-    DELETE_SLIDER: baseUrl + '/sliders/slider/',
+    DELETE_SLIDER: baseUrl + '/sliders/slider/id/remove/by-id/',
 
     // Category
     DELETE_HOME_CATEGORY: baseUrl + '/categories/home-category/',

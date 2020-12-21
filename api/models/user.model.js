@@ -89,7 +89,6 @@ const mongoosePaginate = require('mongoose-paginate');
 const Schema = mongoose.Schema;
 
 const User = new Schema({
-
     mobile: {
         type: String,
         unique: true,
@@ -97,7 +96,6 @@ const User = new Schema({
     },
     fullName: {
         type: String,
-        required: true
     },
     email: {
         type: String,
@@ -106,22 +104,18 @@ const User = new Schema({
     },
     password: {
         type: String,
-        required: true
     },
     licenseNo: {
         type: String,
-        required: true
     },
     role: {
         type: String,
-        required: true
     },
     address: {
         type: String,
     },
     city: {
         type: String,
-        required: true
     },
     avatar: {
         type: String

@@ -1,9 +1,229 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { Card, Dropdown, Form, Nav, Navbar } from 'react-bootstrap'
+import theme from '../../constants/theme'
+import PhoneInput from 'react-phone-input-2'
+import renderError from '../renderError'
+import globalStyle from '../../utils/styles/globalStyle'
+import Link from 'next/link'
+import urls from '../../utils/urls'
+import { saveTokenToStorage, removeTokenFromStorage } from '../../utils/services/auth'
+import axios from 'axios';
+import CustomButton from '../CustomButton'
+import jwt_decode from 'jwt-decode';
+import Router from 'next/router';
 
-export default function toolbar() {
+import { BiLogInCircle, BiLogOutCircle } from 'react-icons/bi';
+import { CgProfile } from 'react-icons/cg';
+import { RiDashboardFill } from 'react-icons/ri';
+
+export default function Toolbar(props) {
+    const { user } = props;
+    const [showDropdown, setShowDropdown] = useState(false);
+    const [passwordError, setpasswordError] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [mobile, setMobile] = useState('');
+    const [password, setPassword] = useState('');
+    const [mobileError, setmobileError] = useState('');
+    const [error, setError] = useState('');
+
+    // Login/Signup
+    const handleLogin = async () => {
+        if (mobile == '' || password == '') {
+            if (mobile == '')
+                setmobileError('Required *');
+            else
+                setmobileError('');
+            if (password == '')
+                setpasswordError('Required *');
+            else
+                setpasswordError('');
+        } else {
+            setLoading(true);
+            let data = {};
+            data = {
+                mobile: '+' + mobile,
+                password: password
+            };
+            await axios.post(urls.POST_REQUEST.LOGIN, data).then(function (res) {
+                console.log('ttoao:', res.data)
+                setLoading(false);
+                saveTokenToStorage(res.data.token);
+                const decodedToken = jwt_decode(res.data.token);
+                console.log('token:', decodedToken)
+                if (decodedToken.data.role == 'customer') {
+                    Router.replace('/')
+                } else if (decodedToken.data.role == 'admin') {
+                    Router.replace('/admin')
+                } else {
+                    Router.replace('/')
+                }
+            }).catch(function (err) {
+                setLoading(false);
+                setError('Incorrect mobile or password!')
+                console.log('Login error:', err);
+            });
+        }
+    }
+    const handleEnterKeyPress = (e) => {
+        if (e.keyCode == 13 || e.which == 13) {
+            handleLogin();
+        }
+    }
+    // End Of Login/Signup
+
+
+    // Acccount
+    const logoutUser = async () => {
+        if (await removeTokenFromStorage()) {
+            Router.replace('/');
+        }
+    }
+    // End Of Acccount
+
     return (
-        <div>
+        <div className='toolbar'>
+            <Navbar style={{ background: theme.COLORS.SEC, padding: '0.45% 6%' }} variant='dark'>
+                <Nav className="mr-auto">
+                    <Nav.Link href='/' style={{ fontWeight: 'bold', fontSize: '15px' }} active>AFGHANDARMALTOON@GMAIL.COM</Nav.Link>
+                    <Nav.Link style={{ fontWeight: 'bold', fontSize: '15px' }} active>+92 3413657092</Nav.Link>
+                </Nav>
+                {/* Login/Signup */}
+                {user && user.fullName === '' &&
+                    <Nav>
+                        <Dropdown show={showDropdown}
+                            flip={"true"}
+                            onMouseEnter={() => setShowDropdown(true)}
+                            onMouseLeave={() => setShowDropdown(false)}>
+                            <Dropdown.Toggle as={Nav.Link} style={{ fontSize: '15px' }} >
+                                {'Login / Signup'}
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu style={{ width: '18rem', }} className='dropdown-menu dropdown-menu-right' >
+                                <div style={{ width: '18rem', marginTop: '10px', marginBottom: '10px', textAlign: 'center', color: theme.COLORS.MUTED }}>
+                                    {'Don\'t have account ? '}
+                                    <span className='signupSpan'><Link href='/signup'>{'Signup'}</Link></span>
+                                </div>
+                                <Card style={{ border: 'none' }}>
+                                    <Card.Body>
+                                        <Card.Title style={{ color: theme.COLORS.MAIN, textAlign: 'center', marginBottom: '20px' }}>Signin</Card.Title>
+                                        <Form>
+                                            <Form.Group controlId="formBasicEmail">
+                                                <PhoneInput
+                                                    inputStyle={{ width: '100%' }}
+                                                    country={'pk'}
+                                                    onlyCountries={['pk', 'af']}
+                                                    value={''}
+                                                    disableDropdown
+                                                    onChange={phone => { setMobile(phone), setmobileError('') }}
+                                                    onKeyPress={(e) => handleEnterKeyPress(e)}
+                                                />
+                                                {mobileError !== '' && renderError(mobileError)}
+                                            </Form.Group>
+                                            <Form.Group controlId="formBasicPassword">
+                                                <Form.Control
+                                                    type="password"
+                                                    value={password}
+                                                    onChange={(e) => setPassword(e.target.value)}
+                                                    placeholder="Password"
+                                                    onKeyPress={(e) => handleEnterKeyPress(e)}
+                                                />
+                                                {passwordError !== '' && renderError(passwordError)}
+                                            </Form.Group>
+                                            {error !== '' && renderError(error)}
+                                            <CustomButton
+                                                block
+                                                loading={loading}
+                                                disabled={loading}
+                                                title={'Login'}
+                                                onClick={() => handleLogin()}
+                                            >
+                                                {!loading && <BiLogInCircle style={globalStyle.leftIcon} />}
+                                            </CustomButton>
+                                        </Form>
+                                        <a href="#" className='color w-100' style={{ fontSize: 'small', marginTop: '50px' }}>Forgot Password ?</a>
+                                    </Card.Body>
+                                </Card>
+                            </Dropdown.Menu>
+                        </Dropdown>
+                    </Nav>
+                }
 
-        </div>
+                {/* Account */}
+                {user && user.fullName !== '' &&
+                    <Nav className="justify-content-center">
+                        <Dropdown show={showDropdown}
+                            flip={"true"}
+                            onMouseEnter={() => setShowDropdown(true)}
+                            onMouseLeave={() => setShowDropdown(false)}>
+                            <Dropdown.Toggle as={Nav.Link}
+                                style={{ fontWeight: 'bold', fontSize: '15px' }} active
+                            >
+                                {'Account'}
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu className='dropdown-menu dropdown-menu-right' style={{ border: 'none', paddingTop: '7px', background: 'none' }} >
+                                <Card style={{ boxShadow: `1px 0px 3px lightgray` }}>
+                                    <div className='link_div'>
+                                        <Nav.Link href="/profile" onClick={() => setShowDropdown(false)} style={{ fontWeight: 'bolder', padding: '10px', color: theme.COLORS.SEC, fontSize: '12px', flexDirection: "row", alignItems: 'center' }}>
+                                            <CgProfile style={{ color: theme.COLORS.SEC, fontSize: '20px', marginRight: '10px' }} />
+                                            {'PROFILE'}
+                                        </Nav.Link>
+                                    </div>
+                                    {user.role == 'admin' &&
+                                        <div className='link_div'>
+                                            <Nav.Link href="/admin" onClick={() => setShowDropdown(false)} style={{ fontWeight: 'bolder', padding: '10px', color: theme.COLORS.SEC, fontSize: '12px', flexDirection: "row", alignItems: 'center' }}>
+                                                <RiDashboardFill style={{ color: theme.COLORS.SEC, fontSize: '20px', marginRight: '10px' }} />
+                                                {'DASHBOARD'}
+                                            </Nav.Link>
+                                        </div>
+                                    }
+                                    {user.role == 'ministory' &&
+                                        <div className='link_div'>
+                                            <Nav.Link href="/admin" onClick={() => setShowDropdown(false)} style={{ fontWeight: 'bolder', padding: '10px', color: theme.COLORS.SEC, fontSize: '12px', flexDirection: "row", alignItems: 'center' }}>
+                                                <RiDashboardFill style={{ color: theme.COLORS.SEC, fontSize: '20px', marginRight: '10px' }} />
+                                                {'DASHBOARD'}
+                                            </Nav.Link>
+                                        </div>
+                                    }
+                                    <div className='link_div'>
+                                        <Nav.Link href="#" onClick={() => logoutUser()} style={{ fontWeight: 'bolder', padding: '10px', color: theme.COLORS.SEC, fontSize: '12px', flexDirection: "row", alignItems: 'center' }}>
+                                            <BiLogOutCircle style={{ color: theme.COLORS.SEC, fontSize: '20px', marginRight: '10px' }} />
+                                            {'LOGOUT'}
+                                        </Nav.Link>
+                                    </div>
+                                </Card>
+                            </Dropdown.Menu>
+                        </Dropdown>
+                    </Nav>
+                }
+            </Navbar>
+            <style jsx>{`
+                .toolbar .signupSpan {
+                    cursor: pointer;
+                }
+                .toolbar .signupSpan:hover {
+                    cursor: pointer;
+                }
+                .toolbar .cart {
+                    width: 60px;
+                    height: 60px;
+                    margin-left: 5%;
+                    background: ${theme.COLORS.MAIN};
+                }
+                .toolbar .cart:hover {
+                    background: ${theme.COLORS.SEC};
+                }
+                .toolbar .link_div {
+                    color: ${theme.COLORS.SEC};
+                }
+                .toolbar .link_div:hover {
+                    background: ${theme.COLORS.MAIN};
+                    color: ${theme.COLORS.WHITE};
+                }
+            `}</style>
+            <style jsx global>{`
+                * {
+                    font-family: Oswald,sans-serif;
+                }
+            `}</style>
+        </div >
     )
 }

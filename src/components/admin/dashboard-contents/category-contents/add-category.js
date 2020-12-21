@@ -33,9 +33,6 @@ class AddCategory extends Component {
         isCategoryNew: false,
         categoryError: '',
         subCategoryError: '',
-
-        img: '',
-        imgError: '',
     };
 
     UNSAFE_componentWillReceiveProps(nextProps) {
@@ -47,57 +44,28 @@ class AddCategory extends Component {
     }
 
     async addCategory(values, currentComponent) {
-        let formData = new FormData();
-        formData.append('category', this.state.category.value);
-        formData.append('sub_category', this.state.subCategory.value);
         this.setState({ isLoading: true });
-
-        let uploaded = false;
-        let secure_url = '';
-        const data = new FormData();
-        data.append('file', this.state.img);
-        data.append('upload_preset', 'afghandarmaltoon');
-        fetch('https://api.cloudinary.com/v1_1/dhm7n3lg7/image/upload', {
-            method: 'POST',
-            body: data,
-        }).then(async res => {
-            uploaded = true;
-            let dataa = await res.json();
-            secure_url = dataa.secure_url;
-            console.log('ImageUrl:', dataa.secure_url)
-            this.setState({ isLoading: false });
-        }).catch(err => {
-            uploaded = false;
-            console.log('error:', err)
-            this.setState({ isLoading: false });
-            alert("Error", "An Error Occured While Uploading")
-            return;
-        })
-        if (uploaded) {
-            await axios.post(urls.POST_REQUEST.ADD_CATEGORY, {
-                category: this.state.category.value,
-                sub_category: this.state.subCategory.value,
-                imageUrl: secure_url,
-            }, {
-                headers: {
-                    'authorization': currentComponent.state.token,
-                }
-            }).then(function (res) {
-                currentComponent.setState({
-                    isLoading: false,
-                    showToast: true,
-                    isCategoryNew: false,
-                    isSubCategoryNew: false,
-                    category: '',
-                    subCategory: '',
-                    imgError: '',
-                })
-                currentComponent.categoriesReloadHandler()
-            }).catch(function (error) {
-                currentComponent.setState({ isLoading: false });
-                alert('Error: ', 'Add Category Failed!\nPlease try again.');
-            });
-        }
+        await axios.post(urls.POST_REQUEST.ADD_CATEGORY, {
+            category: this.state.category.value,
+            sub_category: this.state.subCategory.value,
+        }, {
+            headers: {
+                'authorization': currentComponent.state.token,
+            }
+        }).then(function (res) {
+            currentComponent.setState({
+                isLoading: false,
+                showToast: true,
+                isCategoryNew: false,
+                isSubCategoryNew: false,
+                category: '',
+                subCategory: '',
+            })
+            currentComponent.categoriesReloadHandler()
+        }).catch(function (error) {
+            currentComponent.setState({ isLoading: false });
+            alert('Error: ', 'Add Category Failed!\nPlease try again.');
+        });
     }
     handleCategoryChange = (e) => {
         this.setState({ categoryError: '' })
@@ -152,11 +120,7 @@ class AddCategory extends Component {
                         this.setState({
                             subCategoryError: 'Must be 3-25 caracters'
                         })
-                    } else if (this.state.isCategoryNew == true && this.state.img == '') {
-                        this.setState({})
-                        this.setState({ imgError: 'Select Image' })
-                    }
-                    else {
+                    } else {
                         this.setState({ isLoading: true });
                         setSubmitting(true);
                         setTimeout(() => {
@@ -221,28 +185,6 @@ class AddCategory extends Component {
                                         </Form.Row>
                                     </Form.Group>
                                 </Form.Row>
-                                {this.state.isCategoryNew ?
-                                    <Form.Row>
-                                        <Form.Group as={Col} lg={12} md={12} sm={12} xs={12}>
-                                            <Form.Label style={styles.label}>Image <span> * </span></Form.Label>
-                                            <InputGroup>
-                                                <Form.File
-                                                    className="position-relative"
-                                                    style={{ color: 'gray' }}
-                                                    required
-                                                    name="file"
-                                                    onChange={(e) => this.setState({ img: e.target.files[0] })}
-                                                    isInvalid={this.state.imgError}
-                                                />
-                                                <Form.Row style={{ fontSize: '13px', color: `${theme.COLORS.ERROR}`, marginLeft: '2px', width: '100%' }}>
-                                                    {this.state.imgError}
-                                                </Form.Row>
-                                            </InputGroup>
-                                        </Form.Group>
-                                    </Form.Row>
-                                    :
-                                    null
-                                }
                                 <Form.Row>
                                     <Form.Group as={Col}>
                                         <Button type="submit"

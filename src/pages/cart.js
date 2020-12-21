@@ -25,6 +25,7 @@ import { FiHome } from 'react-icons/fi';
 import { HiOutlineLocationMarker, HiOutlineMailOpen } from 'react-icons/hi';
 import { AiOutlinePhone, AiFillTwitterCircle, AiFillInstagram, AiOutlineClose } from 'react-icons/ai';
 import { FaFacebook } from 'react-icons/fa';
+import Toolbar from '../components/customer/toolbar'
 
 
 export async function getServerSideProps(context) {
@@ -52,7 +53,7 @@ export default function Cart(props) {
     const [showDotView, setshowDotView] = useState(false);
 
     const [token, setToken] = useState(null)
-    const [user, setUser] = useState({ _id: '', fullName: '', mobile: '', city: '', licenseNo: '', address: '', email: '', status: '', role: '', wishList: '', cart: '', entryDate: '' })
+    const [user, setUser] = useState({ _id: '', fullName: '', mobile: '', city: '', licenseNo: '', address: '', email: '', status: '', role: '', wishList: '', cart: '', entry_date: '' })
 
     const [cart_list, setCart_list] = useState([])
     const [isCartLoading, setIsCartLoading] = useState(true)
@@ -74,27 +75,27 @@ export default function Cart(props) {
         async function getData() {
             const _decoded_token = await checkTokenExpAuth()
             if (_decoded_token != null) {
-                if (_decoded_token.role != 'customer') {
-                    Router.push('/')
-                } else {
-                    if (unmounted) {
-                        setUser(_decoded_token)
-                        await axios.get(urls.GET_REQUEST.USER_BY_ID + _decoded_token._id, { cancelToken: source.token }).then((res) => {
-                            if (unmounted) {
-                                setUser(res.data.data[0])
-                                setCart_count(res.data.data[0].cart.length)
-                                setCart_list(res.data.data[0].cart)
-                                setIsCartLoading(false)
-                            }
-                        }).catch((err) => {
-                            if (axios.isCancel(err)) return
+                // if (_decoded_token.role != 'customer') {
+                //     Router.push('/');
+                // } else {
+                if (unmounted) {
+                    setUser(_decoded_token)
+                    await axios.get(urls.GET_REQUEST.USER_BY_ID + _decoded_token._id, { cancelToken: source.token }).then((res) => {
+                        if (unmounted) {
+                            setUser(res.data.data[0])
+                            setCart_count(res.data.data[0].cart.length)
+                            setCart_list(res.data.data[0].cart)
                             setIsCartLoading(false)
-                        })
-                        setShipping_charges(50);
-                        const _token = await getTokenFromStorage();
-                        setToken(_token)
-                    }
+                        }
+                    }).catch((err) => {
+                        if (axios.isCancel(err)) return
+                        setIsCartLoading(false)
+                    })
+                    setShipping_charges(50);
+                    const _token = await getTokenFromStorage();
+                    setToken(_token)
                 }
+                // }
             }
         }
         getData()
@@ -273,6 +274,7 @@ export default function Cart(props) {
 
     return (
         <div className='_cart'>
+            <Toolbar user={user} />
             <AlertModal
                 onHide={(e) => setShowErrorAlertModal(false)}
                 show={showErrorAlertModal}

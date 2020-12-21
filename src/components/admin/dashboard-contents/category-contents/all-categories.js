@@ -53,75 +53,6 @@ class AllCategories extends React.Component {
         categoryArray = nextProps.categories_list
     }
 
-
-
-
-
-    // // Category Request 
-    // // => Field Value 
-    // handleCategoryRequestChange = (e, index) => {
-    //     let copyArray = [];
-    //     copyArray = Object.assign([], this.state.categoryRequestList);
-    //     copyArray[index].value = e.target.value;
-
-    //     if (e.target.value != '' && e.target.value.length <= 20 && e.target.value.length >= 3) {
-    //         copyArray[index].error = ''
-    //     } else {
-    //         copyArray[index].error = 'Value must be 3-20 characters'
-    //     }
-    //     this.setState({ categoryRequestList: copyArray })
-    // }
-    // //  => Edit
-    // async handleEditCategoryRequestClick(index) {
-    //     let copyArray = [];
-    //     copyArray = Object.assign([], this.state.categoryRequestList);
-    //     var obj = {};
-    //     obj['value'] = copyArray[index].value;
-    //     obj['label'] = false;
-    //     obj['prevVal'] = copyArray[index].value;
-    //     obj['error'] = '';
-    //     copyArray[index] = obj
-    //     await this.setState({ categoryRequestList: copyArray })
-    // }
-    // //  => Cancle
-    // handleCancelCategoryRequestClick(index) {
-    //     let copyArray = [];
-    //     copyArray = Object.assign([], this.state.categoryRequestList);
-    //     copyArray[index].value = copyArray[index].prevVal;
-    //     copyArray[index].label = true;
-    //     copyArray[index].error = '';
-    //     this.setState({ categoryRequestList: copyArray })
-    // }
-    // // Update
-    // handleUpdateCategoryRequestClick(index) {
-    //     let copyArray = [];
-    //     copyArray = Object.assign([], this.state.categoryRequestList);
-    //     if (copyArray[index].value == copyArray[index].prevVal) {
-    //         copyArray[index].error = 'Enter Different Value';
-    //         this.setState({ categoryRequestList: copyArray });
-    //     } else {
-    //         if (copyArray[index].error == '') {
-    //             copyArray[index].label = true;
-    //             this.setState({ categoryRequestList: copyArray, showModalMessage: 'Product Category Updated Successfully', showModal: true });
-    //         }
-    //     }
-    // }
-    // //  => Add
-    // handleAddCategoryRequestClick(index) {
-    //     let copyArray = [];
-    //     copyArray = Object.assign([], this.state.categoryRequestList);
-    //     copyArray.splice(index, 1);
-    //     this.setState({ categoryRequestList: copyArray, showModalMessage: 'Product Category Added Successfully', showModal: true })
-    //     this.addCategory(this)
-    // }
-    // //  => Delete
-    // handleDeleteCategoryRequestClick(index) {
-    //     let copyArray = [];
-    //     copyArray = Object.assign([], this.state.categoryRequestList);
-    //     copyArray.splice(index, 1);
-    //     this.setState({ categoryRequestList: copyArray, showModalMessage: 'Product Category Deleted', showModal: true })
-    // }
-
     // All categories
     handleFilterStrChange(e) {
         this.setState({ filterStr: e.target.value });
@@ -172,14 +103,6 @@ class AllCategories extends React.Component {
         }
         this.setState({ categories_list: copyArray })
     }
-    //  => Img Chane
-    handleCategoryImgChange = (e, index) => {
-        let copyArray = [];
-        copyArray = Object.assign([], this.state.categories_list);
-        copyArray[index].url = e.target.files[0];
-
-        this.setState({ categories_list: copyArray })
-    }
     //  => Edit
     async handleEditCategoryClick(index) {
         let copyArray = [];
@@ -189,10 +112,6 @@ class AllCategories extends React.Component {
         obj['label'] = false;
         obj['value'] = copyArray[index].value;
         obj['prevVal'] = copyArray[index].value;
-
-        obj['url'] = copyArray[index].url;
-        obj['prevUrl'] = copyArray[index].url;
-
         obj['error'] = '';
         obj['isLoading'] = false;
         obj['imgError'] = '';
@@ -205,7 +124,7 @@ class AllCategories extends React.Component {
         let copyArray = [];
         copyArray = Object.assign([], this.state.categories_list);
         copyArray[index].value = copyArray[index].prevVal;
-        copyArray[index].url = copyArray[index].prevUrl;
+        copyArray[index].isUpdatedImage = false;
         copyArray[index].error = '';
         copyArray[index].label = true;
         this.setState({ categories_list: copyArray })
@@ -219,13 +138,10 @@ class AllCategories extends React.Component {
             categories_list: copyArray,
         });
         const currentComponent = this
-        let formData = new FormData()
-        formData.append('category', copyArray[index].value)
-        formData.append('myImage', copyArray[index].url)
-
-        await axios.put(urls.PUT_REQUEST.UPDATE_CATEGORY + copyArray[index]._id, formData, {
+        await axios.put(urls.PUT_REQUEST.UPDATE_CATEGORY + copyArray[index]._id, {
+            category: copyArray[index].value,
+        }, {
             headers: {
-                'content-type': 'multipart/form-data',
                 'authorization': this.state.token,
             }
         }).then(function (response) {
@@ -322,7 +238,7 @@ class AllCategories extends React.Component {
                     showModalMessage: 'Product Sub Category Updated Successfully',
                     showModal: true
                 });
-                currentComponent.props.categoriesReloadHandler()
+                currentComponent.props.categoriesReloadHandler();
             }).catch(function (error) {
                 copyArray[index].isUpdateLoading = false;
                 currentComponent.setState({
@@ -393,82 +309,7 @@ class AllCategories extends React.Component {
                     name={this.state.delete_category_name}
                     confirm={this.handleDeleteSubCategoryClick.bind(this)}
                 />
-
                 <TitleRow icon={faListAlt} title={' Admin Dashboard / All Categories'} />
-
-
-
-                {/* Add New Category */}
-
-
-                {/* Add Category Requests */}
-                {/* <CardAccordion title={'Add Category Requests'}>
-                    {this.state.categoryRequestList.map((element, index) =>
-                        <Form.Row>
-                            <Form.Group as={Col} lg={2} md={2} sm={6} xs={12}>
-                                <Form.Control
-                                    type="text"
-                                    size="sm"
-                                    placeholder="Enter Category Value"
-                                    name="sku"
-                                    value={element.value}
-                                    disabled={true}
-                                />
-                            </Form.Group>
-                            <Form.Group as={Col} lg={2} md={2} sm={6} xs={12}>
-                                <Form.Control
-                                    type="text"
-                                    size="sm"
-                                    placeholder="Enter Category Value"
-                                    name="sku"
-                                    value={element.value}
-                                    disabled={true}
-                                />
-                            </Form.Group>
-                            <div className="mr-auto"></div>
-                            <Form.Group as={Col} lg={4} md={4} sm={6} xs={12}>
-                                <InputGroup>
-                                    <Form.Control
-                                        type="text"
-                                        size="sm"
-                                        placeholder="Enter Category Value"
-                                        name="sku"
-                                        value={element.value}
-                                        onChange={(e) => this.handleCategoryRequestChange(e, index)}
-                                        isInvalid={element.error}
-                                        disabled={element.label}
-                                    />
-                                    <Form.Control.Feedback type="invalid">
-                                        {element.error}
-                                    </Form.Control.Feedback>
-                                </InputGroup>
-                            </Form.Group>
-                            <div className="mr-auto"></div>
-                            <Form.Group as={Col} lg="auto" md="auto" sm="auto" xs="auto">
-                                <Button type="submit" variant="outline-success" size="sm" block style={styles.submit_btn}
-                                    onClick={() => element.label ? this.handleEditCategoryRequestClick(index) : this.handleUpdateCategoryRequestClick(index)} >
-                                    <div>{element.label ? 'Edit' : 'Update'}</div>
-                                </Button>
-                            </Form.Group>
-                            <Form.Group as={Col} lg="auto" md="auto" sm="auto" xs="auto">
-                                <Button type="submit" variant="outline-primary" size="sm" block style={styles.submit_btn}
-                                    onClick={() => { element.label ? this.handleAddCategoryRequestClick(index) : this.handleCancelCategoryRequestClick(index) }}>
-                                    <div>{element.label ? 'Add' : 'Cancel'}</div>
-                                </Button>
-                            </Form.Group>
-                            <div className="mr-auto"></div>
-                            <Form.Group as={Col} lg="auto" md="auto" sm="auto" xs="auto">
-                                <Button type="submit" variant="outline-danger" size="sm" block style={styles.submit_btn}
-                                    onClick={() => this.handleDeleteCategoryRequestClick(index)}>
-                                    <div>Discard</div>
-                                </Button>
-                            </Form.Group>
-
-                        </Form.Row>
-                    )}
-                </CardAccordion> */}
-
-                {/* All Categories */}
                 <CardAccordion title={'All Categories'}>
                     <Form.Row style={{ margin: '0% 5%' }}>
                         <Form.Group as={Col}>
@@ -549,16 +390,8 @@ class AllCategories extends React.Component {
                                         </Form.Group>
                                     </Row>
                                 </Col>
-                                <Col>
-                                    <Image src={element.url} fluid style={{ width: '100%', maxHeight: '150px', borderRadius: '5px' }} />
-                                </Col>
                             </Form.Row>
                             <hr className='pb-0 pt-0 mt-0' />
-
-
-
-
-
                             <Form.Row >
                                 {this.state.sub_categories_list.map((e, i) => (element._id == e.category_id) ?
                                     <Col lg={6} md={6} sm={12} xs={12} key={e._id}>

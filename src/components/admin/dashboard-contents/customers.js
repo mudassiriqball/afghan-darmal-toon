@@ -121,7 +121,7 @@ class Customers extends React.Component {
                     iconname={this.state.viewModalIconname}
                     color={this.state.viewConfirmModalColor}
                     _id={this.state.single_user._id}
-                    name={this.state.single_user.full_name}
+                    name={this.state.single_user.fullName}
                     confirm={this.handleViewModalConfirmed.bind(this)}
                     loading={this.state.viewConfirmModalLoading}
                 />
@@ -218,7 +218,7 @@ class Customers extends React.Component {
                     </div>
                     :
                     <>
-                        <TitleRow icon={faPersonBooth} title={`Admin Dashboard / Customers / ${this.state.single_user.full_name}`} />
+                        <TitleRow icon={faPersonBooth} title={`Admin Dashboard / Customers / ${this.state.single_user.fullName}`} />
                         <Form.Row style={{ margin: ' 0% 2%', display: 'flex', alignItems: 'center' }} >
                             <Button size='sm' variant='outline-primary' className="mr-auto" onClick={() => this.setState({ isViewUser: false })}> Back </Button>
                             {this.state.isNewUser ?
@@ -281,7 +281,7 @@ class Customers extends React.Component {
                                     <Form.Group as={Col} lg={4} md={6} sm={6} xs={12}>
                                         <Form.Label className='form_label'>Name</Form.Label>
                                         <InputGroup>
-                                            <Form.Control type="text" disabled={true} size="sm" value={this.state.single_user.full_name} className='form_control' />
+                                            <Form.Control type="text" disabled={true} size="sm" value={this.state.single_user.fullName} className='form_control' />
                                         </InputGroup>
                                     </Form.Group>
                                     <Form.Group as={Col} lg={4} md={6} sm={6} xs={12}>
@@ -508,7 +508,7 @@ function CustomersTable(props) {
                 iconname={iconname}
                 color={confirmModalColor}
                 _id={single_user._id}
-                name={single_user.full_name}
+                name={single_user.fullName}
                 confirm={handleConfirmed}
                 loading={confirmModalLoading}
             />
@@ -703,7 +703,7 @@ function VendorTableBody(props) {
                                 </div>
                             </td>
                             <td align="center" >{element.mobile}</td>
-                            <td align="center" >{element.full_name}</td>
+                            <td align="center" >{element.fullName}</td>
                             <td align="center" >{element.countary}</td>
                             <td align="center" >{element.city}</td>
                             <td align="center" >{element.shop_name}</td>

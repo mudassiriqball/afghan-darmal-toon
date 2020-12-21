@@ -17,7 +17,7 @@ const CssTransition = props => {
                 unmountOnExit
             >
                 <div className='dots_view'>
-                    <Card style={{ width: '100%', height: '100%' }}>
+                    <Card style={{ width: '100%', height: '100%', border: 'none' }}>
                         <AiOutlineClose onClick={props.hide} style={{ color: `${theme.COLORS.MUTED}`, fontSize: '30px', marginLeft: 'auto', marginTop: '30px', marginBlock: '10px', marginRight: '10px', cursor: 'pointer' }} />
                         <Card.Img variant="top" src="logo.jpg" style={{ width: '80%', alignSelf: 'center' }} />
                         <div style={{ marginTop: 'auto', padding: '8%' }}>
@@ -50,6 +50,9 @@ const CssTransition = props => {
                 </div>
             </CSSTransition>
             <style jsx>{`
+                .dotViewDiv {
+                    // position: fie
+                }
                 .dotViewDiv .signupSpan {
                     cursor: pointer;
                 }
@@ -68,14 +71,14 @@ const CssTransition = props => {
 
                 // dots_view
                 .dotViewDiv .dots_view {
-                    position: absolute;
                     transition: transform ease-out 5s;
-                    box-shadow: 1px 0px 7px rgba(0, 0, 0, 0.5);
+                    box-shadow: 0px 0px 10px 0.5px #e6e6e6;
+                    position: fixed;
+                    width: 400px;
                     top: 0;
                     right: 0;
                     bottom: 0;
-                    width: 400px;
-                    background: ${theme.COLORS.MAIN};
+                    z-index: 10000000;
                 }
                 .dotViewDiv .dotViewLabel {
                     font-size: 14;

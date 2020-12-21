@@ -10,6 +10,7 @@ export default {
 
     USERS_BY_STATUS: baseUrl + '/users/all-users/page/limit/by-status/',
     USERS_SEARCH_BY_STATUS: baseUrl + '/users/all-users/search/by-status/',
+    WISHLIST: baseUrl + '',
 
     // CATEGORIES
     CATEGORIES: baseUrl + '/categories/get-all/categories-subcategories',
@@ -21,12 +22,15 @@ export default {
     // PRODUCTS
     GET_PRODUCT_BY_ID: baseUrl + '/products/product/id/product-by-id/',
 
-    SLIDERS: baseUrl + '/sliders/sliders',
+    SLIDERS: baseUrl + '/sliders/all/sliders-list',
     HOME_CATEGORIES: baseUrl + '/categories/home-categories',
     USER_PAGE_LIMIT: baseUrl + '/users/',
     USERS_QUERY_SEARCH: baseUrl + '/users/getUsersBySearching/',
     INVENTRY_PAGE_LIMIT: baseUrl + '/products/all-products',
     INVENTRY_QUERY_SEARCH: baseUrl + '/products/admin-products-query-search',
     ALL_ORDERS_PAGE_LIMIT_BY_STATUS: baseUrl + '/orders/all-orders/',
-    ALL_ORDERS_SEARCH_BY_STATUS: baseUrl + '/orders/all-getAllOrdersSearch/'
+    ALL_ORDERS_SEARCH_BY_STATUS: baseUrl + '/orders/all-getAllOrdersSearch/',
+
+    // ORDERS
+    CUSTOMER_ALL_ORDERS_COUNT: baseUrl + '/orders/abc/abc/customer-orders-count/',
 }

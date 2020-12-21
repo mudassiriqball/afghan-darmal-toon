@@ -3,9 +3,10 @@ import { useEffect, useState } from 'react';
 import Layout from '../components/customer/Layout'
 import jwt_decode from 'jwt-decode';
 import { getDecodedTokenFromStorage } from '../utils/services/auth';
+import theme from '../constants/theme';
 
 export default function Home() {
-  const [user, setUser] = useState({ _id: '', fullName: '', mobile: '', city: '', licenseNo: '', address: '', email: '', status: '', role: '', wishList: '', cart: '', entryDate: '' })
+  const [user, setUser] = useState({ _id: '', fullName: '', mobile: '', city: '', licenseNo: '', address: '', email: '', status: '', role: '', wishList: '', cart: '', entry_date: '' })
 
   useEffect(() => {
     const getDecodedToken = async () => {
@@ -29,7 +30,7 @@ export default function Home() {
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossOrigin="anonymous"></script>
       </Head>
       <Layout user={user}>
-        <h1 className="title">
+        <h1 className="title" style={{ height: '1000px' }}>
           Welcome to <a href="https://nextjs.org">Afghan Darmal Toon</a>
           {''}
         </h1>
@@ -41,9 +42,14 @@ export default function Home() {
 
       <style jsx>{`
         .container {
+          background: ${theme.COLORS.WHITE};
           min-height: 100vh;
           min-width: 100%;
           padding: 0;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right:0;
           display: flex;
           flex-direction: column;
         }

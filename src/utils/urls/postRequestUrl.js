@@ -5,12 +5,11 @@ export default {
     LOGIN: baseUrl + '/users/auth/login-user',
     SIGNUP: baseUrl + '/users/auth/register/register-user',
     CHANGE_CUSTOMER_STATUS: baseUrl + '/users/customer/status/change-customer-status/',
-
     // PRODUCTS
     NEW_PRODUCT: baseUrl + '/products//add-new/product/',
 
     // SLIDERS
-    ADD_SLIDER: baseUrl + '/sliders/add-slider',
+    ADD_SLIDER: baseUrl + '/sliders/add-new/slider',
 
     // CATEGORIES
     ADD_CATEGORY: baseUrl + '/categories/add/new/category-subcategory',

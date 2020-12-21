@@ -17,9 +17,8 @@ import Slider from './dashboard-contents/slider'
 // Products
 
 // Category
-import AddCategory from './dashboard-contents/category-contents/add-category'
-import AllCategories from './dashboard-contents/category-contents/all-categories'
-import HomeScreenCategories from './dashboard-contents/category-contents/home-screen-categories'
+import AddCategory from './dashboard-contents/category-contents/add-category';
+import AllCategories from './dashboard-contents/category-contents/all-categories';
 
 import Inventory from './dashboard-contents/inventory';
 import Orders from './dashboard-contents/orders'
@@ -43,7 +42,7 @@ const DashboardSideDrawer = props => {
                         <Nav.Item style={styles.image_div}>
                             <p>
                                 <Image src={props.avatar} roundedCircle thumbnail fluid style={styles.image} />
-                                <Nav.Link style={styles.muhalik}> {props.full_name} </Nav.Link>
+                                <Nav.Link style={styles.muhalik}> {props.fullName} </Nav.Link>
                             </p>
                         </Nav.Item>
                         <Nav.Item>
@@ -117,13 +116,6 @@ const DashboardSideDrawer = props => {
                                         <FontAwesomeIcon icon={faChevronRight} style={styles.forword_fontawesome} />
                                     </Nav.Link>
                                 </div>
-                                <div className="product_submenu">
-                                    <Nav.Link eventKey="HomeScreenCategories" onClick={props.click} style={styles.categories_submenu_link} >
-                                        <FontAwesomeIcon size="xs" icon={faTh} style={styles.fontawesome} />
-                                        <div className="mr-auto">Home Screen Categories</div>
-                                        <FontAwesomeIcon icon={faChevronRight} style={styles.forword_fontawesome} />
-                                    </Nav.Link>
-                                </div>
                             </div>
                             : null
                         }
@@ -172,11 +164,6 @@ const DashboardSideDrawer = props => {
                             </Tab.Pane>
                             <Tab.Pane eventKey="AllCategories">
                                 <AllCategories
-                                    {...props}
-                                />
-                            </Tab.Pane>
-                            <Tab.Pane eventKey="HomeScreenCategories">
-                                <HomeScreenCategories
                                     {...props}
                                 />
                             </Tab.Pane>

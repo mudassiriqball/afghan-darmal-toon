@@ -11,7 +11,6 @@ export async function getServerSideProps(context) {
     let sliders_list = []
     let categories_list = []
     let sub_categories_list = []
-    let home_categories_list = []
 
     let customers_count = 0;
     let new_customers_count = 0;
@@ -50,11 +49,6 @@ export async function getServerSideProps(context) {
     }).catch((error) => {
     })
 
-    await axios.get(urls.GET_REQUEST.HOME_CATEGORIES).then((res) => {
-        home_categories_list = res.data.data
-    }).catch((error) => {
-    })
-
     return {
         props: {
             customers_count,
@@ -70,7 +64,6 @@ export async function getServerSideProps(context) {
             sliders_list,
             categories_list,
             sub_categories_list,
-            home_categories_list
         },
     }
 }
@@ -121,7 +114,6 @@ class Admin extends Component {
 
             categories_list: this.props.categories_list,
             sub_categories_list: this.props.sub_categories_list,
-            home_categories_list: this.props.home_categories_list,
 
             fields_list: [],
             field_requests_list: [],
@@ -131,7 +123,7 @@ class Admin extends Component {
             token: null,
             user: {
                 _id: '', fullName: '', mobile: '', city: '', licenseNo: '', address: '',
-                email: '', status: '', role: '', wishList: '', cart: '', entryDate: ''
+                email: '', status: '', role: '', wishList: '', cart: '', entry_date: ''
             }
         }
     }
@@ -149,8 +141,6 @@ class Admin extends Component {
             // Token
             const _token = await getTokenFromStorage();
             this.setState({ token: _token });
-            // Get Categories
-            await this.getCategories();
         } else {
             Router.push('/')
         }
@@ -177,29 +167,6 @@ class Admin extends Component {
         this.source.cancel();
         this.unmounted = false
     }
-
-    // async getFields() {
-    //     const currentComponent = this;
-    //     const url_1 = urls.PATH + '/api/categories/fields';
-    //     await axios.get(url_1, { cancelToken: this.source.token }).then((res) => {
-    //         if (currentComponent.unmounted) {
-    //             currentComponent.setState({
-    //                 fields_list: res.data.data.docs,
-    //             })
-    //         }
-    //     }).catch((error) => {
-    //     })
-    //     const url_2 = urls.PATH + '/api/categories/field-requests';
-    //     await axios.get(url_2, { cancelToken: this.source.token }).then((res) => {
-    //         if (currentComponent.unmounted) {
-    //             currentComponent.setState({
-    //                 field_requests_list: res.data.data.docs,
-    //             })
-    //         }
-    //     }).catch((error) => {
-    //     })
-    // }
-
 
     drawerToggleClickHandler = () => {
         this.setState(prevState => {
@@ -241,17 +208,7 @@ class Admin extends Component {
             console.log('reload slider error:', error)
         })
     }
-    async reloadHomeCategories() {
-        let currentComponent = this
-        await axios.get(urls.GET_REQUEST.SLIDERS, { cancelToken: this.source.token }).then((res) => {
-            if (currentComponent.unmounted) {
-                currentComponent.setState({
-                    home_categories_list: res.data.data
-                })
-            }
-        }).catch((error) => {
-        })
-    }
+
     async reloadUsersCount() {
         let currentComponent = this
         await axios.get(urls.GET_REQUEST.ALL_CUSTOMER_COUNT).then((res) => {
@@ -296,7 +253,7 @@ class Admin extends Component {
             <div style={styles.body}>
                 <Dashboard
                     user={this.state.user}
-                    full_name={this.state.user.full_name}
+                    fullName={this.state.user.fullName}
                     avatar={this.state.user.avatar}
 
                     customers_count={this.state.customers_count}
@@ -314,8 +271,6 @@ class Admin extends Component {
                     categories_list={this.state.categories_list}
                     sub_categories_list={this.state.sub_categories_list}
                     categoriesReloadHandler={this.getCategories.bind(this)}
-                    home_categories_list={this.state.home_categories_list}
-                    homeCategoriesReloadHandler={this.reloadHomeCategories.bind(this)}
 
                     fields_list={this.state.fields_list}
                     field_requests_list={this.state.field_requests_list}
@@ -325,7 +280,7 @@ class Admin extends Component {
                     sliderReloadHandler={this.reloadSlider.bind(this)}
 
                     token={this.state.token}
-                    user_name={this.state.user.full_name}
+                    user_name={this.state.user.fullName}
                     show={this.state.showWrapper}
                     drawerClickHandler={this.drawerToggleClickHandler}
                     wrapperBtnClickHandler={this.ShowWrapperClickHandler}
@@ -333,7 +288,7 @@ class Admin extends Component {
                 />
                 <DashboardSideDrawer
                     user={this.state.user}
-                    full_name={this.state.user.full_name}
+                    fullName={this.state.user.fullName}
                     avatar={this.state.user.avatar}
 
                     customers_count={this.state.customers_count}
@@ -349,10 +304,8 @@ class Admin extends Component {
                     ordersReloadCountHandler={this.reloadOrdersCount.bind(this)}
 
                     categories_list={this.state.categories_list}
-                    home_categories_list={this.state.home_categories_list}
                     sub_categories_list={this.state.sub_categories_list}
                     categoriesReloadHandler={this.getCategories.bind(this)}
-                    homeCategoriesReloadHandler={this.reloadHomeCategories.bind(this)}
 
                     fields_list={this.state.fields_list}
                     field_requests_list={this.state.field_requests_list}
@@ -362,7 +315,7 @@ class Admin extends Component {
                     sliderReloadHandler={this.reloadSlider.bind(this)}
 
                     token={this.state.token}
-                    user_name={this.state.user.full_name}
+                    user_name={this.state.user.fullName}
                     show={this.state.sideDrawerOpen}
                     click={this.backdropClickHandler}
                     logout={this.logout.bind(this)}
