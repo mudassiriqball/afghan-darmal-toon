@@ -13,7 +13,7 @@ router.get("/admin-products-query-search", productController.get_admin_products)
 
 router.get("/all-products-query-search", productController.get_customer_side_products);
 
-router.get("/product-by-id/:_id", productController.get_product_by_id);
+router.get("product/id/product-by-id/:_id", productController.get_product_by_id);
 router.get("/any/product-by-id/:_id", productController.get_all_product_by_id);
 
 router.get("/abc/cde/vendor/user-products/:_id", productController.get_vendor_products);
