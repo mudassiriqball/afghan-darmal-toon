@@ -97,7 +97,6 @@ const User = new Schema({
     },
     fullName: {
         type: String,
-        required: true
     },
     email: {
         type: String,
@@ -106,15 +105,12 @@ const User = new Schema({
     },
     password: {
         type: String,
-        required: true
     },
     licenseNo: {
         type: String,
-        required: true
     },
     role: {
         type: String,
-        required: true
     },
     address: {
         type: String,
