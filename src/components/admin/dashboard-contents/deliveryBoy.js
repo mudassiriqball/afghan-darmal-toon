@@ -287,20 +287,15 @@ function CustomerTable(props) {
     const [showAlertModal, setShowAlertModal] = useState(false);
     const [alertModalMsg, setAlertModalMsg] = useState(false);
 
-    const [start_date, setStart_date] = useState(new Date("2020/01/01"));
-    const [end_date, setEnd_date] = useState(new Date());
-
     const { USERS_PAGE_LOADING, USERS_PAGE_ERROR, USERS_PAGE_USERS, USERS_PAGE_PAGES, USERS_PAGE_TOTAL } =
-        getUsersPageLimit(props.token, props.refresh, null, pageNumber, '20', 'delivery')
+        getUsersPageLimit(props.token, props.refresh, 'delivery', null, pageNumber, '20');
     const { USERS_SEARCH_LOADING, USERS_SEARCH_ERROR, USERS_SEARCH_USERS, USERS_SEARCH_PAGES, USERS_SEARCH_TOTAL } =
-        getUsersBySearch(props.token, props.refresh, null, fieldName, query, queryPageNumber, '20', start_date, end_date, 'delivery')
+        getUsersBySearch(props.token, props.refresh, 'delivery', null, fieldName, query, queryPageNumber, '20');
 
     async function handleSearch(type, value, start, end) {
         if (value != '') {
             setFieldName(type)
             setQuery(value)
-            setStart_date(start)
-            setEnd_date(end)
             setIsSearch(true)
         } else {
             setIsSearch(false)
@@ -362,7 +357,7 @@ function CustomerTable(props) {
         <div className='customers'>
             <CardSearchAccordion
                 title={props.header}
-                option={'customer'}
+                option={'delivery'}
                 handleSearch={handleSearch}
                 setIsSearch={() => setIsSearch(false)}
             >

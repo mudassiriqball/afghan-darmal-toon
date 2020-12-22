@@ -55,12 +55,10 @@ export async function getServerSideProps(context) {
             new_customers_count,
             restricted_customers_count,
             delivery_boy_count,
-
             pending_orders_count,
             delivered_orders_count,
             cancelled_orders_count,
             returned_orders_count,
-
             sliders_list,
             categories_list,
             sub_categories_list,
@@ -115,9 +113,6 @@ class Admin extends Component {
             categories_list: this.props.categories_list,
             sub_categories_list: this.props.sub_categories_list,
 
-            fields_list: [],
-            field_requests_list: [],
-
             sliders_list: this.props.sliders_list,
 
             token: null,
@@ -154,11 +149,12 @@ class Admin extends Component {
 
     async getUser(id) {
         let currentComponent = this
-        await axios.get(urls.GET_REQUEST.USER_BY_ID + `/${id}`, { cancelToken: this.source.token }).then((res) => {
+        await axios.get(urls.GET_REQUEST.USER_BY_ID + id, { cancelToken: this.source.token }).then((res) => {
             if (currentComponent.unmounted) {
                 currentComponent.setState({ user: res.data.data[0] })
             }
         }).catch((err) => {
+            console.log('Get user error in admin:', err);
             if (axios.isCancel(err)) return
         })
     }
@@ -272,10 +268,6 @@ class Admin extends Component {
                     sub_categories_list={this.state.sub_categories_list}
                     categoriesReloadHandler={this.getCategories.bind(this)}
 
-                    fields_list={this.state.fields_list}
-                    field_requests_list={this.state.field_requests_list}
-                    // fieldsReloadHandler={this.getFields.bind(this)}
-
                     sliders_list={this.state.sliders_list}
                     sliderReloadHandler={this.reloadSlider.bind(this)}
 
@@ -306,10 +298,6 @@ class Admin extends Component {
                     categories_list={this.state.categories_list}
                     sub_categories_list={this.state.sub_categories_list}
                     categoriesReloadHandler={this.getCategories.bind(this)}
-
-                    fields_list={this.state.fields_list}
-                    field_requests_list={this.state.field_requests_list}
-                    // fieldsReloadHandler={this.getFields.bind(this)}
 
                     sliders_list={this.state.sliders_list}
                     sliderReloadHandler={this.reloadSlider.bind(this)}

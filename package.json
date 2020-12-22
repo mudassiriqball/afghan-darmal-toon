@@ -8,6 +8,7 @@
   "scripts": {
     "next": "next -p 3000",
     "dev": "nodemon server.js",
+    "debug": "NODE_OPTIONS='--inspect nodemon server.js",
     "build": "next build",
     "prod": "cross-env NODE_ENV=production nodemon server.js",
     "start": "next build && nodemon server.js",

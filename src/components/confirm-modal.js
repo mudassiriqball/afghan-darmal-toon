@@ -12,7 +12,9 @@ function ConfirmModal(props) {
             centered
         >
             <div style={{
-                border: `1px solid ${props.color}`, borderRadius: '5px'
+                border: `1px solid ${props.color}`,
+                borderRadius: '10px',
+                pading: '20px',
             }}>
                 {/* '#ff3333' */}
                 <Modal.Header closeButton style={{ color: `${props.color}`, borderBottom: `1px solid ${props.color}` }}>

@@ -3,10 +3,7 @@ import baseUrl from './baseUrl'
 export default {
     // USERS
     VARIFY_MOBILE_NUMBER: baseUrl + '/users/auth/verify/mobile-number/',
-    // USER_BY_ID: baseUrl + '/users/get-user/id/user-by-id/',
-    // APPROVED_CUSTOMERS: baseUrl + '/users/customers/all/approved',
-    // DIS_APPROVED_CUSTOMERS: baseUrl + '/users/customers/all/dis-approved',
-    // RESTRICTED_CUSTOMERS: baseUrl + '/users/customers/all/restricted',
+    USER_BY_ID: baseUrl + '/users/get-user/id/user-by-id/',
 
     USERS_BY_STATUS: baseUrl + '/users/all-users/page/limit/by-status/',
     USERS_SEARCH_BY_STATUS: baseUrl + '/users/all-users/search/by-status/',

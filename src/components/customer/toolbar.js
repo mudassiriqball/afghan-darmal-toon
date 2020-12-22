@@ -49,7 +49,6 @@ export default function Toolbar(props) {
                 setLoading(false);
                 saveTokenToStorage(res.data.token);
                 const decodedToken = jwt_decode(res.data.token);
-                console.log('token:', decodedToken)
                 if (decodedToken.data.role == 'customer') {
                     Router.replace('/')
                 } else if (decodedToken.data.role == 'admin') {
@@ -82,7 +81,7 @@ export default function Toolbar(props) {
 
     return (
         <div className='toolbar'>
-            <Navbar style={{ background: theme.COLORS.SEC, padding: '0.45% 6%' }} variant='dark'>
+            <Navbar style={{ background: theme.COLORS.SEC, padding: '0.45% 6%', width: '100vw', minWidth: '100%' }} variant='dark'>
                 <Nav className="mr-auto">
                     <Nav.Link href='/' style={{ fontWeight: 'bold', fontSize: '15px' }} active>AFGHANDARMALTOON@GMAIL.COM</Nav.Link>
                     <Nav.Link style={{ fontWeight: 'bold', fontSize: '15px' }} active>+92 3413657092</Nav.Link>

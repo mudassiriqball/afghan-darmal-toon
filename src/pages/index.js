@@ -4,6 +4,7 @@ import Layout from '../components/customer/Layout'
 import jwt_decode from 'jwt-decode';
 import { getDecodedTokenFromStorage } from '../utils/services/auth';
 import theme from '../constants/theme';
+import Footer from '../components/customer/footer';
 
 export default function Home() {
   const [user, setUser] = useState({ _id: '', fullName: '', mobile: '', city: '', licenseNo: '', address: '', email: '', status: '', role: '', wishList: '', cart: '', entry_date: '' })
@@ -20,7 +21,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="container">
+    <div className="_container">
       <Head>
         <title>afghandarmaltoon</title>
         <link rel="icon" href="/logo.jpg" />
@@ -29,19 +30,18 @@ export default function Home() {
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossOrigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossOrigin="anonymous"></script>
       </Head>
-      <Layout user={user}>
-        <h1 className="title" style={{ height: '1000px' }}>
-          Welcome to <a href="https://nextjs.org">Afghan Darmal Toon</a>
-          {''}
-        </h1>
-        <img src="/logo.jpg" alt="Vercel Logo" className="logo" />
-      </Layout>
-
-      <footer>
-      </footer>
-
+      <main>
+        <Layout user={user}>
+          {/* <h1 className="title" style={{ height: '700px', width: '100%', background: 'red' }}>
+            Welcome to <a href="https://nextjs.org">Afghan Darmal Toon</a>
+            {''}
+          </h1> */}
+          {/* <img src="/logo.jpg" alt="Vercel Logo" className="logo" /> */}
+        </Layout>
+      </main>
+      <Footer />
       <style jsx>{`
-        .container {
+        ._container {
           background: ${theme.COLORS.WHITE};
           min-height: 100vh;
           min-width: 100%;
@@ -53,21 +53,18 @@ export default function Home() {
           display: flex;
           flex-direction: column;
         }
-        footer {
-          width: 100%;
-          height: 100px;
-          border-top: 1px solid #eaeaea;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        } 
       `}</style>
-
       <style jsx global>{`
         html,
         body {
+          min-height: 100vh;
+          min-width: 100vw;
           padding: 0;
           margin: 0;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right:0;
           font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
             Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
             sans-serif;

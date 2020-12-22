@@ -1,6 +1,9 @@
 import baseUrl from './baseUrl'
 import axios from 'axios'
 export default {
+    // USERS
+    CHANGE_CUSTOMER_STATUS: baseUrl + '/users/status/id/customer-only/',
+
     DELETE_PRODUCT: baseUrl + '/products/delete-product/',
     UPDATE_Order_STATUS: baseUrl + '/orders/user-order-status/',
     UPDATE_USER_STATUS: baseUrl + '/users/user-status/',

@@ -8,13 +8,13 @@ import moment from "moment"
 import theme from '../constants/theme';
 
 export default function CardSearchAccordion(props) {
-    const [options, setOptions] = useState([])
+    const [options, setOptions] = useState([]);
 
-    const [searchType, setSearchType] = useState('_id')
-    const [searchValue, setSearchValue] = useState(props.value)
+    const [searchType, setSearchType] = useState('_id');
+    const [searchValue, setSearchValue] = useState(props.value);
 
-    const [start_date, setStart_date] = useState(new Date("2020/01/01"))
-    const [end_date, setEnd_date] = useState(new Date())
+    const [start_date, setStart_date] = useState(new Date("2020/01/01"));
+    const [end_date, setEnd_date] = useState(new Date());
 
     function handleSearchEnterPress(e) {
         var key = e.keyCode || e.which;
@@ -88,7 +88,7 @@ export default function CardSearchAccordion(props) {
                 return [...new Set([...prevPro, { value: 'city', name: 'City' }])]
             })
 
-        } else if (props.option == 'deliveryBoy') {
+        } else if (props.option == 'delivery') {
             setOptions(prevPro => {
                 return [...new Set([...prevPro, { value: 'mobile', name: 'Mobile' }])]
             })
@@ -115,8 +115,6 @@ export default function CardSearchAccordion(props) {
         }
     }, [props.option])
 
-
-
     return (
         <>
             <Accordion as={Row} defaultActiveKey="0" style={{ margin: '2%' }} noGutters >
@@ -131,7 +129,7 @@ export default function CardSearchAccordion(props) {
 
                         <Col lg={12} md={12} sm={12} xs={12} className='accordian_col md_padding'>
                             <Row noGutters>
-                                <Col lg='auto' md='auto' sm={12} xs={12}>
+                                {/* <Col lg='auto' md='auto' sm={12} xs={12}>
                                     <Row className='m-0 p-0 date_row' noGutters>
                                         <Col className='date_col'>
                                             <DatePicker
@@ -161,7 +159,7 @@ export default function CardSearchAccordion(props) {
                                             />
                                         </Col>
                                     </Row>
-                                </Col>
+                                </Col> */}
                                 <Col className='ml-1' lg='auto' md='auto' sm='auto' xs='auto'>
                                     <Form.Control as="select"
                                         variant="dark"

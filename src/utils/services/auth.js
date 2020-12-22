@@ -38,7 +38,6 @@ export function checkTokenExpAuth() {
     // const token = localStorage.getItem('token');
     if (token != null) {
         const decodedToken = jwt_decode(token);
-        console.log('token:', decodedToken)
         if (decodedToken.exp < Date.now() / 1000) {
             localStorage.removeItem('token')
             Router.push('/')

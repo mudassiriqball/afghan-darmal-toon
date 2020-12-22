@@ -1,5 +1,3 @@
-import { BiLogInCircle, BiDotsVertical } from 'react-icons/bi';
-import { ImCart } from 'react-icons/im';
 import { HiOutlineLocationMarker, HiOutlineMailOpen } from 'react-icons/hi';
 import { AiOutlinePhone, AiFillTwitterCircle, AiFillInstagram, AiOutlineClose } from 'react-icons/ai';
 import { FaFacebook } from 'react-icons/fa';

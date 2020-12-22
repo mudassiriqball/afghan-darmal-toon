@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import urls from '../utils/urls/index';
-
-export default function getUsersPageLimit(token, refresh, status, pageNumber, limit, role) {
+export default function getUsersPageLimit(token, refresh, role, status, pageNumber, limit) {
     const [USERS_PAGE_LOADING, setLoading] = useState(false)
     const [USERS_PAGE_ERROR, setError] = useState('')
     const [USERS_PAGE_USERS, setUsers] = useState([])
@@ -49,6 +48,7 @@ export default function getUsersPageLimit(token, refresh, status, pageNumber, li
                         setTotal(res.data.data.total)
                     }
                 }).catch(err => {
+                    console.log('Get User By page limit Error:', err);
                     if (unmounted) {
                         setLoading(false)
                         if (axios.isCancel(err)) return
