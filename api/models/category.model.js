@@ -12,6 +12,9 @@ const Category = new Schema({
   entry_date: {
     type: Date,
   },
+  imageUrl: {
+    type: String
+  }
 });
 
 Category.plugin(mongoosePaginate);

@@ -448,7 +448,7 @@ usersController.get_user_by_role= async (req, res) => {
     user = await Users.paginate(
       {
         role: req.params._role,
-        status: req.body.status,
+        status: req.query.status,
       },
       {
         limit: parseInt(req.query.limit),
