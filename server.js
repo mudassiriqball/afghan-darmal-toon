@@ -148,8 +148,8 @@ app
 
 
     app.set("port", process.env.PORT);
-    server.listen(app.get("port"));
-    console.log("listening on port", app.get("port"));
+    server.listen(process.env.PORT);
+    console.log("listening on port", process.env.PORT);
   })
   .catch(ex => {
     console.error(ex.stack);
