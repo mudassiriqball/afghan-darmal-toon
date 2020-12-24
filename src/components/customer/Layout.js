@@ -80,11 +80,16 @@ export default function Layout(props) {
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu className='dropdown-menu' style={{ border: 'none', paddingTop: '27px', background: 'none' }} >
                                     <Card style={{ boxShadow: `1px 0px 7px lightgray` }}>
+                                        {user.role == 'admin' &&
+                                            <div className='link_div'>
+                                                <Nav.Link href="/admin" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '14px' }}>DASHBOARD</Nav.Link>
+                                            </div>
+                                        }
                                         <div className='link_div'>
-                                            <Nav.Link href="/cart" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '14px', borderBottom: `1px solid #e6e6e6` }}>CART</Nav.Link>
+                                            <Nav.Link href="/profile" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '14px', borderBottom: `1px solid #e6e6e6` }}>PROFILE</Nav.Link>
                                         </div>
                                         <div className='link_div'>
-                                            <Nav.Link href="#" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '14px' }}>LOL</Nav.Link>
+                                            <Nav.Link href="/cart" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '14px' }}>CART</Nav.Link>
                                         </div>
                                     </Card>
                                 </Dropdown.Menu>

@@ -118,11 +118,12 @@ class AddNew extends Component {
         if (value != null) {
             this.state.categories_list.forEach(element => {
                 if (value.label == element.label) {
-                    _id = element._id
+                    _id = element._id;
+                    return;
                 }
             })
             this.state.sub_categories_list.forEach(element => {
-                if (element.categoryId == _id) {
+                if (element.category_id == _id) {
                     array.push(element)
                 }
             })
@@ -170,6 +171,78 @@ class AddNew extends Component {
         this.setState({ files: copyArray, imagePreviewArray: imgCopyArray })
     }
 
+    uploadedImages = async (values) => {
+        this.state.files && this.state.files.forEach(async (element) => {
+            const data = new FormData();
+            data.append('file', element);
+            data.append('upload_preset', 'afghandarmaltoon');
+            await fetch('https://api.cloudinary.com/v1_1/dhm7n3lg7/image/upload', {
+                method: 'POST',
+                body: data,
+            }).then(async res => {
+                let dataa = await res.json();
+                values.imageUrl.push({ 'imageUrl': dataa.secure_url });
+                console.log('imageUrl:', dataa.secure_url)
+            }).catch(err => {
+                console.log('error:', err)
+                currentComponent.setState({ isLoading: false });
+                alert("An Error Occured While Uploading")
+                return false;
+            })
+        })
+        return true;
+    }
+
+
+    addProduct = async (values, setSubmitting, resetForm) => {
+        values.categoryId = this.state.categoryId;
+        values.subCategoryId = this.state.subCategoryId;
+        values.imagesUrl = this.state.files;
+        values.specifications = this.state.customFieldsArray;
+        const currentComponent = this;
+        this.setState({ isLoading: true });
+        let uploaded = await this.uploadedImages(values);
+        if (uploaded) {
+            const config = {
+                headers: {
+                    'authorization': this.props.token,
+                }
+            };
+            await axios.post(urls.POST_REQUEST.NEW_PRODUCT + this.props.user._id, values, config).then((res) => {
+                resetForm()
+                currentComponent.setState({
+                    userStatusAlert: false,
+                    statusAlertMessage: '',
+                    isUpdateProduct: false,
+                    _id: this.props._id,
+                    clearFields: false,
+                    isLoading: false,
+                    showToast: false,
+                    toastMessage: '',
+                    showImgLinkErrorrAlert: false,
+                    productCategory: '',
+                    productSubCategory: '',
+                    categoryId: '',
+                    subCategoryId: '',
+                    sub_category_options: [],
+                    subCategoryDisabled: true,
+                    categoryErrorDiv: 'BorderDiv',
+                    subCategoryErrorDiv: 'BorderDiv',
+                    warrantyType: '',
+                    inputValue: '',
+                    customFieldsArray: [],
+                    files: [],
+                    imagePreviewArray: [],
+                    imgError: '',
+                });
+            }).catch((error) => {
+                console.log('error:', error)
+                currentComponent.setState({ isLoading: false });
+                alert('Product Upload failed')
+            });
+            setSubmitting(false);
+        }
+    }
     render() {
         return (
             <Formik
@@ -196,103 +269,19 @@ class AddNew extends Component {
                     }
                 }
                 onSubmit={(values, { setSubmitting, resetForm }) => {
-                    const currentComponent = this
-                    if (this.props.status == 'disapproved') {
-                        this.setState({
-                            userStatusAlert: true,
-                            statusAlertMessage: 'You can\'t upload product, Your account is not approved yet'
-                        })
-                    } else if (this.props.status == 'restricted') {
-                        this.setState({
-                            userStatusAlert: true,
-                            statusAlertMessage: 'You can\'t upload product, Your account has blocked, Contact to Admin'
-                        })
-                    } else {
-                        //  Category & Sub-Category Checking
-                        if (this.state.productCategory == '' || this.state.productSubCategory == '' || this.state.files == '') {
-                            if (this.state.productCategory == '') {
-                                this.setState({ categoryErrorDiv: 'RedBorderDiv' });
-                            }
-                            if (this.state.productSubCategory == '') {
-                                this.setState({ subCategoryErrorDiv: 'RedBorderDiv' });
-                            }
-                            if (this.state.files == '') {
-                                this.setState({ imgError: 'Required *' });
-                            }
-                        } else {
-                            values.categoryId = this.state.categoryId;
-                            values.subCategoryId = this.state.subCategoryId;
-                            values.imagesUrl = this.state.files;
-                            values.specifications = this.state.customFieldsArray;
-
-                            let uploaded = false;
-                            let secure_urls = [];
-                            this.setState({ isLoading: true });
-                            this.state.files && this.state.files.forEach(element => {
-                                const data = new FormData();
-                                data.append('file', element);
-                                data.append('upload_preset', 'afghandarmaltoon');
-                                fetch('https://api.cloudinary.com/v1_1/dhm7n3lg7/image/upload', {
-                                    method: 'POST',
-                                    body: data,
-                                }).then(async res => {
-                                    uploaded = true;
-                                    let dataa = await res.json();
-                                    secure_urls.push({ 'imageUrl': dataa.secure_url });
-                                    console.log('ImageUrl:', dataa.secure_url)
-                                    this.setState({ isLoading: false });
-                                }).catch(err => {
-                                    uploaded = false;
-                                    console.log('error:', err)
-                                    this.setState({ isLoading: false });
-                                    alert("Error", "An Error Occured While Uploading")
-                                    return;
-                                })
-                            })
-                            values.imageUrl = secure_urls;
-                            if (uploaded) {
-                                setTimeout(() => {
-                                    const config = {
-                                        headers: {
-                                            'authorization': this.props.token,
-                                        }
-                                    };
-                                    axios.post(urls.POST_REQUEST.NEW_PRODUCT + this.props.user._id, values, config).then((res) => {
-                                        resetForm()
-                                        currentComponent.setState({
-                                            userStatusAlert: false,
-                                            statusAlertMessage: '',
-                                            isUpdateProduct: false,
-                                            _id: this.props._id,
-                                            clearFields: false,
-                                            isLoading: false,
-                                            showToast: false,
-                                            toastMessage: '',
-                                            showImgLinkErrorrAlert: false,
-                                            productCategory: '',
-                                            productSubCategory: '',
-                                            categoryId: '',
-                                            subCategoryId: '',
-                                            sub_category_options: [],
-                                            subCategoryDisabled: true,
-                                            categoryErrorDiv: 'BorderDiv',
-                                            subCategoryErrorDiv: 'BorderDiv',
-                                            warrantyType: '',
-                                            inputValue: '',
-                                            customFieldsArray: [],
-                                            files: [],
-                                            imagePreviewArray: [],
-                                            imgError: '',
-                                        });
-                                    }).catch((error) => {
-                                        console.log('error:', error)
-                                        currentComponent.setState({ isLoading: false });
-                                        alert('Product Upload failed')
-                                    });
-                                    setSubmitting(false);
-                                }, 500);
-                            }
+                    //  Category & Sub-Category Checking
+                    if (this.state.productCategory == '' || this.state.productSubCategory == '' || this.state.files == '') {
+                        if (this.state.productCategory == '') {
+                            this.setState({ categoryErrorDiv: 'RedBorderDiv' });
                         }
+                        if (this.state.productSubCategory == '') {
+                            this.setState({ subCategoryErrorDiv: 'RedBorderDiv' });
+                        }
+                        if (this.state.files == '') {
+                            this.setState({ imgError: 'Required *' });
+                        }
+                    } else {
+                        this.addProduct(values, setSubmitting, resetForm);
                     }
                 }}>
                 {({
@@ -310,7 +299,7 @@ class AddNew extends Component {
                             :
                             null
                         }
-                        {this.props.status == 'disapproved' ?
+                        {/* {this.props.status == 'disapproved' ?
                             <Alert variant='danger' style={{ fontSize: '14px' }}>
                                 You can't upload product, Your account is not approved yet
                                 </Alert>
@@ -323,7 +312,7 @@ class AddNew extends Component {
                                 </Alert>
                             :
                             null
-                        }
+                        } */}
                         <Form noValidate onSubmit={handleSubmit}>
                             <AlertModal
                                 onHide={() => this.setState({ userStatusAlert: false })}
@@ -601,7 +590,7 @@ class AddNew extends Component {
                                                                 type="text"
                                                                 size="sm"
                                                                 placeholder="Enter Purchase Notes"
-                                                                name="purchase_note"
+                                                                name="purchaseNote"
                                                                 value={values.purchaseNote}
                                                                 onChange={handleChange}
                                                                 isInvalid={errors.purchaseNote}
@@ -658,7 +647,6 @@ class AddNew extends Component {
                                                     id={'1'}
                                                     instanceId={'1'}
                                                     inputId={'1'}
-
                                                     styles={theme.REACT_SELECT_STYLES}
                                                     onChange={this.handleProductCategoryChange}
                                                     options={this.state.categories_list}

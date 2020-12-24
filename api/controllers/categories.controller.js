@@ -1,15 +1,12 @@
 const categoriesController = {};
-const Categories = require("../models/category.model")
+const Categories = require("../models/category.model");
 const Sub_Categories = require("../models/sub-category.model");
 // const Product = require("../models/product.model");
 
 const jwt = require("jsonwebtoken");
 
-
 categoriesController.add_Category = async (req, res) => {
-
   const body = req.body;
-
   try {
     var datetime = new Date();
     body.entry_date = datetime;
@@ -24,8 +21,8 @@ categoriesController.add_Category = async (req, res) => {
       const category = new Categories(body);
       const result = await category.save();
 
-      body.label = body.subCategory;
-      body.value = body.subCategory;
+      body.label = body.sub_category;
+      body.value = body.sub_category;
       body.category_id = category._id;
 
       const sub_category = new Sub_Categories(body);
@@ -37,11 +34,11 @@ categoriesController.add_Category = async (req, res) => {
     } else if (search.label === body.category) {
       const search1 = await Sub_Categories.find({
         category_id: search._id,
-        label: body.subCategory,
+        label: body.sub_category,
       });
       if (!search1.length) {
-        body.label = body.subCategory;
-        body.value = body.subCategory;
+        body.label = body.sub_category;
+        body.value = body.sub_category;
         body.category_id = search._id;
         const sub_category = new Sub_Categories(body);
         const result1 = await sub_category.save();
@@ -196,7 +193,7 @@ categoriesController.get_tags = async (req, res) => {
 categoriesController.get_unique_category = async (req, res) => {
   let home_categories;
   try {
-    home_categories = await Home_Categories.paginate()
+    home_categories = await Home_Categories.paginate();
     res.status(200).send({
       code: 200,
       message: "Successful",
@@ -282,9 +279,6 @@ categoriesController.delete_unique_category = async (req, res) => {
   });
 };
 
-
-
-
 categoriesController.delete_field = async (req, res) => {
   Fields.findByIdAndDelete(req.params._id, function (err) {
     res.status(200).send({
@@ -328,12 +322,6 @@ categoriesController.update_field = async (req, res) => {
 //Update
 
 categoriesController.update_category = async (req, res) => {
-
-  var s3 = new AWS.S3({
-    secretAccessKey: 'nKZSmn0MFET9TEtEy4kUrksDjzkMFBQdt+x6+aPc',
-    accessKeyId: 'AKIAIYECX324S27WGWFQ',
-  });
-
   const body = req.body;
   const _id = req.params._id;
 
@@ -344,19 +332,27 @@ categoriesController.update_category = async (req, res) => {
     });
   }
 
-
-  const category = await Categories.findOne({ _id: _id });
-  const token = category.url;
-  const filenameToRemove = token.split('/').slice(-1)[0];
-
-
-  if (!req.files && !body.category) {
-    res.status(500).send({
-      code: 500,
-      message: "Send Data First",
-    });
-  } else if (body.category && !req.files.length) {
-    try {
+  try {
+    if (body.category && body.imageUrl) {
+      console.log("both");
+      Categories.findOneAndUpdate(
+        { _id: _id },
+        {
+          $set: { value: body.category, label: body.category, imageUrl: body.imageUrl },
+        },
+        {
+          returnNewDocument: true,
+        },
+        function (error, result) {
+          res.status(200).send({
+            code: 200,
+            message: "Sub Category Updated Successfully",
+          });
+        }
+      );
+    }
+    else if (!body.imageUrl) {
+      console.log("category only");
       Categories.findOneAndUpdate(
         { _id: _id },
         {
@@ -368,29 +364,17 @@ categoriesController.update_category = async (req, res) => {
         function (error, result) {
           res.status(200).send({
             code: 200,
-            message: "Category Updated Successfully",
+            message: "Sub Category Updated Successfully",
           });
         }
       );
-    } catch (error) {
-      console.log("error", error);
-      return res.status(500).send(error);
     }
-  } else if (req.files.length && !body.category) {
-
-    s3.deleteObject(
-      {
-        Bucket: 'slider-images',
-        Key: filenameToRemove
-      },
-      function (err, data) { }
-    );
-    var url = req.files[0].location;
-    try {
+    else if (!body.category) {
+      console.log("image only")
       Categories.findOneAndUpdate(
         { _id: _id },
         {
-          $set: { url: url },
+          $set: { imageUrl: body.imageUrl },
         },
         {
           returnNewDocument: true,
@@ -398,49 +382,14 @@ categoriesController.update_category = async (req, res) => {
         function (error, result) {
           res.status(200).send({
             code: 200,
-            message: "Image Updated Successfully",
+            message: "Sub Category Updated Successfully",
           });
         }
       );
-    } catch (error) {
-      console.log("error", error);
-      return res.status(500).send(error);
     }
-  } else if (body.category && req.files.length) {
-
-    s3.deleteObject(
-      {
-        Bucket: 'slider-images',
-        Key: filenameToRemove
-      },
-      function (err, data) { }
-    );
-
-    var url = req.files[0].location;
-    try {
-      Categories.findOneAndUpdate(
-        { _id: _id },
-        {
-          $set: {
-            value: body.category,
-            label: body.category,
-            url: url,
-          },
-        },
-        {
-          returnNewDocument: true,
-        },
-        function (error, result) {
-          res.status(200).send({
-            code: 200,
-            message: "Updated Successfully",
-          });
-        }
-      );
-    } catch (error) {
-      console.log("error", error);
-      return res.status(500).send(error);
-    }
+  } catch (error) {
+    console.log("error", error);
+    return res.status(500).send(error);
   }
 };
 

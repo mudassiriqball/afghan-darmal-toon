@@ -29,22 +29,17 @@ export default function getUsersPageLimit(token, refresh, role, status, pageNumb
                     params: { page: pageNumber, limit: limit, status: status },
                     cancelToken: source.token
                 }).then(res => {
-                    debugger
-                    if (unmounted) {
-                        setLoading(false)
-                        setUsers(prevPro => {
-                            return [...new Set([...prevPro, ...res.data.data.docs])]
-                        })
-                        setPages(res.data.data.pages)
-                        setTotal(res.data.data.total)
-                    }
+                    setLoading(false)
+                    setUsers(prevPro => {
+                        return [...new Set([...prevPro, ...res.data.data.docs])]
+                    })
+                    setPages(res.data.data.pages)
+                    setTotal(res.data.data.total)
                 }).catch(err => {
                     console.log('Get User By page limit Error:', err);
-                    if (unmounted) {
-                        setLoading(false)
-                        if (axios.isCancel(err)) return
-                        setError(true)
-                    }
+                    setLoading(false)
+                    if (axios.isCancel(err)) return
+                    setError(true)
                 })
             }
         }

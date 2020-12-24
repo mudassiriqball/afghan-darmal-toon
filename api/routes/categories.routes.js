@@ -17,8 +17,8 @@ router.get("/tags", categoriesController.get_tags);
 router.get("/home-categories", categoriesController.get_unique_category);
 
 // Update Requests
-router.put("/category/:_id", checkAuth, categoriesController.update_category);
-router.put("/sub-category/:_id", checkAuth, categoriesController.update_sub_category);
+router.put("/category/id/update/by-id/:_id", categoriesController.update_category);
+router.put("/sub-category/update/by-id/:_id", categoriesController.update_sub_category);
 router.put("/field/:_id", checkAuth, categoriesController.update_field);
 
 //  Delete Requests

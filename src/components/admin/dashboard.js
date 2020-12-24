@@ -189,7 +189,10 @@ const Dashboard = props => {
                                     />
                                 </Tab.Pane>
                                 <Tab.Pane eventKey="AddProduct">
-                                    <AddProduct title={'Add New Product'} />
+                                    <AddProduct
+                                        title={'Add New Product'}
+                                        {...props}
+                                    />
                                 </Tab.Pane>
                                 <Tab.Pane eventKey="AddCategory">
                                     <AddCategory

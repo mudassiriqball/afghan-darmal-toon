@@ -114,7 +114,6 @@ class AllCategories extends React.Component {
         obj['prevVal'] = copyArray[index].value;
         obj['error'] = '';
         obj['isLoading'] = false;
-        obj['imgError'] = '';
 
         copyArray[index] = obj
         await this.setState({ categories_list: copyArray })
@@ -351,23 +350,6 @@ class AllCategories extends React.Component {
                                             {element.error}
                                         </Form.Control.Feedback>
                                     </Form.Group>
-                                    {!element.label ?
-                                        <Form.Group as={Form.Row}>
-                                            <InputGroup>
-                                                <Form.File
-                                                    className="position-relative"
-                                                    required
-                                                    style={{ fontSize: '13px' }}
-                                                    name="file"
-                                                    onChange={(e) => this.handleCategoryImgChange(e, index)}
-                                                    isInvalid={!!this.state.imgError}
-                                                    id="validationFormik07"
-                                                />
-                                            </InputGroup>
-                                        </Form.Group>
-                                        :
-                                        null
-                                    }
                                     <Row>
                                         <Form.Group as={Col} lg="auto" md="auto" sm="auto" xs="auto">
                                             <Button type="submit" className='d-inline-flex' variant={element.label ? "outline-primary" : "outline-success"} size="sm"

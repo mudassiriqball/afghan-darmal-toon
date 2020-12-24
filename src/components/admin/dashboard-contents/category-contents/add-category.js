@@ -43,30 +43,6 @@ class AddCategory extends Component {
         });
     }
 
-    async addCategory(values, currentComponent) {
-        this.setState({ isLoading: true });
-        await axios.post(urls.POST_REQUEST.ADD_CATEGORY, {
-            category: this.state.category.value,
-            sub_category: this.state.subCategory.value,
-        }, {
-            headers: {
-                'authorization': currentComponent.state.token,
-            }
-        }).then(function (res) {
-            currentComponent.setState({
-                isLoading: false,
-                showToast: true,
-                isCategoryNew: false,
-                isSubCategoryNew: false,
-                category: '',
-                subCategory: '',
-            })
-            currentComponent.categoriesReloadHandler()
-        }).catch(function (error) {
-            currentComponent.setState({ isLoading: false });
-            alert('Error: ', 'Add Category Failed!\nPlease try again.');
-        });
-    }
     handleCategoryChange = (e) => {
         this.setState({ categoryError: '' })
         let search = null
@@ -121,12 +97,30 @@ class AddCategory extends Component {
                             subCategoryError: 'Must be 3-25 caracters'
                         })
                     } else {
+                        const currentComponent = this;
                         this.setState({ isLoading: true });
-                        setSubmitting(true);
-                        setTimeout(() => {
-                            this.addCategory(values, this)
-                            setSubmitting(false);
-                        }, 500);
+                        axios.post(urls.POST_REQUEST.ADD_CATEGORY, {
+                            category: currentComponent.state.category.value,
+                            sub_category: currentComponent.state.subCategory.value,
+                        }, {
+                            headers: {
+                                'authorization': currentComponent.state.token,
+                            }
+                        }).then(function (res) {
+                            currentComponent.setState({
+                                isLoading: false,
+                                showToast: true,
+                                isCategoryNew: false,
+                                isSubCategoryNew: false,
+                                category: '',
+                                subCategory: '',
+                            })
+                            currentComponent.props.categoriesReloadHandler();
+                        }).catch(function (error) {
+                            console.log('Add category err:', error)
+                            currentComponent.setState({ isLoading: false });
+                            alert('Add Category Failed!\nPlease try again.');
+                        });
                     }
                 }}
             >

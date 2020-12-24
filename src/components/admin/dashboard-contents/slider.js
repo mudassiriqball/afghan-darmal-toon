@@ -106,7 +106,7 @@ class Slider extends Component {
         let copyArray = [];
         copyArray = Object.assign([], this.state.sliders_list);
         copyArray[index].newImg = e.target.files[0];
-        copyArray[index].url = URL.createObjectURL(e.target.files[0])
+        copyArray[index].imageUrl = URL.createObjectURL(e.target.files[0])
         copyArray[index].imgError = '';
         this.setState({ sliders_list: copyArray })
     }
@@ -121,9 +121,9 @@ class Slider extends Component {
         obj['category'] = copyArray[index].category;
         obj['sub_category'] = copyArray[index].sub_category;
 
-        obj['url'] = copyArray[index].url;
+        obj['imageUrl'] = copyArray[index].imageUrl;
         obj['newImg'] = '';
-        obj['prevUrl'] = copyArray[index].url;
+        obj['prevUrl'] = copyArray[index].imageUrl;
 
         obj['isLoading'] = false;
         obj['imgError'] = '';
@@ -135,7 +135,7 @@ class Slider extends Component {
     handleCancelClick(index) {
         let copyArray = [];
         copyArray = Object.assign([], this.state.sliders_list);
-        copyArray[index].url = copyArray[index].prevUrl;
+        copyArray[index].imageUrl = copyArray[index].prevUrl;
         copyArray[index].imgError = '';
         copyArray[index].isEdit = false;
         this.setState({ sliders_list: copyArray })
@@ -145,7 +145,7 @@ class Slider extends Component {
     async handleUpdateClick(index) {
         let copyArray = [];
         copyArray = Object.assign([], this.state.sliders_list);
-        if (copyArray[index].url == copyArray[index].prevUrl) {
+        if (copyArray[index].imageUrl == copyArray[index].prevUrl) {
             copyArray[index].imgError = 'Select Img'
 
         } else {
@@ -214,6 +214,65 @@ class Slider extends Component {
         });
     }
 
+
+    uploadSilder = async (values, setSubmitting, resetForm) => {
+        this.setState({ isLoading: true });
+        setSubmitting(true);
+        const currentComponent = this;
+        let uploaded = false;
+        let secure_url = '';
+        const data = new FormData();
+        data.append('file', this.state.img);
+        data.append('upload_preset', 'afghandarmaltoon');
+        await fetch('https://api.cloudinary.com/v1_1/dhm7n3lg7/image/upload', {
+            method: 'POST',
+            body: data,
+        }).then(async res => {
+            uploaded = true;
+            let dataa = await res.json();
+            secure_url = dataa.secure_url;
+            console.log('ImageUrl:', dataa.secure_url)
+            this.setState({ isLoading: false });
+        }).catch(err => {
+            uploaded = false;
+            console.log('error:', err)
+            this.setState({ isLoading: false });
+            alert("Error", "An Error Occured While Uploading")
+            return;
+        })
+
+        if (uploaded) {
+            await axios.post(urls.POST_REQUEST.ADD_SLIDER,
+                {
+                    category: this.state.category.value,
+                    sub_category: this.state.sub_category.value,
+                    imageUrl: secure_url
+                }, {
+                headers: {
+                    'authorization': currentComponent.props.token,
+                }
+            }).then(function (response) {
+                resetForm();
+                currentComponent.setState({
+                    isLoading: false,
+                    showToast: true,
+                    toastMsg: 'Category Added Successfully',
+                    sub_categories: [],
+                    category: '',
+                    sub_category: '',
+                    sub_categoryDisabled: true,
+                    img: '',
+                })
+                currentComponent.props.sliderReloadHandler();
+            }).catch(function (error) {
+                console.log('Add slider error:', error)
+                currentComponent.setState({ isLoading: false });
+                alert('Add Slider Failed!\nPlease try again later');
+            });
+        }
+        setSubmitting(false);
+    }
+
     render() {
         return (
             <Formik
@@ -232,60 +291,7 @@ class Slider extends Component {
                         }
                     }
                     else {
-                        this.setState({ isLoading: true });
-                        setSubmitting(true);
-                        setTimeout(() => {
-                            let uploaded = false;
-                            let secure_url = '';
-                            const data = new FormData();
-                            data.append('file', this.state.img);
-                            data.append('upload_preset', 'afghandarmaltoon');
-                            fetch('https://api.cloudinary.com/v1_1/dhm7n3lg7/image/upload', {
-                                method: 'POST',
-                                body: data,
-                            }).then(async res => {
-                                uploaded = true;
-                                let dataa = await res.json();
-                                secure_url = dataa.secure_url;
-                                console.log('ImageUrl:', dataa.secure_url)
-                                this.setState({ isLoading: false });
-                            }).catch(err => {
-                                uploaded = false;
-                                console.log('error:', err)
-                                this.setState({ isLoading: false });
-                                alert("Error", "An Error Occured While Uploading")
-                                return;
-                            })
-                            if (uploaded) {
-                                axios.post(urls.POST_REQUEST.ADD_SLIDER,
-                                    {
-                                        category: this.state.category.value,
-                                        sub_category: this.state.sub_category.value,
-                                        imageUrl: secure_url
-                                    }, {
-                                    headers: {
-                                        'authorization': currentComponent.props.token,
-                                    }
-                                }).then(function (response) {
-                                    resetForm();
-                                    currentComponent.setState({
-                                        isLoading: false,
-                                        showToast: true,
-                                        toastMsg: 'Category Added Successfully',
-                                        sub_categories: [],
-                                        category: '',
-                                        sub_category: '',
-                                        sub_categoryDisabled: true,
-                                        img: '',
-                                    })
-                                    currentComponent.props.sliderReloadHandler()
-                                }).catch(function (error) {
-                                    currentComponent.setState({ isLoading: false });
-                                    alert('Error: ', 'Add Slider Failed!\nPlease try again later');
-                                });
-                            }
-                            setSubmitting(false);
-                        }, 500);
+                        this.uploadSilder(values, setSubmitting, resetForm);
                     }
                 }}
             >
@@ -467,7 +473,7 @@ class Slider extends Component {
                                                 </Row>
                                             </Col>
                                             <Col>
-                                                <Image src={element.url} fluid style={{ width: '100%', borderRadius: '5px', border: '0.5px solid lightgray' }} />
+                                                <Image src={element.imageUrl} fluid style={{ width: '100%', borderRadius: '5px', border: '0.5px solid lightgray' }} />
                                             </Col>
                                         </Form.Row>
                                         <div className='w-100 mt-5 mb-2' style={{ background: 'lightgray', minHeight: '5px' }}></div>

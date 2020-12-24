@@ -81,7 +81,7 @@ export default function Toolbar(props) {
 
     return (
         <div className='toolbar'>
-            <Navbar collapseOnSelect expand="lg" style={{ background: theme.COLORS.SEC, padding: '0.45% 6%', width: '100vw', minWidth: '100%' }} variant='dark'>
+            <Navbar collapseOnSelect expand="lg" style={{ background: theme.COLORS.SEC, padding: '0.45% 6%', width: '100vw', minWidth: '100%', width: '100%' }} variant='dark'>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" style={{ marginTop: '10px', marginBottom: '10px', marginRight: 'auto' }} />
                 <Navbar.Collapse id="responsive-navbar-nav ">
                     <Nav className="mr-auto">
@@ -198,6 +198,9 @@ export default function Toolbar(props) {
                 </Navbar.Collapse>
             </Navbar>
             <style jsx>{`
+                .toolbar {
+                    width: 100%;
+                }
                 .toolbar .signupSpan {
                     cursor: pointer;
                 }
