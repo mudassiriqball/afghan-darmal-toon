@@ -21,8 +21,8 @@ router.get("/customers", UserController.get_customers);
 router.get("/restricted-customers", UserController.get_restricted_customers);
 router.get("/cart/:_id", UserController.get_cart);
 router.get("/all/user/count", UserController.get_total_specific_users);
-router.get("all-users/page/limit/by-status/:_role", UserController.get_user_by_role);
-router.get("/all-users/search/by-status/:_role", UserController.get_users_by_query) //has
+router.get("/all-users/page/limit/by-status/:_role", UserController.get_user_by_role);
+router.get("/all-users/search/by-status/:_role", UserController.get_users_by_query);
 // router.get("/:_id",UserController.getSingleUser);
 
 // put Requests

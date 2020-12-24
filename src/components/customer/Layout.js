@@ -36,7 +36,7 @@ export default function Layout(props) {
 
     return (
         <div className='_layout'>
-            {/* <Toolbar user={user} /> */}
+            <Toolbar user={user} />
             {/* Nav Links */}
             <div className={`sticky-wrapper${isSticky ? ' sticky' : ''}`} ref={ref}>
                 <Navbar collapseOnSelect expand="lg" className='sticky-inner' style={{ justifyContent: 'center' }} variant='light'>

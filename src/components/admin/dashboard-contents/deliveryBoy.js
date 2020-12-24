@@ -109,7 +109,7 @@ class deliveryBoy extends React.Component {
                         <Row className='Card' noGutters>
                             <Col lg={4} md={4} sm={12} xs={12} style={styles.col} className='p-0 m-0'>
                                 <CountColoredCard
-                                    count={this.props.customers_count}
+                                    count={this.props.delivery_boy_count}
                                     header={'All Delivery Boys'}
                                     background={'lightblue'}
                                     iconname={faUserPlus}

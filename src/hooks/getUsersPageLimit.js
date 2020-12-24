@@ -16,16 +16,6 @@ export default function getUsersPageLimit(token, refresh, role, status, pageNumb
         let unmounted = true;
         const CancelToken = axios.CancelToken;
         const source = CancelToken.source();
-        // let _url = '';
-        // if (url === null) {
-        //     _url = urls.GET_REQUEST.APPROVED_CUSTOMERS;
-        // } else if (url == 'approved') {
-        //     _url = urls.GET_REQUEST.APPROVED_CUSTOMERS;
-        // } else if (url === 'disapproved') {
-        //     _url = urls.GET_REQUEST.DIS_APPROVED_CUSTOMERS;
-        // } else if (url === 'restricted') {
-        //     _url = urls.GET_REQUEST.RESTRICTED_CUSTOMERS;
-        // }
         const getData = () => {
             if (token != null) {
                 setLoading(true)
@@ -39,6 +29,7 @@ export default function getUsersPageLimit(token, refresh, role, status, pageNumb
                     params: { page: pageNumber, limit: limit, status: status },
                     cancelToken: source.token
                 }).then(res => {
+                    debugger
                     if (unmounted) {
                         setLoading(false)
                         setUsers(prevPro => {

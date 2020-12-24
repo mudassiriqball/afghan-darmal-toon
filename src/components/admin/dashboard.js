@@ -52,14 +52,11 @@ const Dashboard = props => {
                             <NavDropdown className='nav_dropdown' title={
                                 <FontAwesomeIcon icon={faCog} style={styles.cog_fontawesome} />
                             } id="nav-dropdown" alignRight>
-                                <NavDropdown.Item onClick={() => Router.push('/user/profile')} className='profile_md_lg'>
+                                <NavDropdown.Item onClick={() => Router.push('/profile')} className='profile_md_lg'>
                                     <FontAwesomeIcon icon={faUserCircle} className='dropdown_fontawesome' />
-                                        Profile
-                                    </NavDropdown.Item>
-                                <NavDropdown.Item onClick={() => Router.push('/user/account')} className='profile_xs_sm'>
-                                    <FontAwesomeIcon icon={faUserCircle} className='dropdown_fontawesome' />
-                                        Profile
-                                    </NavDropdown.Item>
+                                    {'Profile'}
+                                </NavDropdown.Item>
+
                                 <NavDropdown.Item className='dropdown_item'>
                                     <FontAwesomeIcon icon={faHandsHelping} className='dropdown_fontawesome' />
                                         Help?
