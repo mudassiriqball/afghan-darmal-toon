@@ -33,6 +33,7 @@ export default function Toolbar(props) {
                 setmobileError('Required *');
             else
                 setmobileError('');
+
             if (password == '')
                 setpasswordError('Required *');
             else
@@ -73,7 +74,8 @@ export default function Toolbar(props) {
 
     // Acccount
     const logoutUser = async () => {
-        if (await removeTokenFromStorage()) {
+        const loggedOut = await removeTokenFromStorage();
+        if (loggedOut) {
             Router.replace('/');
         }
     }
@@ -123,7 +125,7 @@ export default function Toolbar(props) {
                                                     <Form.Control
                                                         type="password"
                                                         value={password}
-                                                        onChange={(e) => setPassword(e.target.value)}
+                                                        onChange={(e) => { setPassword(e.target.value), setpasswordError('') }}
                                                         placeholder="Password"
                                                         onKeyPress={(e) => handleEnterKeyPress(e)}
                                                     />

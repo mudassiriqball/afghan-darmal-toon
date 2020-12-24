@@ -148,7 +148,7 @@ app
 
 
     app.set("port", process.env.PORT);
-    server.listen(process.env.PORT);
+    server.listen(process.env.PORT || 5000, '0.0.0.0');
     console.log("listening on port", process.env.PORT);
   })
   .catch(ex => {
