@@ -31,5 +31,4 @@ router.put("/delete-product/:_id", checkAuth, productController.deleteProduct);
 
 router.put("/product/update/product/:_id", checkAuth, productController.update_product_data);
 router.put("/product/update/product-variation/:_id", checkAuth, productController.update_product_variation_data);
-
 module.exports = router;
