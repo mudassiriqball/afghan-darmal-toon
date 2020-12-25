@@ -137,7 +137,7 @@ app
 
     app.use("/api/users", UsersRoutes);
     app.use("/api/products", ProductRoutes);
-    app.use("/api/category", CategoryRoutes);
+    app.use("/api/categories", CategoryRoutes);
     app.use("/api/sliders", SlidersRoutes);
 
 
