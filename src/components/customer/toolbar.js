@@ -3,7 +3,7 @@ import { Card, Dropdown, Form, Nav, Navbar } from 'react-bootstrap'
 import theme from '../../constants/theme'
 import PhoneInput from 'react-phone-input-2'
 import renderError from '../renderError'
-import globalStyle from '../../utils/styles/globalStyle'
+import globalStyle from '../../utils/styles/globalStyle';
 import Link from 'next/link'
 import urls from '../../utils/urls'
 import { saveTokenToStorage, removeTokenFromStorage } from '../../utils/services/auth'
