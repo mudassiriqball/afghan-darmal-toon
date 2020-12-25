@@ -150,9 +150,9 @@ export default function Layout(props) {
                                     <FontAwesomeIcon icon={faListUl} style={styles.category_fontawesome} />
                                     {'CATEGORIES'}
                                 </Dropdown.Toggle>
-                                <Dropdown.Menu className='dropdown-menu dropdown_menue' style={{ border: 'none', paddingTop: '27px', background: 'white' }}>
-                                    <Row noGutters onMouseLeave={() => categoryMouseLeave()} style={{ boxShadow: `0px 0px 5px #e6e6e6` }}>
-                                        <Col style={{ overflowY: 'auto', zIndex: 1, minHeight: '500px', maxHeight: '500px', padding: '2% 0%' }}>
+                                <Dropdown.Menu className='dropdown-menu dropdown_menue' style={{ border: 'none', paddingTop: '27px', background: 'none' }}>
+                                    <Row noGutters onMouseLeave={() => categoryMouseLeave()} style={{ boxShadow: `0px 0px 5px #e6e6e6`, paddingTop: '20px', background: theme.COLORS.WHITE }}>
+                                        <Col style={{ overflowY: 'auto', zIndex: 1, minHeight: '500px', maxHeight: '500px' }}>
                                             {props.categories_list && props.categories_list.map((element, index) =>
                                                 <Link key={index} href='/products/category/[category]' as={`/products/category/${element.value}`} >
                                                     {props.active_category == element.value ?
@@ -168,7 +168,7 @@ export default function Layout(props) {
                                             )}
                                         </Col>
                                         {/* {category_id ? */}
-                                        <Col style={{ minHeight: '500px', maxHeight: '50px', overflowY: 'auto', boxShadow: `0px 0px 5px #e6e6e6`, padding: '2% 0%' }}>
+                                        <Col style={{ minHeight: '500px', maxHeight: '50px', overflowY: 'auto' }}>
                                             {props.sub_categories_list && props.sub_categories_list.map((element, index) =>
                                                 element.category_id == category_id._id ?
                                                     <Link href='/products/category/[category]/[sub_category]' as={`/products/category/${category_id.value}/${element.value}`} key={index} >
@@ -404,19 +404,18 @@ export default function Layout(props) {
                 }
                 ._layout .category_list_item {
                     cursor: pointer;
-                    width: 98%;
+                    width: 96%;
                     display: inline-flex;
                     align-items: center;
-                    font-size: 14px;
+                    font-size: 16px;
                     padding: 1.5% 4%;
-                    margin: 0% -2% 0% 2%;
+                    margin: 0% 2% 0% 2%;
                     color: gray;
                 }
                 ._layout .category_list_item:hover{
                     z-index: 100;
                     color: #005ce6;
-                    border-radius: 2px;
-                    box-shadow: -1px 0px 10px 1px rgba(0,0,0,0.12);
+                    background: ${theme.COLORS.MAIN};
                 }
 
                 ._layout .cart {
