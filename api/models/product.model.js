@@ -6,10 +6,10 @@ const Product = new Schema({
   vendor_id: {
     type: Schema.Types.ObjectId,
   },
-  categoryId:{
+  categoryId: {
     type: Schema.Types.ObjectId,
   },
-  subCategoryId:{
+  subCategoryId: {
     type: Schema.Types.ObjectId,
   },
   name: {
@@ -18,15 +18,15 @@ const Product = new Schema({
   product_weight: {
     type: Number,
   },
- 
-  handlingFee:{
+
+  handlingFee: {
     type: Number,
   },
 
   description: {
     type: String,
   },
-  brand:{
+  brand: {
     type: String,
   },
   price: {
@@ -57,6 +57,17 @@ const Product = new Schema({
   imagesUrl: [
     {
       imageurl: {
+        type: String,
+      },
+    },
+  ],
+
+  specifications: [
+    {
+      name: {
+        type: String,
+      },
+      value: {
         type: String,
       },
     },
