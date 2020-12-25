@@ -134,11 +134,11 @@ export default function Layout(props) {
             </div>
             {/* Nav Links */}
             <div className={`sticky-wrapper${isSticky ? ' sticky' : ''}`} ref={ref}>
-                <Navbar collapseOnSelect expand="lg" className='sticky-inner' style={{ justifyContent: 'center' }} variant='light'>
+                <Navbar collapseOnSelect expand="md" className='sticky-inner' style={{ justifyContent: 'center' }} variant='light'>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" style={{ marginTop: '10px', marginBottom: '10px', marginRight: 'auto' }} />
                     <Navbar.Collapse id="responsive-navbar-nav">
                         {/* Categories */}
-                        <Nav className='mr-auto categories_nav'>
+                        <Nav className='categories_nav d-flex'>
                             <Dropdown
                                 onMouseOver={() => { setIsCategoryOpen(true), setHoverCategory(true) }}
                                 onMouseLeave={() => { setIsCategoryOpen(false), setHoverCategory(false) }}
@@ -191,11 +191,10 @@ export default function Layout(props) {
                             </ Dropdown>
                         </Nav>
                         {/* End of categories */}
-                        <Nav className="justify-content-center" style={{ flex: 1, }}>
+                        <Nav className="justify-content-center mr-auto ml-auto" >
                             {/* HOME */}
                             <Dropdown show={showHomeDropDown}
                                 flip={"true"}
-                                // onClick={() => setshowHomeDropDown(!showHomeDropDown)}
                                 onMouseEnter={() => setshowHomeDropDown(true)}
                                 onMouseLeave={() => setshowHomeDropDown(false)}>
                                 <Dropdown.Toggle as={Nav.Link}
@@ -216,7 +215,6 @@ export default function Layout(props) {
                             {/* PAGES */}
                             <Dropdown show={showPagesDropDown}
                                 flip={"true"}
-                                // onClick={() => setshowPagesDropDown(!showPagesDropDown)}
                                 onMouseEnter={() => setshowPagesDropDown(true)}
                                 onMouseLeave={() => setshowPagesDropDown(false)}>
                                 <Dropdown.Toggle as={Nav.Link}
@@ -245,7 +243,6 @@ export default function Layout(props) {
                             {/* SERVICES */}
                             <Dropdown show={showServicesDropDown}
                                 flip={"true"}
-                                // onClick={() => setshowServicesDropDown(!showServicesDropDown)}
                                 onMouseEnter={() => setshowServicesDropDown(true)}
                                 onMouseLeave={() => setshowServicesDropDown(false)}>
                                 <Dropdown.Toggle as={Nav.Link}
@@ -264,14 +261,11 @@ export default function Layout(props) {
                                 </Dropdown.Menu>
                             </Dropdown>
 
-
-
                             {/* Login/Signup/ sm xs */}
                             <div className='login_siginup_sm_xs'>
                                 {user && user.fullName === '' &&
                                     <Dropdown show={showDropdown}
                                         flip={"true"}
-                                        // onClick={() => setShowDropdown(!showDropdown)}
                                         onMouseEnter={() => setShowDropdown(true)}
                                         onMouseLeave={() => setShowDropdown(false)}>
                                         <Dropdown.Toggle as={Nav.Link}
@@ -330,7 +324,6 @@ export default function Layout(props) {
                                 {user && user.fullName !== '' &&
                                     <Dropdown show={showDropdown}
                                         flip={"true"}
-                                        // onClick={() => setShowDropdown(!showDropdown)}
                                         onMouseEnter={() => setShowDropdown(true)}
                                         onMouseLeave={() => setShowDropdown(false)}>
                                         <Dropdown.Toggle as={Nav.Link}
@@ -374,7 +367,7 @@ export default function Layout(props) {
                                 }
                             </div>
                         </Nav>
-                        <Nav className="justify-content-center flex-row" style={{ flex: 1 }}>
+                        <Nav className="justify-content-center flex-row m-0 p-0">
                             <div className='cart'>
                                 <Nav.Link href="#" onClick={() => setDotsView(!dotsView)} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '60px', height: '60px' }}>
                                     <BiDotsVertical style={styles.cart} />
@@ -448,7 +441,7 @@ export default function Layout(props) {
                 }
                 ._layout .sticky .sticky-inner {
                     background: ${theme.COLORS.WHITE};
-                    padding: 1% 6%;
+                    padding: 1% 10%;
                     border-bottom: 1px solid white;
                     box-shadow: 0px 0px 10px 0.5px #e6e6e6;
                     position: fixed;
@@ -461,7 +454,7 @@ export default function Layout(props) {
                 }
                 ._layout .sticky-inner {
                     align-items: center;
-                    padding: 1.7% 6%;
+                    padding: 1.7% 10%;
                     margin: 0;
                     width: 100%;
                     background: ${theme.COLORS.WHITE};
@@ -473,8 +466,11 @@ export default function Layout(props) {
                     }
                 }
                 @media (max-width: 991px) {
+                     ._layout .sticky .sticky-inner {
+                        padding: 1% 2%;
+                    }
                     ._layout .sticky-inner {
-                        padding: 2% 4%;
+                        padding: 1.7% 2%;
                     }
                     ._layout .afghandarmaltoon { 
                         font-size: 25px;
