@@ -111,52 +111,13 @@ productsController.add_rating_and_review = async (req, res) => {
 productsController.addProduct = async (req, res) => {
   const body = req.body;
 
-  var url;
-  const urls = [];
-  for (const file of req.files) {
-    urls.push({ url: file.location });
-  }
-
   try {
-    body.dangerous_goods = JSON.parse(body.dangerous_goods);
-    body.product_tags = JSON.parse(body.product_tags);
 
     var datetime = new Date();
     body.isdeleted = false;
     body.entry_date = datetime;
     const header = jwt.decode(req.headers.authorization);
     body.vendor_id = header.data._id;
-    if (body.product_type === "simple-product") {
-      const body1 = {
-        rating: {
-          one_star: 0,
-          two_star: 0,
-          three_star: 0,
-          four_star: 0,
-          five_star: 0,
-          overall: 0,
-        },
-      };
-      body.rating_review = body1;
-      body.custom_fields = JSON.parse(body.custom_fields);
-      body.product_image_link = urls;
-      body.product_variations = undefined;
-    } else if (body.product_type === "variable-prouct") {
-      body.product_image_link = undefined;
-      body.custom_fields = undefined;
-      body.product_variations = JSON.parse(body.product_variations);
-      var count = 0;
-      for (let index = 0; index < body.product_variations.length; index++) {
-        for (
-          let k = 0;
-          k < body.product_variations[index].image_link.length;
-          k++
-        ) {
-          body.product_variations[index].image_link[k] = urls[count];
-          count++;
-        }
-      }
-    }
     const product = new Products(body);
     const result = await product.save();
     res.status(200).send({

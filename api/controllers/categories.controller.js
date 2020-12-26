@@ -25,8 +25,8 @@ categoriesController.add_Category = async (req, res) => {
       body.value = body.sub_category;
       body.category_id = category._id;
 
-      const sub_category = new Sub_Categories(body);
-      const result1 = await sub_category.save();
+      const subcategory = new Sub_Categories(body);
+      const result1 = await subcategory.save();
       res.status(200).send({
         code: 200,
         message: "Category Added Successfully",
@@ -40,8 +40,8 @@ categoriesController.add_Category = async (req, res) => {
         body.label = body.sub_category;
         body.value = body.sub_category;
         body.category_id = search._id;
-        const sub_category = new Sub_Categories(body);
-        const result1 = await sub_category.save();
+        const sub_Category = new Sub_Categories(body);
+        const result1 = await sub_Category.save();
         res.status(200).send({
           code: 200,
           message: "Category Added Successfully",
