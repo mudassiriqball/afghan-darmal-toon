@@ -109,14 +109,14 @@ class deliveryBoy extends React.Component {
                         <Row className='Card' noGutters>
                             <Col lg={4} md={4} sm={12} xs={12} style={styles.col} className='p-0 m-0'>
                                 <CountColoredCard
-                                    count={this.props.customers_count}
+                                    count={this.props.delivery_boy_count}
                                     header={'All Delivery Boys'}
                                     background={'lightblue'}
                                     iconname={faUserPlus}
                                 />
                             </Col>
                         </Row>
-                        <CustomerTable
+                        <DeliveryBoyTable
                             header={'All Delivery Boys'}
                             rank={true}
                             setView={(element) => this.setState({
@@ -266,7 +266,7 @@ class deliveryBoy extends React.Component {
     }
 }
 
-function CustomerTable(props) {
+function DeliveryBoyTable(props) {
     const [page, setPage] = useState(1)
     const [queryPage, setQueryPage] = useState(1)
     const [pageNumber, setpageNumber] = useState(1)
@@ -386,27 +386,10 @@ function CustomerTable(props) {
                         :
                         USERS_PAGE_TOTAL > 0 ?
                             <>
-                                <CustomerTableBody
+                                <DeliveryBoyTableBody
                                     pageNumber={page}
                                     list={USERS_PAGE_USERS}
-                                    rank={props.rank}
                                     setView={props.setView}
-                                    setRestrict={(element) => {
-                                        setMethod('Restricted')
-                                        setSingle_customer(element)
-                                        setShowConfirmModal(true)
-                                        setConfirmModalMsg('Restrict Customer?')
-                                        setConfirmModalColor('red')
-                                        setIconname(faBan)
-                                    }}
-                                    setUnrestrict={(element) => {
-                                        setMethod('Unrestricted')
-                                        setSingle_customer(element)
-                                        setShowConfirmModal(true)
-                                        setConfirmModalMsg('Unrestrict/Unblock Customer?')
-                                        setConfirmModalColor('blue')
-                                        setIconname(faCheckCircle)
-                                    }}
                                 />
                                 <hr />
                                 <PaginationRow
@@ -423,27 +406,10 @@ function CustomerTable(props) {
                         :
                         USERS_SEARCH_TOTAL ?
                             <>
-                                <CustomerTableBody
+                                <DeliveryBoyTableBody
                                     pageNumber={queryPage}
                                     list={USERS_SEARCH_USERS}
-                                    rank={props.rank}
                                     setView={props.setView}
-                                    setRestrict={(element) => {
-                                        setMethod('Restricted')
-                                        setSingle_customer(element)
-                                        setShowConfirmModal(true)
-                                        setConfirmModalMsg('Restrict Customer?')
-                                        setConfirmModalColor('red')
-                                        setIconname(faBan)
-                                    }}
-                                    setUnrestrict={(element) => {
-                                        setMethod('Unrestricted')
-                                        setSingle_customer(element)
-                                        setShowConfirmModal(true)
-                                        setConfirmModalMsg('Unrestrict/Unblock Customer?')
-                                        setConfirmModalColor('blue')
-                                        setIconname(faCheckCircle)
-                                    }}
                                 />
                                 <hr />
                                 <PaginationRow
@@ -469,7 +435,7 @@ function CustomerTable(props) {
     )
 }
 
-function CustomerTableBody(props) {
+function DeliveryBoyTableBody(props) {
     const [lower_limit, setlower_limit] = useState(0)
     const [upper_limit, setupper_limit] = useState(0)
 
@@ -487,14 +453,8 @@ function CustomerTableBody(props) {
                         <th>ID</th>
                         <th>Mobile</th>
                         <th>Name</th>
-                        <th>Gender</th>
-                        <th>Countary</th>
                         <th>City</th>
                         <th>Address</th>
-                        {props.rank ?
-                            <th>Rank</th>
-                            : null
-                        }
                         <th>Date</th>
                     </tr>
                 </thead>
@@ -502,27 +462,10 @@ function CustomerTableBody(props) {
                     {props.list && props.list.map((element, index) =>
                         index >= lower_limit && index < upper_limit && <tr key={index}>
                             <td align="center" >{index + 1}</td>
-                            <td>
-                                {element._id}
-                                <div className="td">
-                                    <Nav.Link style={styles.nav_link} className='pt-0' onClick={() => props.setView(element)} > View </Nav.Link>
-                                    {element.status == 'restricted' ?
-                                        <Nav.Link style={styles.nav_link} className='pt-0' onClick={() => props.setUnrestrict(element)}>Unrestrict</Nav.Link>
-                                        :
-                                        <Nav.Link style={styles.nav_link} className='pt-0 delete' onClick={() => props.setRestrict(element)}>Restrict</Nav.Link>
-                                    }
-                                </div>
-                            </td>
                             <td align="center" >{element.mobile}</td>
                             <td align="center" >{element.fullName}</td>
-                            <td align="center" >{element.gender}</td>
-                            <td align="center" >{element.countary}</td>
                             <td align="center" >{element.city}</td>
                             <td align="center" >{element.address}</td>
-                            {props.rank ?
-                                <td align="center" >{element.rank || '-'}</td>
-                                : null
-                            }
                             <td align="center" >{element.entry_date.substring(0, 10)}</td>
                         </tr>
                     )}

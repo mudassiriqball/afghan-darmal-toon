@@ -76,15 +76,15 @@ export default function Profile(props) {
             const _decoded_token = await checkTokenExpAuth()
             if (_decoded_token != null) {
                 setUser(_decoded_token);
-                getUser(_decoded_token._id);
-                await axios.get(urls.GET_REQUEST.CUSTOMER_ALL_ORDERS_COUNT + _decoded_token._id).then((res) => {
-                    setPending_orders_count(res.data.pending_orders_count)
-                    setDelivered_orders_count(res.data.delivered_orders_count)
-                    setCancelled_orders_count(res.data.cancelled_orders_count)
-                    setReturned_orders_count(res.data.returned_orders_count)
-                }).catch((error) => {
-                    console.log('user order count error in profile')
-                })
+                await getUser(_decoded_token._id);
+                // await axios.get(urls.GET_REQUEST.CUSTOMER_ALL_ORDERS_COUNT + _decoded_token._id).then((res) => {
+                //     setPending_orders_count(res.data.pending_orders_count)
+                //     setDelivered_orders_count(res.data.delivered_orders_count)
+                //     setCancelled_orders_count(res.data.cancelled_orders_count)
+                //     setReturned_orders_count(res.data.returned_orders_count)
+                // }).catch((error) => {
+                //     console.log('user order count error in profile',error)
+                // })
                 const _token = await getTokenFromStorage()
                 setToken(_token)
             } else {
@@ -99,9 +99,10 @@ export default function Profile(props) {
     }, []);
 
     async function getUser(id) {
-        await axios.get(urls.GET_REQUEST.USER_BY_ID + `/${id}`).then((res) => {
+        await axios.get(urls.GET_REQUEST.USER_BY_ID + id).then((res) => {
             setUser(res.data.data[0])
-            setCart_count(res.data.data[0].cart.length)
+            if ('cart' in res.data.data[0])
+                setCart_count(res.data.data[0].cart.length);
         }).catch((err) => {
             console.log('Get user error in profile', err);
         })

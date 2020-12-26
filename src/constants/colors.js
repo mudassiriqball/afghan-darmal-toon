@@ -33,6 +33,7 @@ export default {
     SEC: '#172B4D',
     SEC_HOVER: '#12213b',
     LINK: 'blue',
+    SHADOW: '#e6e6e6',
 
     // Admin
     ADMIN_MAIN: '#172B4D',

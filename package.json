@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": "12.13.0"
+    "node": "14.15.1",
+    "npm": "6.14.9"
   },
   "scripts": {
     "next": "next -p 3000",
@@ -11,7 +12,7 @@
     "debug": "NODE_OPTIONS='--inspect nodemon server.js",
     "build": "next build",
     "prod": "cross-env NODE_ENV=production nodemon server.js",
-    "start": "next build && nodemon server.js",
+    "start": "next build && node server.js",
     "export": "npm run build && next export"
   },
   "dependencies": {

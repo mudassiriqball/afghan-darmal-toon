@@ -20,34 +20,34 @@ export default function getAllOrdersSearch(token, refresh, status, fieldName, qu
         const source = CancelToken.source();
         const getData = () => {
             if (query != null) {
-                setLoading(true)
-                setError(false)
-                axios({
-                    method: 'GET',
-                    url: urls.GET_REQUEST.ALL_ORDERS_SEARCH_BY_STATUS + status,
-                    headers: {
-                        'authorization': token
-                    },
-                    params: {
-                        field: fieldName, q: query, page: pageNumber, limit: limit,
-                        start_date: moment(start_date).format('YYYY-MM-DD'), end_date: moment(end_date).format('YYYY-MM-DD')
-                    },
-                }).then(res => {
-                    if (unmounted) {
-                        setLoading(false)
-                        setQueryOrders(prevPro => {
-                            return [...new Set([...prevPro, ...res.data.data.docs])]
-                        })
-                        setPages(res.data.data.pages)
-                        setTotal(res.data.data.total)
-                    }
-                }).catch(err => {
-                    if (unmounted) {
-                        setLoading(false)
-                        if (axios.isCancel(err)) return
-                        setError(true)
-                    }
-                })
+                // setLoading(true)
+                // setError(false)
+                // axios({
+                //     method: 'GET',
+                //     url: urls.GET_REQUEST.ALL_ORDERS_SEARCH_BY_STATUS + status,
+                //     headers: {
+                //         'authorization': token
+                //     },
+                //     params: {
+                //         field: fieldName, q: query, page: pageNumber, limit: limit,
+                //         start_date: moment(start_date).format('YYYY-MM-DD'), end_date: moment(end_date).format('YYYY-MM-DD')
+                //     },
+                // }).then(res => {
+                //     if (unmounted) {
+                //         setLoading(false)
+                //         setQueryOrders(prevPro => {
+                //             return [...new Set([...prevPro, ...res.data.data.docs])]
+                //         })
+                //         setPages(res.data.data.pages)
+                //         setTotal(res.data.data.total)
+                //     }
+                // }).catch(err => {
+                //     if (unmounted) {
+                //         setLoading(false)
+                //         if (axios.isCancel(err)) return
+                //         setError(true)
+                //     }
+                // })
             }
         }
         getData()

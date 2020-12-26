@@ -374,10 +374,10 @@ function CustomersTable(props) {
     const [showAlertModal, setShowAlertModal] = useState(false)
     const [alertModalMsg, setAlertModalMsg] = useState(false)
 
-    const [iconname, setIconname] = useState(null)
+    const [iconname, setIconname] = useState(null);
 
     const { USERS_PAGE_LOADING, USERS_PAGE_ERROR, USERS_PAGE_USERS, USERS_PAGE_PAGES, USERS_PAGE_TOTAL } =
-        getUsersPageLimit(props.token, props.refresh, 'customer', props.staus, pageNumber, '20')
+        getUsersPageLimit(props.token, props.refresh, 'customer', props.status, pageNumber, '20')
     const { USERS_SEARCH_LOADING, USERS_SEARCH_ERROR, USERS_SEARCH_USERS, USERS_SEARCH_PAGES, USERS_SEARCH_TOTAL } =
         getUsersBySearch(props.token, props.refresh, 'customer', props.status, fieldName, query, queryPageNumber, '20')
 
