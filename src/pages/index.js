@@ -10,11 +10,14 @@ import axios from 'axios';
 import SliderCarousel from '../components/customer/slider-carousel';
 import Loading from '../components/loading';
 import InfoRow from '../components/customer/info-row';
+import MultiCarosuel from '../components/customer/multi-carosuel';
+import StickyBottomNavbar from '../components/customer/sticky-bottom-navbar';
 
 export async function getServerSideProps(context) {
   let sliders_list = []
   let categories_list = []
   let sub_categories_list = []
+  let products = [];
 
   await axios.get(urls.GET_REQUEST.SLIDERS).then((res) => {
     sliders_list = res.data.data
@@ -27,11 +30,17 @@ export async function getServerSideProps(context) {
   }).catch((error) => {
   })
 
+  await axios.get(urls.GET_REQUEST.ALL_PRODUCTS).then((res) => {
+    products = res.data.data
+  }).catch((error) => {
+  })
+
   return {
     props: {
       sliders_list,
       categories_list,
       sub_categories_list,
+      products,
     },
   }
 }
@@ -74,8 +83,8 @@ export default function Home(props) {
         <link rel="icon" href="/logo.jpg" />
         <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet" />
         <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossOrigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossOrigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossOrigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossOrigin="anonymous"></script>
       </Head>
       <main>
         <Layout
@@ -87,12 +96,14 @@ export default function Home(props) {
             sliders_list={props.sliders_list}
           />
           <InfoRow />
-          <h5 style={{ height: '500px', textAlign: 'center', marginTop: '200px' }}>
-            Welcome to <a href="#">Afghan Darmal Toon</a>
-          </h5>
         </Layout>
-
+        <MultiCarosuel
+          products={props.products}
+          categories_list={props.categories_list}
+          sub_categories_list={props.sub_categories_list}
+        />
         <Footer />
+        <StickyBottomNavbar isLoggedIn={user.fullName !== ''} />
       </main>
       <style jsx>{`
         ._container {

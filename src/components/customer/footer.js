@@ -37,13 +37,11 @@ export default function Footer() {
                     </Row>
                 </Card.Body>
             </Card>
-            <Row noGutters style={{ background: theme.COLORS.SEC_HOVER, }}>
-                <Col></Col>
-                <Col lg={4} md={4} sm={6} xs={12} className='d-flex flex-row justify-content-center align-items-center' >
-                    <h5 style={{ color: 'white' }}>Copyright By@Afghan Darmaltoon - 2020</h5>
+            <Row noGutters style={{ background: theme.COLORS.SEC_HOVER, padding: '2% 0%' }}>
+                <Col lg={6} md={6} sm={6} xs={12} className='d-flex justify-content-center align-items-center' >
+                    <h5 style={{ color: 'white', textAlign: 'center', pading: '0px' }}>Copyright By@Afghan Darmaltoon - 2020</h5>
                 </Col>
-                <Col></Col>
-                <Col lg={4} md={4} sm={6} xs={12} className='d-flex flex-row justify-content-center align-items-center' >
+                <Col lg={6} md={6} sm={6} xs={12} className='d-flex flex-row justify-content-center align-items-center' >
                     <div className='dotViewIcon'>
                         <FaFacebook style={styles.dotsSocialIconFB} />
                     </div>
@@ -93,7 +91,7 @@ export default function Footer() {
                     line-height: 40px;
                 }
             `}</style>
-        </div>
+        </div >
     )
 }
 const styles = {

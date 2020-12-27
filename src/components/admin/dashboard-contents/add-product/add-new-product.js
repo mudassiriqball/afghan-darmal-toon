@@ -69,8 +69,6 @@ class AddNew extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            userStatusAlert: false,
-            statusAlertMessage: '',
             isUpdateProduct: false,
             _id: this.props._id,
             clearFields: false,
@@ -158,7 +156,7 @@ class AddNew extends Component {
         await this.setState({ files: [...this.state.files, ...e.target.files], imgError: '' })
         let array = []
         this.state.files.forEach(element => {
-            array.push({ 'url': URL.createObjectURL(element) })
+            array.push({ 'imageUrl': URL.createObjectURL(element) })
         })
         this.setState({ imagePreviewArray: array })
     }
@@ -172,6 +170,7 @@ class AddNew extends Component {
     }
 
     uploadedImages = async (values) => {
+        let array = [];
         this.state.files && this.state.files.forEach(async (element) => {
             const data = new FormData();
             data.append('file', element);
@@ -181,15 +180,16 @@ class AddNew extends Component {
                 body: data,
             }).then(async res => {
                 let dataa = await res.json();
-                values.imageUrl.push({ 'imageUrl': dataa.secure_url });
+                array.push({ 'imageUrl': dataa.secure_url });
                 console.log('imageUrl:', dataa.secure_url)
             }).catch(err => {
                 console.log('error:', err)
-                currentComponent.setState({ isLoading: false });
+                this.setState({ isLoading: false });
                 alert("An Error Occured While Uploading")
                 return false;
             })
         })
+        values.imageUrl = array;
         return true;
     }
 
@@ -211,14 +211,12 @@ class AddNew extends Component {
             await axios.post(urls.POST_REQUEST.NEW_PRODUCT + this.props.user._id, values, config).then((res) => {
                 resetForm()
                 currentComponent.setState({
-                    userStatusAlert: false,
-                    statusAlertMessage: '',
                     isUpdateProduct: false,
                     _id: this.props._id,
                     clearFields: false,
                     isLoading: false,
-                    showToast: false,
-                    toastMessage: '',
+                    showToast: true,
+                    toastMessage: 'Product Uploaded Successfully',
                     showImgLinkErrorrAlert: false,
                     productCategory: '',
                     productSubCategory: '',
@@ -314,14 +312,6 @@ class AddNew extends Component {
                             null
                         } */}
                         <Form noValidate onSubmit={handleSubmit}>
-                            <AlertModal
-                                onHide={() => this.setState({ userStatusAlert: false })}
-                                show={this.state.userStatusAlert}
-                                header={'Error'}
-                                message={this.state.statusAlertMessage}
-                                iconname={faExclamationTriangle}
-                                color={"#ff3333"}
-                            />
                             <AlertModal
                                 onHide={(e) => this.setState({ showToast: false })}
                                 show={this.state.showToast}
@@ -468,7 +458,7 @@ class AddNew extends Component {
                                                 <Form.Row>
                                                     {(this.state.imagePreviewArray || []).map((element, index) => (
                                                         <div className="show-image" key={index}>
-                                                            <img style={{ height: '100px', width: '100px', margin: '1%' }} src={element.url} alt="..." />
+                                                            <img style={{ height: '100px', width: '100px', margin: '1%' }} src={element.imageUrl} alt="..." />
                                                             <input className="deleteImage" type="button" onClick={() => this.deleteImage(index)} value="Delete" />
                                                         </div>
                                                     ))}

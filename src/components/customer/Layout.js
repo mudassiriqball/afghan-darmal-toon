@@ -1,83 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Card, Col, Dropdown, Nav, Navbar, Row, Form } from 'react-bootstrap'
 import theme from '../../constants/theme'
-import { BiDotsVertical } from 'react-icons/bi';
-import { ImCart } from 'react-icons/im';
 import CssTransition from './CssTransition'
 import Toolbar from './toolbar';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faListUl } from '@fortawesome/free-solid-svg-icons'
-import PhoneInput from 'react-phone-input-2'
-import renderError from '../renderError'
-import globalStyle from '../../utils/styles/globalStyle';
 import Link from 'next/link'
-import urls from '../../utils/urls'
-import { saveTokenToStorage, removeTokenFromStorage } from '../../utils/services/auth'
-import axios from 'axios';
-import CustomButton from '../CustomButton'
-import jwt_decode from 'jwt-decode';
+import { removeTokenFromStorage } from '../../utils/services/auth'
 import Router from 'next/router';
 
-import { BiLogInCircle, BiLogOutCircle } from 'react-icons/bi';
-import { CgProfile } from 'react-icons/cg';
-import { RiDashboardFill } from 'react-icons/ri';
+import { BiDotsVertical } from 'react-icons/bi';
+import { ImCart } from 'react-icons/im';
+import { RiSearch2Line } from 'react-icons/ri';
 
 export default function Layout(props) {
     const { user } = props;
-
-    const [showDropdown, setShowDropdown] = useState(false);
-    const [passwordError, setpasswordError] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [mobile, setMobile] = useState('');
-    const [password, setPassword] = useState('');
-    const [mobileError, setmobileError] = useState('');
-    const [error, setError] = useState('');
-
-    // Login/Signup
-    const handleLogin = async () => {
-        if (mobile == '' || password == '') {
-            if (mobile == '')
-                setmobileError('Required *');
-            else
-                setmobileError('');
-
-            if (password == '')
-                setpasswordError('Required *');
-            else
-                setpasswordError('');
-        } else {
-            setLoading(true);
-            let data = {};
-            data = {
-                mobile: '+' + mobile,
-                password: password
-            };
-            await axios.post(urls.POST_REQUEST.LOGIN, data).then(function (res) {
-                console.log('ttoao:', res.data)
-                setLoading(false);
-                saveTokenToStorage(res.data.token);
-                const decodedToken = jwt_decode(res.data.token);
-                if (decodedToken.data.role == 'customer') {
-                    Router.replace('/')
-                } else if (decodedToken.data.role == 'admin') {
-                    Router.replace('/admin')
-                } else {
-                    Router.replace('/')
-                }
-            }).catch(function (err) {
-                setLoading(false);
-                setError('Incorrect mobile or password!')
-                console.log('Login error:', err);
-            });
-        }
-    }
-    const handleEnterKeyPress = (e) => {
-        if (e.keyCode == 13 || e.which == 13) {
-            handleLogin();
-        }
-    }
-    // End Of Login/Signup
-
 
     // Acccount
     const logoutUser = async () => {
@@ -87,7 +22,6 @@ export default function Layout(props) {
         }
     }
     // End Of Acccount
-
 
     // 2nd Nav
     const [pagesHover, setpagesHover] = useState(false);
@@ -137,8 +71,8 @@ export default function Layout(props) {
                 <Navbar collapseOnSelect expand="md" className='sticky-inner' style={{ justifyContent: 'center' }} variant='light'>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" style={{ marginTop: '10px', marginBottom: '10px', marginRight: 'auto' }} />
                     <Navbar.Collapse id="responsive-navbar-nav">
-                        {/* Categories */}
-                        <Nav className='categories_nav d-flex'>
+                        {/* Categories lg md*/}
+                        <Nav className='sm_xs_display_none'>
                             <Dropdown
                                 onMouseOver={() => { setIsCategoryOpen(true), setHoverCategory(true) }}
                                 onMouseLeave={() => { setIsCategoryOpen(false), setHoverCategory(false) }}
@@ -147,7 +81,6 @@ export default function Layout(props) {
                                 <Dropdown.Toggle as={Nav.Link} className='d-flex flex-row align-items-center'
                                     style={{ fontWeight: 'bold', background: hoverCategory ? theme.COLORS.MAIN : theme.COLORS.WHITE, padding: '20px 30px' }}
                                 >
-                                    <FontAwesomeIcon icon={faListUl} style={styles.category_fontawesome} />
                                     {'CATEGORIES'}
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu className='dropdown-menu dropdown_menue' style={{ border: 'none', paddingTop: '27px', background: 'none' }}>
@@ -260,122 +193,21 @@ export default function Layout(props) {
                                     </Card>
                                 </Dropdown.Menu>
                             </Dropdown>
-
-                            {/* Login/Signup/ sm xs */}
-                            <div className='login_siginup_sm_xs'>
-                                {user && user.fullName === '' &&
-                                    <Dropdown show={showDropdown}
-                                        flip={"true"}
-                                        onMouseEnter={() => setShowDropdown(true)}
-                                        onMouseLeave={() => setShowDropdown(false)}>
-                                        <Dropdown.Toggle as={Nav.Link}
-                                            style={{ fontWeight: 'bold', background: showDropdown ? theme.COLORS.MAIN : theme.COLORS.WHITE, padding: '20px 30px' }}
-                                        >
-                                            {'Login / Signup'}
-                                        </Dropdown.Toggle>
-                                        <Dropdown.Menu style={{ border: 'none', paddingTop: '5px', background: 'none' }} className='dropdown-menu dropdown-menu-right' >
-                                            <div style={{ marginTop: '5px', marginBottom: '5px', textAlign: 'center', color: theme.COLORS.MUTED }}>
-                                                {'Don\'t have account ? '}
-                                                <span className='signupSpan'><Link href='/signup'>{'Signup'}</Link></span>
-                                            </div>
-                                            <Card style={{ border: 'none' }}>
-                                                <Card.Body>
-                                                    <Form>
-                                                        <Form.Group controlId="formBasicEmail">
-                                                            <PhoneInput
-                                                                inputStyle={{ width: '100%' }}
-                                                                country={'pk'}
-                                                                onlyCountries={['pk', 'af']}
-                                                                value={''}
-                                                                disableDropdown
-                                                                onChange={phone => { setMobile(phone), setmobileError('') }}
-                                                                onKeyPress={(e) => handleEnterKeyPress(e)}
-                                                            />
-                                                            {mobileError !== '' && renderError(mobileError)}
-                                                        </Form.Group>
-                                                        <Form.Group controlId="formBasicPassword">
-                                                            <Form.Control
-                                                                type="password"
-                                                                value={password}
-                                                                onChange={(e) => { setPassword(e.target.value), setpasswordError('') }}
-                                                                placeholder="Password"
-                                                                onKeyPress={(e) => handleEnterKeyPress(e)}
-                                                            />
-                                                            {passwordError !== '' && renderError(passwordError)}
-                                                        </Form.Group>
-                                                        {error !== '' && renderError(error)}
-                                                        <CustomButton
-                                                            block
-                                                            loading={loading}
-                                                            disabled={loading}
-                                                            title={'Login'}
-                                                            onClick={() => handleLogin()}
-                                                        >
-                                                            {!loading && <BiLogInCircle style={globalStyle.leftIcon} />}
-                                                        </CustomButton>
-                                                    </Form>
-                                                    <a href="#" className='color w-100' style={{ fontSize: 'small', marginTop: '50px' }}>Forgot Password ?</a>
-                                                </Card.Body>
-                                            </Card>
-                                        </Dropdown.Menu>
-                                    </Dropdown>
-                                }
-                                {/* Account */}
-                                {user && user.fullName !== '' &&
-                                    <Dropdown show={showDropdown}
-                                        flip={"true"}
-                                        onMouseEnter={() => setShowDropdown(true)}
-                                        onMouseLeave={() => setShowDropdown(false)}>
-                                        <Dropdown.Toggle as={Nav.Link}
-                                            style={{ fontWeight: 'bold', background: showDropdown ? theme.COLORS.MAIN : theme.COLORS.WHITE, padding: '20px 30px' }}
-                                        >
-                                            {'Account'}
-                                        </Dropdown.Toggle>
-                                        <Dropdown.Menu className='dropdown-menu dropdown-menu-right' style={{ border: 'none', paddingTop: '27px', background: 'none' }} >
-                                            <Card style={{ boxShadow: `1px 0px 3px lightgray` }}>
-                                                <div className='link_div'>
-                                                    <Nav.Link href="/profile" onClick={() => setShowDropdown(false)} style={{ fontWeight: 'bolder', padding: '10px', color: theme.COLORS.SEC, fontSize: '12px', flexDirection: "row", alignItems: 'center' }}>
-                                                        <CgProfile style={{ color: theme.COLORS.SEC, fontSize: '20px', marginRight: '10px' }} />
-                                                        {'PROFILE'}
-                                                    </Nav.Link>
-                                                </div>
-                                                {user.role == 'admin' &&
-                                                    <div className='link_div'>
-                                                        <Nav.Link href="/admin" onClick={() => setShowDropdown(false)} style={{ fontWeight: 'bolder', padding: '10px', color: theme.COLORS.SEC, fontSize: '12px', flexDirection: "row", alignItems: 'center' }}>
-                                                            <RiDashboardFill style={{ color: theme.COLORS.SEC, fontSize: '20px', marginRight: '10px' }} />
-                                                            {'DASHBOARD'}
-                                                        </Nav.Link>
-                                                    </div>
-                                                }
-                                                {user.role == 'ministory' &&
-                                                    <div className='link_div'>
-                                                        <Nav.Link href="/admin" onClick={() => setShowDropdown(false)} style={{ fontWeight: 'bolder', padding: '10px', color: theme.COLORS.SEC, fontSize: '12px', flexDirection: "row", alignItems: 'center' }}>
-                                                            <RiDashboardFill style={{ color: theme.COLORS.SEC, fontSize: '20px', marginRight: '10px' }} />
-                                                            {'DASHBOARD'}
-                                                        </Nav.Link>
-                                                    </div>
-                                                }
-                                                <div className='link_div'>
-                                                    <Nav.Link href="#" onClick={() => logoutUser()} style={{ fontWeight: 'bolder', padding: '10px', color: theme.COLORS.SEC, fontSize: '12px', flexDirection: "row", alignItems: 'center' }}>
-                                                        <BiLogOutCircle style={{ color: theme.COLORS.SEC, fontSize: '20px', marginRight: '10px' }} />
-                                                        {'LOGOUT'}
-                                                    </Nav.Link>
-                                                </div>
-                                            </Card>
-                                        </Dropdown.Menu>
-                                    </Dropdown>
-                                }
-                            </div>
                         </Nav>
-                        <Nav className="justify-content-center flex-row m-0 p-0">
-                            <div className='cart'>
-                                <Nav.Link href="#" onClick={() => setDotsView(!dotsView)} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '60px', height: '60px' }}>
-                                    <BiDotsVertical style={styles.cart} />
+                        <Nav className="justify-content-center flex-row m-0 p-0 sm_xs_display_none">
+                            <div className='coloreBoxIcon'>
+                                <Nav.Link href="/search" onClick={() => setDotsView(!dotsView)} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '60px', height: '60px' }}>
+                                    <RiSearch2Line style={styles.coloreBoxIcon} />
                                 </Nav.Link>
                             </div>
-                            <div className='cart'>
+                            <div className='coloreBoxIcon'>
                                 <Nav.Link href="/cart" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '60px', height: '60px' }}>
-                                    <ImCart style={styles.cart} />
+                                    <ImCart style={styles.coloreBoxIcon} />
+                                </Nav.Link>
+                            </div>
+                            <div className='coloreBoxIcon'>
+                                <Nav.Link href="#" onClick={() => setDotsView(!dotsView)} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '60px', height: '60px' }}>
+                                    <BiDotsVertical style={styles.coloreBoxIcon} />
                                 </Nav.Link>
                             </div>
                         </Nav>
@@ -388,13 +220,9 @@ export default function Layout(props) {
                 ._layout .xl_md {
                     display: block;
                 }
-                ._layout .categories_nav{
-                    display: block;
+                ._layout .sm_xs_display_none{
+                    display: flex;
                 }
-                ._layout .login_siginup_sm_xs {
-                    display: none;
-                }
-
                 ._layout .dropdown_menue {
                     min-width: 700px; 
                     min-height: 500px;
@@ -418,13 +246,13 @@ export default function Layout(props) {
                     background: ${theme.COLORS.MAIN};
                 }
 
-                ._layout .cart {
+                ._layout .coloreBoxIcon {
                     width: 60px;
                     height: 60px;
                     margin-left: 5%;
                     background: ${theme.COLORS.MAIN};
                 }
-                ._layout .cart:hover {
+                ._layout .coloreBoxIcon:hover {
                     background: ${theme.COLORS.SEC};
                 }
                 ._layout .link_div {
@@ -476,14 +304,11 @@ export default function Layout(props) {
                     }
                 }
                 @media (max-width: 767px) {
+                    ._layout .sm_xs_display_none {
+                        display: none;
+                    }
                     ._layout .xl_md {
                         display: none;
-                    }
-                    ._layout .categories_nav{
-                        display: none;
-                    }
-                    ._layout .login_siginup_sm_xs {
-                        display: block;
                     }
                     ._layout .sticky-inner {
                         padding: 0.5% 4%;
@@ -495,12 +320,6 @@ export default function Layout(props) {
                 @media (max-width: 575px) {
                     ._layout .xl_md {
                         display: none;
-                    }
-                    ._layout .categories_nav{
-                        display: none;
-                    }
-                    ._layout .login_siginup_sm_xs {
-                        display: block;
                     }
                     ._layout .sticky-inner{
                         padding: 0.5% 2%;
@@ -533,7 +352,7 @@ export default function Layout(props) {
 }
 
 const styles = {
-    cart: {
+    coloreBoxIcon: {
         color: theme.COLORS.WHITE,
         fontSize: '30px',
         alignSelf: 'center'
