@@ -19,7 +19,7 @@ router.get("/abc/cde/vendor/user-products/:_id", productController.get_vendor_pr
 router.get("/user-products-query-search/:_id", productController.get_vendor_product_query_search);
 
 router.get("/products-all-count/:_id", productController.geteverything);
-router.get("/search/abc", productController.get_search_products);
+router.get("/search/products/query-only", productController.get_search_products);
 
 router.get("/less-stock/:_id", productController.get_less_stock_products);
 router.get("/vendor-search-less-stock/:_id", productController.get_vendor_product_less_stock_by_id);
