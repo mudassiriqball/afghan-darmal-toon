@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Card, Col, Dropdown, Nav, Navbar, Row, Form } from 'react-bootstrap'
+import { Card, Col, Dropdown, Nav, Navbar, Row, Form, Badge } from 'react-bootstrap'
 import theme from '../../constants/theme'
 import CssTransition from './CssTransition'
 import Toolbar from './toolbar';
@@ -13,15 +13,6 @@ import { RiSearch2Line } from 'react-icons/ri';
 
 export default function Layout(props) {
     const { user } = props;
-
-    // Acccount
-    const logoutUser = async () => {
-        const loggedOut = await removeTokenFromStorage();
-        if (loggedOut) {
-            Router.replace('/');
-        }
-    }
-    // End Of Acccount
 
     // 2nd Nav
     const [pagesHover, setpagesHover] = useState(false);
@@ -60,6 +51,7 @@ export default function Layout(props) {
             window.removeEventListener('scroll', () => handleScroll);
         };
     }, []);
+    // End of sticky
 
     return (
         <div className='_layout'>
@@ -79,12 +71,12 @@ export default function Layout(props) {
                                 show={isCategoryOpen}
                             >
                                 <Dropdown.Toggle as={Nav.Link} className='d-flex flex-row align-items-center'
-                                    style={{ fontWeight: 'bold', background: hoverCategory ? theme.COLORS.MAIN : theme.COLORS.WHITE, padding: '20px 30px' }}
+                                    style={{ fontWeight: 'bold', background: hoverCategory ? theme.COLORS.MAIN : theme.COLORS.WHITE, color: hoverCategory ? theme.COLORS.WHITE : theme.COLORS.SEC, padding: '20px 30px', fontSize: '14px' }}
                                 >
                                     {'CATEGORIES'}
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu className='dropdown-menu dropdown_menue' style={{ border: 'none', paddingTop: '27px', background: 'none' }}>
-                                    <Row noGutters onMouseLeave={() => categoryMouseLeave()} style={{ boxShadow: `0px 0px 5px #e6e6e6`, paddingTop: '20px', background: theme.COLORS.WHITE }}>
+                                    <Row noGutters onMouseLeave={() => categoryMouseLeave()} style={{ boxShadow: `0px 0px 5px ${theme.COLORS.MAIN}`, paddingTop: '20px', background: theme.COLORS.WHITE }}>
                                         <Col style={{ overflowY: 'auto', zIndex: 1, minHeight: '500px', maxHeight: '500px' }}>
                                             {props.categories_list && props.categories_list.map((element, index) =>
                                                 <Link key={index} href='/products/category/[category]' as={`/products/category/${element.value}`} >
@@ -133,12 +125,12 @@ export default function Layout(props) {
                                 <Dropdown.Toggle as={Nav.Link}
                                     onMouseEnter={() => sethomeHover(true)}
                                     onMouseLeave={() => sethomeHover(false)}
-                                    style={{ fontWeight: 'bold', background: homeHover ? theme.COLORS.MAIN : theme.COLORS.WHITE, padding: '20px 30px' }}
+                                    style={{ fontWeight: 'bold', background: homeHover ? theme.COLORS.MAIN : theme.COLORS.WHITE, color: homeHover ? theme.COLORS.WHITE : theme.COLORS.SEC, padding: '20px 30px', fontSize: '14px' }}
                                 >
                                     {'HOME'}
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu className='dropdown-menu' style={{ border: 'none', paddingTop: '27px', background: 'none' }} >
-                                    <Card style={{ boxShadow: `0px 0px 5px #e6e6e6` }}>
+                                    <Card style={{ boxShadow: `0px 0px 5px ${theme.COLORS.MAIN}` }}>
                                         <div className='link_div'>
                                             <Nav.Link href="/" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '14px' }}>HOME</Nav.Link>
                                         </div>
@@ -153,12 +145,12 @@ export default function Layout(props) {
                                 <Dropdown.Toggle as={Nav.Link}
                                     onMouseEnter={() => setpagesHover(true)}
                                     onMouseLeave={() => setpagesHover(false)}
-                                    style={{ fontWeight: 'bold', background: pagesHover ? theme.COLORS.MAIN : theme.COLORS.WHITE, padding: '20px 30px' }}
+                                    style={{ fontWeight: 'bold', background: pagesHover ? theme.COLORS.MAIN : theme.COLORS.WHITE, color: pagesHover ? theme.COLORS.WHITE : theme.COLORS.SEC, padding: '20px 30px', fontSize: '14px' }}
                                 >
                                     {'PAGES'}
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu className='dropdown-menu' style={{ border: 'none', paddingTop: '27px', background: 'none' }} >
-                                    <Card style={{ boxShadow: `0px 0px 5px #e6e6e6` }}>
+                                    <Card style={{ boxShadow: `0px 0px 5px ${theme.COLORS.MAIN}` }}>
                                         {user.role == 'admin' &&
                                             <div className='link_div'>
                                                 <Nav.Link href="/admin" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '14px' }}>DASHBOARD</Nav.Link>
@@ -181,12 +173,12 @@ export default function Layout(props) {
                                 <Dropdown.Toggle as={Nav.Link}
                                     onMouseEnter={() => setservicesHover(true)}
                                     onMouseLeave={() => setservicesHover(false)}
-                                    style={{ fontWeight: 'bold', background: servicesHover ? theme.COLORS.MAIN : theme.COLORS.WHITE, padding: '20px 30px' }}
+                                    style={{ fontWeight: 'bold', background: servicesHover ? theme.COLORS.MAIN : theme.COLORS.WHITE, color: servicesHover ? theme.COLORS.WHITE : theme.COLORS.SEC, padding: '20px 30px', fontSize: '14px' }}
                                 >
                                     {'SERVICES'}
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu className='dropdown-menu' style={{ border: 'none', paddingTop: '27px', background: 'none' }} >
-                                    <Card style={{ boxShadow: `0px 0px 5px #e6e6e6` }}>
+                                    <Card style={{ boxShadow: `0px 0px 5px ${theme.COLORS.MAIN}` }}>
                                         <div className='link_div'>
                                             <Nav.Link href="/" style={{ fontWeight: 'bolder', padding: '10px 30px' }}>HOME</Nav.Link>
                                         </div>
@@ -196,13 +188,14 @@ export default function Layout(props) {
                         </Nav>
                         <Nav className="justify-content-center flex-row m-0 p-0 sm_xs_display_none">
                             <div className='coloreBoxIcon'>
-                                <Nav.Link href="/search" onClick={() => setDotsView(!dotsView)} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '60px', height: '60px' }}>
+                                <Nav.Link href="/search" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '60px', height: '60px' }}>
                                     <RiSearch2Line style={styles.coloreBoxIcon} />
                                 </Nav.Link>
                             </div>
                             <div className='coloreBoxIcon'>
-                                <Nav.Link href="/cart" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '60px', height: '60px' }}>
+                                <Nav.Link href="/cart" style={{ display: 'flex', position: 'relative', justifyContent: 'center', alignItems: 'center', width: '60px', height: '60px' }}>
                                     <ImCart style={styles.coloreBoxIcon} />
+                                    <Badge variant="light" style={{ position: 'absolute', top: '5px', right: '5px' }}>9</Badge>
                                 </Nav.Link>
                             </div>
                             <div className='coloreBoxIcon'>
@@ -270,7 +263,7 @@ export default function Layout(props) {
                     background: ${theme.COLORS.WHITE};
                     padding: 1% 10%;
                     border-bottom: 1px solid white;
-                    box-shadow: 0px 0px 10px 0.5px #e6e6e6;
+                    box-shadow: 0px 0px 10px 0.5px ${theme.COLORS.SHADOW};
                     position: fixed;
                     align-items: center;
                     top: 0;
@@ -285,7 +278,7 @@ export default function Layout(props) {
                     margin: 0;
                     width: 100%;
                     background: ${theme.COLORS.WHITE};
-                    border-bottom: 0.1px solid #f2f2f2;
+                    border-bottom: 0.1px solid ${theme.COLORS.SHADOW};
                 }
                 @media (max-width: 1199px) {
                     ._layout .sticky-inner{

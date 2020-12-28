@@ -21,18 +21,18 @@ export async function getServerSideProps(context) {
 
   await axios.get(urls.GET_REQUEST.SLIDERS).then((res) => {
     sliders_list = res.data.data
-  }).catch((error) => {
+  }).catch((err) => {
   })
 
   await axios.get(urls.GET_REQUEST.CATEGORIES).then((res) => {
     categories_list = res.data.category.docs
     sub_categories_list = res.data.sub_category.docs
-  }).catch((error) => {
+  }).catch((err) => {
   })
 
   await axios.get(urls.GET_REQUEST.ALL_PRODUCTS).then((res) => {
     products = res.data.data
-  }).catch((error) => {
+  }).catch((err) => {
   })
 
   return {
@@ -60,8 +60,17 @@ export default function Home(props) {
       }
     }
     getDecodedToken();
+
+    axios.get(urls.GET_REQUEST.ALL_PRODUCTS).then((res) => {
+      console.log('ananan:', res.data)
+    }).catch((err) => {
+      console.log('agagagag:', err)
+    })
+
     return () => { }
   }, []);
+
+  console.log('products:', props.products);
 
   async function getUser(id) {
     await axios.get(urls.GET_REQUEST.USER_BY_ID + id).then((res) => {
@@ -69,7 +78,7 @@ export default function Home(props) {
       if ('cart' in res.data.data[0])
         setCart_count(res.data.data[0].cart.length);
     }).catch((err) => {
-      console.log('Get user error in profile', err);
+      console.log('Get user err in profile', err);
     })
   }
   if (!showChild) {
