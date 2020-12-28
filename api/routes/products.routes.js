@@ -10,8 +10,7 @@ router.post("/add-new/product/:_id", checkAuth, productController.addProduct);
 // get Requests
 router.get("/all-products", productController.get_all_products);
 router.get("/admin-products-query-search", productController.get_admin_products);
-
-router.get("/all-products-query-search", productController.get_customer_side_products);
+router.get("/page/limit/category/sub-category", productController.get_products_by_category);
 
 router.get("product/id/product-by-id/:_id", productController.get_product_by_id);
 router.get("/any/product-by-id/:_id", productController.get_all_product_by_id);
