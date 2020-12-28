@@ -112,7 +112,7 @@ usersController.set_avatar = async (req, res) => {
           Bucket: "slider-images",
           Key: filenameToRemove,
         },
-        function (err, data) {}
+        function (err, data) { }
       );
     }
     const url = req.files[0].location;
@@ -440,57 +440,57 @@ usersController.get_total_specific_users = async (req, res) => {
   });
 };
 
-usersController.get_user_by_role= async (req, res) => {
-  
+usersController.get_user_by_role = async (req, res) => {
+
   let user;
   try {
-    if(req.params._role==="customer"){
-    user = await Users.paginate(
-      {
-        role: req.params._role,
-        status: req.query.status,
-      },
-      {
-        limit: parseInt(req.query.limit),
-        page: parseInt(req.query.page),
+    if (req.params._role === "customer") {
+      user = await Users.paginate(
+        {
+          role: req.params._role,
+          status: req.query.status,
+        },
+        {
+          limit: parseInt(req.query.limit),
+          page: parseInt(req.query.page),
+        }
+      );
+      if (user) {
+        res.status(200).send({
+          code: 200,
+          message: "Successful",
+          data: user,
+        });
+      } else {
+        res.status(500).send({
+          code: 500,
+          message: "does not exits",
+        });
       }
-    );
-    if (user) {
-      res.status(200).send({
-        code: 200,
-        message: "Successful",
-        data: user,
-      });
-    } else {
-      res.status(500).send({
-        code: 500,
-        message: "does not exits",
-      });
     }
-  }
-  else{
-    user = await Users.paginate(
-      {
-        role: req.params._role,
-      },
-      {
-        limit: parseInt(req.query.limit),
-        page: parseInt(req.query.page),
+    else {
+      user = await Users.paginate(
+        {
+          role: req.params._role,
+        },
+        {
+          limit: parseInt(req.query.limit),
+          page: parseInt(req.query.page),
+        }
+      );
+      if (user) {
+        res.status(200).send({
+          code: 200,
+          message: "Successful",
+          data: user,
+        });
+      } else {
+        res.status(500).send({
+          code: 500,
+          message: "does not exits",
+        });
       }
-    );
-    if (user) {
-      res.status(200).send({
-        code: 200,
-        message: "Successful",
-        data: user,
-      });
-    } else {
-      res.status(500).send({
-        code: 500,
-        message: "does not exits",
-      });
     }
-  }
   } catch (error) {
     return res.status(500).send(error);
   }

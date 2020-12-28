@@ -8,7 +8,7 @@ const handle = app.getRequestHandler();
 // const path=require("path");
 // const aws = require('aws-sdk')
 // const multerS3 = require('multer-s3')
-const dotenv=require('dotenv');
+const dotenv = require('dotenv');
 dotenv.config();
 
 // start
@@ -86,7 +86,7 @@ app
     // connection to mongoose
     const mongoCon = process.env.mongoCon;
 
-    const connect = async function() {
+    const connect = async function () {
       return mongoose.connect(mongoCon, {
         useNewUrlParser: true,
         useCreateIndex: true,
@@ -102,7 +102,7 @@ app
       }
     })();
     const fs = require("fs");
-    fs.readdirSync(__dirname + "/api/models").forEach(function(file) {
+    fs.readdirSync(__dirname + "/api/models").forEach(function (file) {
       require(__dirname + "/api/models/" + file);
     });
     // var key = fs.readFileSync('./new/one.txt');
@@ -116,7 +116,7 @@ app
     // in case you want to serve images
     app.use(express.static("public"));
 
-    app.get("/api", function(req, res) {
+    app.get("/api", function (req, res) {
       res.status(200).send({
         message: "Express backend server"
       });
@@ -141,15 +141,15 @@ app
     app.use("/api/sliders", SlidersRoutes);
 
 
-    
+
     app.get("*", (req, res) => {
       return handle(req, res);
     });
-   
-   
+
+
     app.set("port", process.env.PORT);
-    server.listen(app.get("port"));
-    console.log("listening on port", app.get("port"));
+    server.listen(process.env.PORT || 5000, '0.0.0.0');
+    console.log("listening on port", process.env.PORT);
   })
   .catch(ex => {
     console.error(ex.stack);

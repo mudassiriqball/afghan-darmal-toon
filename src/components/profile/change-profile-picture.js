@@ -12,15 +12,14 @@ export default function ChangrProfilePicture(props) {
     const [img, setImg] = React.useState('')
     const [isLoading, setIsLoading] = React.useState(false)
 
-    function handleImgUpload() {
-        setIsLoading(true);
+    async function handleImgUpload() {
         let uploaded = false;
         let secure_url = '';
-        this.setState({ isLoading: true });
+        setIsLoading(true);
         const data = new FormData();
         data.append('file', img);
         data.append('upload_preset', 'afghandarmaltoon');
-        fetch('https://api.cloudinary.com/v1_1/dhm7n3lg7/image/upload', {
+        await fetch('https://api.cloudinary.com/v1_1/dhm7n3lg7/image/upload', {
             method: 'POST',
             body: data,
         }).then(async res => {
@@ -37,7 +36,7 @@ export default function ChangrProfilePicture(props) {
             return;
         })
         if (uploaded) {
-            axios.put(urls.PUT_REQUEST.UPDATE_USER_PROFILE + props._id, { avatar: secure_url }, {
+            await axios.put(urls.PUT_REQUEST.UPDATE_USER_PROFILE + props._id, { avatar: secure_url }, {
                 headers: {
                     'authorization': props.token,
                 }

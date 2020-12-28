@@ -5,20 +5,76 @@ import jwt_decode from 'jwt-decode';
 import { getDecodedTokenFromStorage } from '../utils/services/auth';
 import theme from '../constants/theme';
 import Footer from '../components/customer/footer';
+import urls from '../utils/urls';
+import axios from 'axios';
+import SliderCarousel from '../components/customer/slider-carousel';
+import Loading from '../components/loading';
+import InfoRow from '../components/customer/info-row';
+import MultiCarosuel from '../components/customer/multi-carosuel';
+import StickyBottomNavbar from '../components/customer/sticky-bottom-navbar';
 
-export default function Home() {
+export async function getServerSideProps(context) {
+  let sliders_list = []
+  let categories_list = []
+  let sub_categories_list = []
+  let products = [];
+
+  await axios.get(urls.GET_REQUEST.SLIDERS).then((res) => {
+    sliders_list = res.data.data
+  }).catch((error) => {
+  })
+
+  await axios.get(urls.GET_REQUEST.CATEGORIES).then((res) => {
+    categories_list = res.data.category.docs
+    sub_categories_list = res.data.sub_category.docs
+  }).catch((error) => {
+  })
+
+  await axios.get(urls.GET_REQUEST.ALL_PRODUCTS).then((res) => {
+    products = res.data.data
+  }).catch((error) => {
+  })
+
+  return {
+    props: {
+      sliders_list,
+      categories_list,
+      sub_categories_list,
+      products,
+    },
+  }
+}
+
+export default function Home(props) {
   const [user, setUser] = useState({ _id: '', fullName: '', mobile: '', city: '', licenseNo: '', address: '', email: '', status: '', role: '', wishList: '', cart: '', entry_date: '' })
+  const [cart_count, setsetCart_count] = useState(0);
+  const [showChild, setShowChild] = useState(false);
 
   useEffect(() => {
+    setShowChild(true);
     const getDecodedToken = async () => {
       const decodedToken = await getDecodedTokenFromStorage();
       if (decodedToken !== null) {
         setUser(decodedToken);
+        getUser(decodedToken._id);
       }
     }
     getDecodedToken();
     return () => { }
   }, []);
+
+  async function getUser(id) {
+    await axios.get(urls.GET_REQUEST.USER_BY_ID + id).then((res) => {
+      setUser(res.data.data[0])
+      if ('cart' in res.data.data[0])
+        setCart_count(res.data.data[0].cart.length);
+    }).catch((err) => {
+      console.log('Get user error in profile', err);
+    })
+  }
+  if (!showChild) {
+    return <Loading />;
+  }
 
   return (
     <div className="_container">
@@ -31,40 +87,40 @@ export default function Home() {
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossOrigin="anonymous"></script>
       </Head>
       <main>
-        <Layout user={user}>
-          {/* <h1 className="title" style={{ height: '700px', width: '100%', background: 'red' }}>
-            Welcome to <a href="https://nextjs.org">Afghan Darmal Toon</a>
-            {''}
-          </h1> */}
-          {/* <img src="/logo.jpg" alt="Vercel Logo" className="logo" /> */}
+        <Layout
+          user={user}
+          categories_list={props.categories_list}
+          sub_categories_list={props.sub_categories_list}
+        >
+          <SliderCarousel
+            sliders_list={props.sliders_list}
+          />
+          <InfoRow />
         </Layout>
+        <MultiCarosuel
+          products={props.products}
+          categories_list={props.categories_list}
+          sub_categories_list={props.sub_categories_list}
+        />
+        <Footer />
+        <StickyBottomNavbar isLoggedIn={user.fullName !== ''} />
       </main>
-      <Footer />
       <style jsx>{`
         ._container {
           background: ${theme.COLORS.WHITE};
           min-height: 100vh;
-          min-width: 100%;
-          padding: 0;
+          position: absolute;
           top: 0;
-          bottom: 0;
           left: 0;
-          right:0;
-          display: flex;
-          flex-direction: column;
+          right: 0;
         }
       `}</style>
       <style jsx global>{`
         html,
         body {
           min-height: 100vh;
-          min-width: 100vw;
           padding: 0;
           margin: 0;
-          top: 0;
-          bottom: 0;
-          left: 0;
-          right:0;
           font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
             Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
             sans-serif;
@@ -74,6 +130,6 @@ export default function Home() {
           box-sizing: border-box;
         }
       `}</style>
-    </div>
+    </div >
   )
 }

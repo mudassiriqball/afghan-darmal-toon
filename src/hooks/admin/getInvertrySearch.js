@@ -25,41 +25,41 @@ export default function getInvertrySearch(refresh_count, fieldName, query, pageN
         const source = CancelToken.source();
         const getData = () => {
             if (query != '') {
-                setLoading(true)
-                setError(false)
-                let cancle
-                axios({
-                    method: 'GET',
-                    url: urls.GET_REQUEST.INVENTRY_QUERY_SEARCH,
-                    params: {
-                        field: fieldName, q: query, page: pageNumber, limit: limit,
-                        start_date: moment(start_date).format('YYYY-MM-DD'), end_date: moment(end_date).format('YYYY-MM-DD')
-                    },
-                    cancelToken: new axios.CancelToken(c => cancle = c)
-                }).then(res => {
-                    if (unmounted) {
-                        setLoading(false)
-                        setProducts(prevPro => {
-                            return [...new Set([...prevPro, ...res.data.data])]
-                        })
-                        setHasMore(res.data.data.length > 0)
-                        setTotal(res.data.total)
-                        let count = res.data.total / 20
-                        let rounded = Math.floor(count);
-                        let decimal = count - rounded;
-                        if (decimal > 0) {
-                            setPages(rounded + 1)
-                        } else {
-                            setPages(rounded)
-                        }
-                    }
-                }).catch(err => {
-                    if (unmounted) {
-                        setLoading(false)
-                        if (axios.isCancel(err)) return
-                        setError(true)
-                    }
-                })
+                // setLoading(true)
+                // setError(false)
+                // let cancle
+                // axios({
+                //     method: 'GET',
+                //     url: urls.GET_REQUEST.INVENTRY_QUERY_SEARCH,
+                //     params: {
+                //         field: fieldName, q: query, page: pageNumber, limit: limit,
+                //         start_date: moment(start_date).format('YYYY-MM-DD'), end_date: moment(end_date).format('YYYY-MM-DD')
+                //     },
+                //     cancelToken: new axios.CancelToken(c => cancle = c)
+                // }).then(res => {
+                //     if (unmounted) {
+                //         setLoading(false)
+                //         setProducts(prevPro => {
+                //             return [...new Set([...prevPro, ...res.data.data])]
+                //         })
+                //         setHasMore(res.data.data.length > 0)
+                //         setTotal(res.data.total)
+                //         let count = res.data.total / 20
+                //         let rounded = Math.floor(count);
+                //         let decimal = count - rounded;
+                //         if (decimal > 0) {
+                //             setPages(rounded + 1)
+                //         } else {
+                //             setPages(rounded)
+                //         }
+                //     }
+                // }).catch(err => {
+                //     if (unmounted) {
+                //         setLoading(false)
+                //         if (axios.isCancel(err)) return
+                //         setError(true)
+                //     }
+                // })
             }
         }
         getData()

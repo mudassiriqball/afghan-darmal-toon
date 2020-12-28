@@ -18,6 +18,9 @@ export default {
 
     // PRODUCTS
     GET_PRODUCT_BY_ID: baseUrl + '/products/product/id/product-by-id/',
+    ALL_PRODUCTS: baseUrl + '/products/all-products',
+    PRODUCTS_BY_CATEGORY_SUB_CATEGORY_PAGE_LIMIT: baseUrl + '/products/page/limit/category/sub-category',
+
 
     SLIDERS: baseUrl + '/sliders/all/sliders-list',
     HOME_CATEGORIES: baseUrl + '/categories/home-categories',

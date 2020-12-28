@@ -30,13 +30,13 @@ export async function getServerSideProps(context) {
     }).catch((error) => {
     })
 
-    await axios.get(urls.GET_REQUEST.ALL_ORDERS_COUNT).then((res) => {
-        pending_orders_count = res.data.pending_orders_count
-        delivered_orders_count = res.data.delivered_orders_count
-        cancelled_orders_count = res.data.cancelled_orders_count
-        returned_orders_count = res.data.returned_orders_count
-    }).catch((error) => {
-    })
+    // await axios.get(urls.GET_REQUEST.ALL_ORDERS_COUNT).then((res) => {
+    //     pending_orders_count = res.data.pending_orders_count
+    //     delivered_orders_count = res.data.delivered_orders_count
+    //     cancelled_orders_count = res.data.cancelled_orders_count
+    //     returned_orders_count = res.data.returned_orders_count
+    // }).catch((error) => {
+    // })
 
     await axios.get(urls.GET_REQUEST.SLIDERS).then((res) => {
         sliders_list = res.data.data
@@ -221,17 +221,17 @@ class Admin extends Component {
     }
     async reloadOrdersCount() {
         let currentComponent = this
-        await axios.get(urls.GET_REQUEST.ALL_ORDERS_COUNT).then((res) => {
-            if (currentComponent.unmounted) {
-                currentComponent.setState({
-                    pending_orders_count: res.data.pending_orders_count,
-                    delivered_orders_count: res.data.delivered_orders_count,
-                    cancelled_orders_count: res.data.cancelled_orders_count,
-                    returned_orders_count: res.data.returned_orders_count,
-                })
-            }
-        }).catch((error) => {
-        })
+        // await axios.get(urls.GET_REQUEST.ALL_ORDERS_COUNT).then((res) => {
+        //     if (currentComponent.unmounted) {
+        //         currentComponent.setState({
+        //             pending_orders_count: res.data.pending_orders_count,
+        //             delivered_orders_count: res.data.delivered_orders_count,
+        //             cancelled_orders_count: res.data.cancelled_orders_count,
+        //             returned_orders_count: res.data.returned_orders_count,
+        //         })
+        //     }
+        // }).catch((error) => {
+        // })
     }
 
     async logout() {

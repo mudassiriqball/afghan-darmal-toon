@@ -61,7 +61,6 @@ const Product = new Schema({
       },
     },
   ],
-
   specifications: [
     {
       name: {
@@ -69,10 +68,9 @@ const Product = new Schema({
       },
       value: {
         type: String,
-      },
-    },
+      }
+    }
   ],
-
   entry_date: {
     type: Date,
   },

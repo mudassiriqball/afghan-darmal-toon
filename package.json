@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": "12.13.0"
+    "node": "14.15.1",
+    "npm": "6.14.9"
   },
   "scripts": {
     "next": "next -p 3000",
@@ -11,7 +12,7 @@
     "debug": "NODE_OPTIONS='--inspect nodemon server.js",
     "build": "next build",
     "prod": "cross-env NODE_ENV=production nodemon server.js",
-    "start": "next build && nodemon server.js",
+    "start": "next build && node server.js",
     "export": "npm run build && next export"
   },
   "dependencies": {
@@ -20,6 +21,7 @@
     "@fortawesome/free-regular-svg-icons": "^5.15.1",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@fortawesome/react-fontawesome": "^0.1.13",
+    "@material-ui/core": "^5.0.0-alpha.20",
     "@popperjs/core": "^2.5.4",
     "axios": "^0.21.0",
     "bcrypt": "^5.0.0",
@@ -32,6 +34,7 @@
     "formik": "^2.2.5",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^3.1.2",
+    "mobile-detect": "^1.4.4",
     "moment": "^2.29.1",
     "mongoose": "^5.11.7",
     "mongoose-paginate": "^5.0.3",
@@ -43,7 +46,9 @@
     "react-datepicker": "^3.3.0",
     "react-dom": "16.13.1",
     "react-icons": "^4.1.0",
+    "react-multi-carousel": "^2.6.1",
     "react-phone-input-2": "^2.13.9",
+    "react-rating-stars-component": "^2.2.0",
     "react-select": "^3.1.1",
     "react-to-print": "^2.12.0",
     "react-transition-group": "^4.4.1",

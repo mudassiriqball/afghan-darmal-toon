@@ -33,6 +33,9 @@ export default {
     SEC: '#172B4D',
     SEC_HOVER: '#12213b',
     LINK: 'blue',
+    SHADOW: '#e6e6e6',
+    GRAY: 'gray',
+    LIGHT_GRAY: 'lightgray',
 
     // Admin
     ADMIN_MAIN: '#172B4D',

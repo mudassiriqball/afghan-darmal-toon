@@ -7,7 +7,6 @@ const jwt = require("jsonwebtoken");
 
 categoriesController.add_Category = async (req, res) => {
   const body = req.body;
-
   try {
     var datetime = new Date();
     body.entry_date = datetime;
@@ -77,7 +76,7 @@ categoriesController.add_fields = async (req, res) => {
       console.log("error", error);
     }
   } else {
-    Field_Request.findByIdAndDelete(body._id, function (err) {});
+    Field_Request.findByIdAndDelete(body._id, function (err) { });
     try {
       var datetime = new Date();
       body.entry_date = datetime;
@@ -352,7 +351,7 @@ categoriesController.update_category = async (req, res) => {
         }
       );
     }
-    else if(!body.imageUrl){
+    else if (!body.imageUrl) {
       console.log("category only");
       Categories.findOneAndUpdate(
         { _id: _id },
@@ -370,7 +369,7 @@ categoriesController.update_category = async (req, res) => {
         }
       );
     }
-    else if(!body.category){
+    else if (!body.category) {
       console.log("image only")
       Categories.findOneAndUpdate(
         { _id: _id },
