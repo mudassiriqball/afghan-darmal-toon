@@ -1146,15 +1146,10 @@ productsController.get_search_products = async (req, res) => {
   let products1 = 0;
   let products2 = 0;
   let products3 = 0;
-  let products4 = 0;
   let set = 0;
   try {
     const products = await Products.paginate(
-      { product_name: regex },
-      {
-        limit: parseInt(req.query.limit),
-        page: parseInt(req.query.page),
-      }
+      { name: regex },
     );
     if (products.total > 0) {
       console.log("1");
@@ -1166,11 +1161,7 @@ productsController.get_search_products = async (req, res) => {
       if (category.length > 0) {
         console.log("3");
         products1 = await Products.paginate(
-          { category: category[0]._id },
-          {
-            limit: parseInt(req.query.limit),
-            page: parseInt(req.query.page),
-          }
+          { categoryId: category[0]._id },
         );
         if (products1.total > 0) {
           console.log("4");
@@ -1192,11 +1183,7 @@ productsController.get_search_products = async (req, res) => {
       if (sub_category.length > 0) {
         console.log("8");
         products2 = await Products.paginate(
-          { sub_category: sub_category[0]._id },
-          {
-            limit: parseInt(req.query.limit),
-            page: parseInt(req.query.page),
-          }
+          { subCategoryId: sub_category[0]._id },
         );
         if (products2.total > 0) {
           console.log("9");
@@ -1214,11 +1201,7 @@ productsController.get_search_products = async (req, res) => {
     if (set === 2) {
       console.log("12");
       products3 = await Products.paginate(
-        { product_name: new RegExp(query, "i") },
-        {
-          limit: parseInt(req.query.limit),
-          page: parseInt(req.query.page),
-        }
+        { name: new RegExp(query, "i") },
       );
       if (products3.total > 0) {
         console.log("13");
@@ -1229,23 +1212,23 @@ productsController.get_search_products = async (req, res) => {
       }
     }
 
-    if (set === 3) {
-      console.log("15");
-      products4 = await Products.paginate(
-        { "product_tags.label": regex },
-        {
-          limit: parseInt(req.query.limit),
-          page: parseInt(req.query.page),
-        }
-      );
-      if (products4.total > 0) {
-        console.log("16");
-        actual_products = products4;
-      } else {
-        console.log("17");
-        actual_products = products4;
-      }
-    }
+    // if (set === 3) {
+    //   console.log("15");
+    //   products4 = await Products.paginate(
+    //     { "product_tags.label": regex },
+    //     {
+    //       limit: parseInt(req.query.limit),
+    //       page: parseInt(req.query.page),
+    //     }
+    //   );
+    //   if (products4.total > 0) {
+    //     console.log("16");
+    //     actual_products = products4;
+    //   } else {
+    //     console.log("17");
+    //     actual_products = products4;
+    //   }
+    // }
 
     res.status(200).send({
       code: 200,
