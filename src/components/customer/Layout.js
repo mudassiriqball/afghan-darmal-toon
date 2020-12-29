@@ -1,15 +1,60 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Card, Col, Dropdown, Nav, Navbar, Row, Form, Badge } from 'react-bootstrap'
+import { Card, Col, Dropdown, Nav, Navbar, Row, Form, Badge, Modal, Button } from 'react-bootstrap'
 import theme from '../../constants/theme'
 import CssTransition from './CssTransition'
 import Toolbar from './toolbar';
-import Link from 'next/link'
-import { removeTokenFromStorage } from '../../utils/services/auth'
-import Router from 'next/router';
+import Link from 'next/link';
 
 import { BiDotsVertical } from 'react-icons/bi';
 import { ImCart } from 'react-icons/im';
 import { RiSearch2Line } from 'react-icons/ri';
+
+function SearchModal(props) {
+    const [searchQuery, setSearchQuery] = useState('');
+    return (
+        <Modal
+            {...props}
+            size="lg"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+            className='_searchModal'
+        >
+            <Modal.Header closeButton>
+            </Modal.Header>
+            <Modal.Body style={{ border: 'none', padding: '10%' }} className='d-flex flex-row'>
+                <Form.Control
+                    type="text"
+                    placeholder="Search here"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                {searchQuery !== '' && searchQuery !== null ?
+                    <Link onClick={props.onHide} href={'/products/search/[search]'} as={`/products/search/${searchQuery}`} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
+                        <div onClick={props.onHide} style={{ flex: 1 }} className='coloreBoxIcon d-flex justify-content-center align-items-center'>
+                            <RiSearch2Line style={{ fontSize: '25px', color: theme.COLORS.WHITE }} />
+                        </div>
+                    </Link>
+                    :
+                    <Link href='' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
+                        <div style={{ flex: 1 }} className='coloreBoxIcon d-flex justify-content-center align-items-center'>
+                            <RiSearch2Line style={{ fontSize: '25px', color: theme.COLORS.WHITE }} />
+                        </div>
+                    </Link>
+                }
+            </Modal.Body>
+            <style type='text/css'>{`
+                ._searchModal .coloreBoxIcon {
+                    background: ${theme.COLORS.MAIN};
+                    min-width: 45px;
+                    cursor: pointer;
+                }
+                ._searchModal .coloreBoxIcon:hover {
+                    background: ${theme.COLORS.SEC};
+                } 
+            `}</style>
+        </Modal >
+    );
+}
 
 export default function Layout(props) {
     const { user } = props;
@@ -53,8 +98,15 @@ export default function Layout(props) {
     }, []);
     // End of sticky
 
+    // Search
+    const [showSearchModal, setShowSearchModal] = useState(false);
+    // End of search
     return (
         <div className='_layout'>
+            <SearchModal
+                show={showSearchModal}
+                onHide={() => setShowSearchModal(false)}
+            />
             <div className='xl_md'>
                 <Toolbar user={user} />
             </div>
@@ -79,7 +131,7 @@ export default function Layout(props) {
                                     <Row noGutters onMouseLeave={() => categoryMouseLeave()} style={{ boxShadow: `0px 0px 5px ${theme.COLORS.MAIN}`, paddingTop: '20px', background: theme.COLORS.WHITE }}>
                                         <Col style={{ overflowY: 'auto', zIndex: 1, minHeight: '500px', maxHeight: '500px' }}>
                                             {props.categories_list && props.categories_list.map((element, index) =>
-                                                <Link key={index} href='/products/category/[category]' as={`/products/category/${element.value}`} >
+                                                <Link key={index} href='/products/[category]' as={`/products/${element._id}`}>
                                                     {props.active_category == element.value ?
                                                         <a style={{ color: 'blue' }} className="category_list_item" onMouseOver={() => categoryMouseEnter(index)} onClick={() => { setIsCategoryOpen(false), setHoverCategory(false) }}>
                                                             {element.value}
@@ -92,11 +144,10 @@ export default function Layout(props) {
                                                 </Link>
                                             )}
                                         </Col>
-                                        {/* {category_id ? */}
                                         <Col style={{ minHeight: '500px', maxHeight: '50px', overflowY: 'auto' }}>
                                             {props.sub_categories_list && props.sub_categories_list.map((element, index) =>
                                                 element.category_id == category_id._id ?
-                                                    <Link href='/products/category/[category]/[sub_category]' as={`/products/category/${category_id.value}/${element.value}`} key={index} >
+                                                    <Link href='/products/[category]/[sub_category]' as={`/products/${category_id._id}/${element._id}`} key={index} >
                                                         {props.active_sub_category == element.value ?
                                                             <a style={{ color: 'blue' }} className="category_list_item" onClick={() => { setIsCategoryOpen(false), setHoverCategory(false) }}>
                                                                 {element.value}
@@ -186,16 +237,17 @@ export default function Layout(props) {
                                 </Dropdown.Menu>
                             </Dropdown>
                         </Nav>
+                        {/* Boxes */}
                         <Nav className="justify-content-center flex-row m-0 p-0 sm_xs_display_none">
                             <div className='coloreBoxIcon'>
-                                <Nav.Link href="/search" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '60px', height: '60px' }}>
+                                <Nav.Link href='#' onClick={() => setShowSearchModal(true)} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '60px', height: '60px' }}>
                                     <RiSearch2Line style={styles.coloreBoxIcon} />
                                 </Nav.Link>
                             </div>
                             <div className='coloreBoxIcon'>
                                 <Nav.Link href="/cart" style={{ display: 'flex', position: 'relative', justifyContent: 'center', alignItems: 'center', width: '60px', height: '60px' }}>
                                     <ImCart style={styles.coloreBoxIcon} />
-                                    <Badge variant="light" style={{ position: 'absolute', top: '5px', right: '5px' }}>9</Badge>
+                                    <Badge variant="light" style={{ position: 'absolute', top: '5px', right: '5px' }}>{user.cart.length || '0'}</Badge>
                                 </Nav.Link>
                             </div>
                             <div className='coloreBoxIcon'>
@@ -204,6 +256,7 @@ export default function Layout(props) {
                                 </Nav.Link>
                             </div>
                         </Nav>
+                        {/* End of Boxes */}
                     </Navbar.Collapse>
                 </Navbar>
             </div>

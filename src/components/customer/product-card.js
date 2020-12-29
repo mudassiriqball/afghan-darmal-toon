@@ -13,7 +13,7 @@ export default function ProductCard(props) {
     return (
         <div className='_productCard'>
             <Card className='_card' >
-                <Card.Body ref={ref}>
+                <Card.Body >
                     <Card.Title>{element.name}</Card.Title>
                     <Card.Text style={{
                         textOverflow: 'ellipsis',
@@ -22,7 +22,7 @@ export default function ProductCard(props) {
                     }}>
                         {element.description}
                     </Card.Text>
-                    <Card.Img variant="top" style={{ minWidth: '100%', minHeight: width, maxHeight: width }} src={element.imagesUrl[0].imageUrl} />
+                    <Card.Img variant="top" ref={ref} style={{ minWidth: '100%', minHeight: width, maxHeight: width }} src={element.imagesUrl[0].imageUrl} />
                     <div style={{ borderTop: `1px solid lightgray`, margin: '10px 0px' }} />
                     <Row noGutters>
                         <Col lg={8} md={8} sm={8} xs={8}>
@@ -44,6 +44,18 @@ export default function ProductCard(props) {
                     </Row>
                 </Card.Body>
             </Card>
+            <style type="text/css">{`
+                ._productCard ._card {
+                    margin: 4%;
+                }
+                ._productCard ._card:hover{
+                    box-shadow: 0px 0px 10px 0.5px ${theme.COLORS.SHADOW};
+                    transition: width 0.5s, height 0.5s, opacity 0.5s 0.5s;
+                    cursor: pointer;
+                    border: none;
+                    margin: 2%;
+                }
+            `}</style>
         </div>
     )
 }
