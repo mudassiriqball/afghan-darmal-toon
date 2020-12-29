@@ -1,24 +1,32 @@
 import React from 'react'
-import { Card, Col, Row } from 'react-bootstrap'
-import { FiShoppingCart } from 'react-icons/fi'
-import reactStars from 'react-rating-stars-component'
+import { Card, Col, Row } from 'react-bootstrap';
+import { FiShoppingCart } from 'react-icons/fi';
+import ReactStars from 'react-rating-stars-component';
 import theme from '../../constants/theme';
+import useDimensions from "react-use-dimensions";
 
 export default function ProductCard(props) {
     const { element } = props;
+    console.log('element:', element);
+    const [ref, { x, y, width }] = useDimensions();
+
     return (
         <div className='_productCard'>
-            <Card className='_card'>
-                <Card.Body>
-                    <Card.Title>Card Title</Card.Title>
-                    <Card.Text>
-                        {'Some quick example text to build on the card title and make up the bulk of'}
+            <Card className='_card' >
+                <Card.Body ref={ref}>
+                    <Card.Title>{element.name}</Card.Title>
+                    <Card.Text style={{
+                        textOverflow: 'ellipsis',
+                        overflow: 'hidden',
+                        whiteSpace: 'nowrap'
+                    }}>
+                        {element.description}
                     </Card.Text>
-                    <Card.Img variant="top" src={element} />
+                    <Card.Img variant="top" style={{ minWidth: '100%', minHeight: width, maxHeight: width }} src={element.imagesUrl[0].imageUrl} />
                     <div style={{ borderTop: `1px solid lightgray`, margin: '10px 0px' }} />
                     <Row noGutters>
                         <Col lg={8} md={8} sm={8} xs={8}>
-                            <reactStars
+                            <ReactStars
                                 count={5}
                                 value={3}
                                 edit={false}

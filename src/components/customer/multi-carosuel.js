@@ -116,7 +116,7 @@ function MultiCarosuelRow(props) {
                         // customLeftArrow={}
                         itemClass="carousel-item-padding-50-px"
                     >
-                        {images && images.map((element, index) => (
+                        {PRODUCTS_PAGE_LIMIT_PRODUCTS && PRODUCTS_PAGE_LIMIT_PRODUCTS.map((element, index) => (
                             <ProductCard element={element} key={index} />
                         ))}
                     </Carousel>

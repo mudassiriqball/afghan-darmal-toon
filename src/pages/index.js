@@ -17,7 +17,6 @@ export async function getServerSideProps(context) {
   let sliders_list = []
   let categories_list = []
   let sub_categories_list = []
-  let products = [];
 
   await axios.get(urls.GET_REQUEST.SLIDERS).then((res) => {
     sliders_list = res.data.data
@@ -30,17 +29,11 @@ export async function getServerSideProps(context) {
   }).catch((err) => {
   })
 
-  await axios.get(urls.GET_REQUEST.ALL_PRODUCTS).then((res) => {
-    products = res.data.data
-  }).catch((err) => {
-  })
-
   return {
     props: {
       sliders_list,
       categories_list,
       sub_categories_list,
-      products,
     },
   }
 }
@@ -61,16 +54,8 @@ export default function Home(props) {
     }
     getDecodedToken();
 
-    axios.get(urls.GET_REQUEST.ALL_PRODUCTS).then((res) => {
-      console.log('ananan:', res.data)
-    }).catch((err) => {
-      console.log('agagagag:', err)
-    })
-
     return () => { }
   }, []);
-
-  console.log('products:', props.products);
 
   async function getUser(id) {
     await axios.get(urls.GET_REQUEST.USER_BY_ID + id).then((res) => {

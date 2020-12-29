@@ -189,7 +189,7 @@ class AddNew extends Component {
                 return false;
             })
         })
-        values.imageUrl = array;
+        values.imagesUrl = array;
         return true;
     }
 
@@ -197,7 +197,6 @@ class AddNew extends Component {
     addProduct = async (values, setSubmitting, resetForm) => {
         values.categoryId = this.state.categoryId;
         values.subCategoryId = this.state.subCategoryId;
-        values.imagesUrl = this.state.files;
         values.specifications = this.state.customFieldsArray;
         const currentComponent = this;
         this.setState({ isLoading: true });
