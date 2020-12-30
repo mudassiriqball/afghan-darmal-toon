@@ -247,7 +247,7 @@ export default function Layout(props) {
                             <div className='coloreBoxIcon'>
                                 <Nav.Link href="/cart" style={{ display: 'flex', position: 'relative', justifyContent: 'center', alignItems: 'center', width: '60px', height: '60px' }}>
                                     <ImCart style={styles.coloreBoxIcon} />
-                                    <Badge variant="light" style={{ position: 'absolute', top: '5px', right: '5px' }}>{user.cart.length || '0'}</Badge>
+                                    <Badge variant="light" style={{ position: 'absolute', top: '5px', right: '5px' }}>{user.cart && user.cart.length || '0'}</Badge>
                                 </Nav.Link>
                             </div>
                             <div className='coloreBoxIcon'>

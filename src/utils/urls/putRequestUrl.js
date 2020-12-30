@@ -21,4 +21,7 @@ export default {
 
     // Cart
     CLEAR_CART: baseUrl + '/clear-cart-obj/id/clear-by-id/',
+
+    // Rating Review
+    ADD_RATING_REVIEW: baseUrl + '/products/add/review/rating/',
 }

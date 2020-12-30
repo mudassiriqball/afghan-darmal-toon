@@ -8,6 +8,7 @@ import ProductCard from '../../../components/customer/product-card';
 import { getDecodedTokenFromStorage } from '../../../utils/services/auth';
 import urls from '../../../utils/urls';
 import Layout from '../../../components/customer/Layout';
+import getSearchProducts from '../../../hooks/customer/getSearchProducts';
 
 export async function getServerSideProps(context) {
     let categories_list = [];

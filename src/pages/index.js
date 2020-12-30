@@ -59,9 +59,7 @@ export default function Home(props) {
 
   async function getUser(id) {
     await axios.get(urls.GET_REQUEST.USER_BY_ID + id).then((res) => {
-      setUser(res.data.data[0])
-      if ('cart' in res.data.data[0])
-        setCart_count(res.data.data[0].cart.length);
+      setUser(res.data.data[0]);
     }).catch((err) => {
       console.log('Get user err in profile', err);
     })
