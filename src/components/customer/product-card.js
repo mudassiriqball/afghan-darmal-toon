@@ -1,38 +1,43 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Card, Col, Row } from 'react-bootstrap';
 import { FiShoppingCart } from 'react-icons/fi';
 import ReactStars from 'react-rating-stars-component';
 import theme from '../../constants/theme';
 import useDimensions from "react-use-dimensions";
 import Link from 'next/link';
+import CustomButton from '../CustomButton';
 
 export default function ProductCard(props) {
     const { element } = props;
     console.log('element:', element);
     const [ref, { x, y, width }] = useDimensions();
 
+    const [isCartHover, setIsCartHover] = useState(false);
+
     return (
         <div className='_productCard'>
             <Link href='/products/[category]/[sub_category]/[product]' as={`/products/${element.categoryId}/${element.subCategoryId}/${element._id}`}>
                 <Card className='_card' >
-                    <Card.Body >
-                        <Card.Title>{element.name}</Card.Title>
-                        <Card.Text style={{
+                    <Card.Body className='p-3'>
+                        <Card.Title style={{
                             textOverflow: 'ellipsis',
                             overflow: 'hidden',
-                            whiteSpace: 'nowrap'
-                        }}>
+                            whiteSpace: 'nowrap',
+                            color: theme.COLORS.GRAY
+                        }}
+                        >{element.name}</Card.Title>
+                        <Card.Text className='abc' >
                             {element.description}
                         </Card.Text>
                         <Card.Img
                             variant="top"
                             ref={ref}
                             src={element.imagesUrl[0].imageUrl}
-                            style={{ minWidth: '100%', minHeight: width + width / theme.SIZES.IMAGE_HEIGHT_DIVIDE, maxHeight: width + width / theme.SIZES.IMAGE_HEIGHT_DIVIDE }}
+                            style={{ minWidth: '100%', minHeight: width + (width / theme.SIZES.IMAGE_HEIGHT_DIVIDE), maxHeight: width + (width / theme.SIZES.IMAGE_HEIGHT_DIVIDE) }}
                         />
-                        <div style={{ borderTop: `1px solid lightgray`, margin: '10px 0px' }} />
+                        <div style={{ borderTop: `1px solid lightgray`, margin: '5px 0px' }} />
                         <Row noGutters>
-                            <Col lg={8} md={8} sm={8} xs={8}>
+                            <Col className='p-0'>
                                 <ReactStars
                                     count={5}
                                     value={3}
@@ -40,13 +45,25 @@ export default function ProductCard(props) {
                                     size={15}
                                     activeColor='orange'
                                 />
-                                <label>{'Rs: 1990'}</label>
+                                <label className='p-0 m-0'>{'Rs: 1990'}</label>
                             </Col>
-                            <Col lg={4} md={4} sm={4} xs={4} className='d-flex align-items-center'>
+                            <Col
+                                onMouseEnter={() => setIsCartHover(true)}
+                                onMouseLeave={() => setIsCartHover(false)}
+                                lg={4} md={4} sm={4} xs={4} className='d-flex align-items-center p-0'
+                            >
                                 <div className='mr-auto' />
-                                <div style={{ border: `1px solid ${theme.COLORS.LIGHT_GRAY}`, borderRadius: '3px', padding: '7px' }}>
-                                    <FiShoppingCart style={{ fontSize: '28px', color: theme.COLORS.GRAY }} />
-                                </div>
+                                {isCartHover ?
+                                    <div style={{ position: 'absolute', top: '0px', left: '0px', right: '0px' }}>
+                                        <CustomButton
+                                            block
+                                            title={'Add To Cart'}
+                                        />
+                                    </div>
+                                    :
+                                    <div style={{ border: `1px solid ${theme.COLORS.LIGHT_GRAY}`, borderRadius: '3px', padding: '5px' }}>
+                                        <FiShoppingCart style={{ fontSize: '20px', color: theme.COLORS.GRAY }} />
+                                    </div>}
                             </Col>
                         </Row>
                     </Card.Body>
@@ -55,6 +72,15 @@ export default function ProductCard(props) {
             <style type="text/css">{`
                 ._productCard ._card {
                     margin: 3%;
+                }
+                .abc {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2; /* number of lines to show */
+                    -webkit-box-orient: vertical;
+                    font-size: 12px;
+                    color: ${theme.COLORS.GRAY}
                 }
                 ._productCard ._card:hover{
                     box-shadow: 0px 0px 10px 0.5px ${theme.COLORS.SHADOW};
