@@ -54,14 +54,14 @@ export default function ProductCard(props) {
             </Link>
             <style type="text/css">{`
                 ._productCard ._card {
-                    margin: 2%;
+                    margin: 3%;
                 }
                 ._productCard ._card:hover{
                     box-shadow: 0px 0px 10px 0.5px ${theme.COLORS.SHADOW};
                     transition: width 0.5s, height 0.5s, opacity 0.5s 0.5s;
                     cursor: pointer;
                     border: none;
-                    margin: 0% 2% 4% 2%;
+                    margin: 2%;
                 }
             `}</style>
         </div>
