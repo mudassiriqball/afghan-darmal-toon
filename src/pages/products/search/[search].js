@@ -2,12 +2,12 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import axios from 'axios';
-import Loading from '../../components/loading';
-import NoDataFound from '../../components/no-data-found';
-import ProductCard from '../../components/customer/product-card';
-import { getDecodedTokenFromStorage } from '../../utils/services/auth';
-import urls from '../../utils/urls';
-import Layout from '../../components/customer/Layout';
+import Loading from '../../../components/loading';
+import NoDataFound from '../../../components/no-data-found';
+import ProductCard from '../../../components/customer/product-card';
+import { getDecodedTokenFromStorage } from '../../../utils/services/auth';
+import urls from '../../../utils/urls';
+import Layout from '../../../components/customer/Layout';
 
 export async function getServerSideProps(context) {
     let categories_list = [];
