@@ -6,13 +6,43 @@ import theme from '../../constants/theme';
 import useDimensions from "react-use-dimensions";
 import Link from 'next/link';
 import CustomButton from '../CustomButton';
+import axios from 'axios';
+import urls from '../../utils/urls';
 
 export default function ProductCard(props) {
-    const { element } = props;
-    console.log('element:', element);
+    const { element, user, token } = props;
     const [ref, { x, y, width }] = useDimensions();
-
     const [isCartHover, setIsCartHover] = useState(false);
+
+    // Add to cart
+    const [quantity, setQuantity] = useState(1);
+    const [cartLoading, setCartLoading] = useState(false);
+    const handleAddToCart = async () => {
+        if (user.full_name == '') {
+            alert('Please Login Before Add to Cart!');
+        } else {
+            setCartLoading(true);
+            let data = {
+                p_id: element._id,
+                vendor_id: element.vendor_id,
+                quantity: 1
+            };
+            await axios.put(urls.PUT_REQUEST.ADD_TO_CART + user._id, data, {
+                headers: {
+                    'authorization': token,
+                }
+            }).then(function (res) {
+                setCartLoading(false);
+                setShowAlertModal(true);
+                getUser(user._id);
+            }).catch(function (err) {
+                setCartLoading(false)
+                console.log('Add to cart error:', err);
+                alert('Error');
+            });
+        }
+    }
+    // End of Add to cart
 
     return (
         <div className='_productCard'>
@@ -45,7 +75,7 @@ export default function ProductCard(props) {
                                     size={15}
                                     activeColor='orange'
                                 />
-                                <label className='p-0 m-0'>{'Rs: 1990'}</label>
+                                <h6 className='p-0 m-0' style={{ color: theme.COLORS.MAIN, fontWeight: 'bold' }}>{'Rs: ' + element.price}</h6>
                             </Col>
                             <Col
                                 onMouseEnter={() => setIsCartHover(true)}
@@ -54,10 +84,16 @@ export default function ProductCard(props) {
                             >
                                 <div className='mr-auto' />
                                 {isCartHover ?
-                                    <div style={{ position: 'absolute', top: '0px', left: '0px', right: '0px' }}>
+                                    <div style={{ position: 'absolute', top: '0px', right: '0px', bottom: '0px' }}>
                                         <CustomButton
-                                            block
-                                            title={'Add To Cart'}
+                                            size={'sm'}
+                                            loading={cartLoading}
+                                            disabled={cartLoading}
+                                            title={'ADD TO CART'}
+                                            // variant={'success'}
+                                            spinnerSize={'lg'}
+                                            onlyLoading
+                                            onClick={() => handleAddToCart()}
                                         />
                                     </div>
                                     :

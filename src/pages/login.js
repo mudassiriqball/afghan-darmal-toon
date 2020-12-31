@@ -127,7 +127,7 @@ export default function Login(props) {
                     <a href="#" className='color w-100' style={{ fontSize: 'small', marginTop: '50px' }}>Forgot Password ?</a>
                 </Card.Body>
             </Card>
-            <StickyBottomNavbar isLoggedIn={false} />
+            <StickyBottomNavbar user={''} />
             <style jsx>{`
                 ._login {
                     width: 100%;

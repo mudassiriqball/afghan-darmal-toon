@@ -2,15 +2,29 @@ import React from 'react'
 import { Button, Spinner } from 'react-bootstrap'
 
 export default function CustomButton(props) {
-    const { variant, loading, title, spinnerVariant } = props;
+    const { variant, loading, title, spinnerVariant, spinnerSize, onlyLoading } = props;
     return (
         <Button
-            variant={variant ? variant : 'danger'}
+            // variant={variant ? variant : 'danger'}
+            variant={'danger'}
             {...props}
+            style={{ alignItems: 'center', display: 'flex', justifyContent: 'center' }}
         >
-            {loading && <Spinner animation="border" size={'sm'} style={{ marginRight: 5 }} role="status" variant={spinnerVariant} />}
+            {loading && <Spinner animation="border"
+                size={spinnerSize ? spinnerSize : 'sm'}
+                style={{ marginRight: 5 }}
+                role="status"
+                variant={spinnerVariant}
+            />
+            }
             {props.children}
-            {title}
+            {onlyLoading ?
+                loading ?
+                    null
+                    :
+                    title
+                : title
+            }
         </Button>
     )
 }

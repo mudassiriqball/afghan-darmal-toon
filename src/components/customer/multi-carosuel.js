@@ -28,18 +28,23 @@ const responsive = {
 };
 
 export default function MultiCarosuel(props) {
+    const { user, token, categories_list, sub_categories_list } = props;
+
     return (
-        props.categories_list && props.categories_list.map((element, index) => (
+        categories_list && categories_list.map((element, index) => (
             <MultiCarosuelRow
+                key={index}
+                user={user}
+                token={token}
                 category={element}
-                sub_categories_list={props.sub_categories_list}
+                sub_categories_list={sub_categories_list}
             />
         ))
     )
 }
 
 function MultiCarosuelRow(props) {
-    const { category, sub_categories_list } = props;
+    const { user, token, category, sub_categories_list } = props;
     const [page, setPage] = useState(0);
     const [subCategory_id, setSubCategory_id] = useState(null);
 
@@ -108,7 +113,12 @@ function MultiCarosuelRow(props) {
                                 itemClass="carousel-item-padding-50-px"
                             >
                                 {PRODUCTS_PAGE_LIMIT_PRODUCTS && PRODUCTS_PAGE_LIMIT_PRODUCTS.map((element, index) => (
-                                    <ProductCard element={element} key={index} />
+                                    <ProductCard
+                                        user={user}
+                                        token={token}
+                                        element={element}
+                                        key={index}
+                                    />
                                 ))}
                             </Carousel>
                             :

@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 
 import getProductsByCategorySubCategoryPageLimit from '../../../../hooks/customer/getProductsByCategorySubCategoryPageLimit';
-import { getDecodedTokenFromStorage } from '../../../../utils/services/auth';
+import { getDecodedTokenFromStorage, getTokenFromStorage } from '../../../../utils/services/auth';
 import ProductCard from '../../../../components/customer/product-card';
 import NoDataFound from '../../../../components/no-data-found';
 import CustomButton from '../../../../components/CustomButton';
@@ -18,6 +18,7 @@ import theme from '../../../../constants/theme';
 import urls from '../../../../utils/urls';
 
 import { AiOutlineMinusSquare, AiOutlinePlusSquare } from 'react-icons/ai';
+import StickyBottomNavbar from '../../../../components/customer/sticky-bottom-navbar';
 
 
 export async function getServerSideProps(context) {
@@ -48,7 +49,7 @@ export default function Category(props) {
 
     // User
     const [user, setUser] = useState({ _id: '', fullName: '', mobile: '', city: '', licenseNo: '', address: '', email: '', status: '', role: '', wishList: '', cart: '', entry_date: '' })
-
+    const [token, setToken] = useState('');
     useEffect(() => {
         setProductLoading(true);
         getProduct();
@@ -57,6 +58,9 @@ export default function Category(props) {
             if (decodedToken !== null) {
                 setUser(decodedToken);
                 getUser(decodedToken._id);
+                const _token = getTokenFromStorage();
+                if (_token !== null)
+                    setToken(_token);
             }
         }
         getDecodedToken();
@@ -83,6 +87,33 @@ export default function Category(props) {
 
     // Add to cart
     const [quantity, setQuantity] = useState(1);
+    const [cartLoading, setCartLoading] = useState(false);
+    const handleAddToCart = async () => {
+        if (user.full_name == '') {
+            alert('Please Login Before Add to Cart!');
+        } else {
+            setCartLoading(true);
+            let data = {
+                p_id: productData._id,
+                vendor_id: productData.vendor_id,
+                quantity: quantity
+            };
+            await axios.put(urls.PUT_REQUEST.ADD_TO_CART + user._id, data, {
+                headers: {
+                    'authorization': token,
+                }
+            }).then(function (res) {
+                setCartLoading(false);
+                setShowAlertModal(true);
+                getUser(user._id);
+            }).catch(function (err) {
+                setCartLoading(false)
+                console.log('Add to cart error:', err);
+                alert('Error');
+            });
+        }
+    }
+    // ENd of Add to cart
 
     // Rating Reviews
     const [rating, setRating] = useState(0)
@@ -95,7 +126,7 @@ export default function Category(props) {
     function ratingChanged(newRating) {
         setRating(newRating)
     }
-    function handleSetRating() {
+    function handleSetRatingReview() {
         setLoading(true)
         axios({
             method: 'PUT',
@@ -137,7 +168,7 @@ export default function Category(props) {
                             <Row>
                                 <Col lg={5} md={5} sm={12} xs={12}>
                                     <Row >
-                                        <Col lg={2} md={2} sm={4} xs={4} className='flex-column'>
+                                        <Col lg={2} md={2} sm={2} xs={2} className='flex-column'>
                                             {productData.imagesUrl && productData.imagesUrl.map((element, index) => (
                                                 <SmallImage
                                                     key={index}
@@ -148,7 +179,7 @@ export default function Category(props) {
                                                 />
                                             ))}
                                         </Col>
-                                        <Col lg={10} md={10} sm={8} xs={8}>
+                                        <Col lg={10} md={10} sm={10} xs={10}>
                                             <Image
                                                 ref={ref}
                                                 src={productData.imagesUrl[activeImgIndex].imageUrl}
@@ -157,12 +188,12 @@ export default function Category(props) {
                                         </Col>
                                     </Row>
                                 </Col>
-                                <Col lg={7} md={7} sm={12} xs={12}>
+                                <Col lg={7} md={7} sm={12} xs={12} className='sm_xs_padding_top'>
                                     <h3 style={{ fontWeight: 'bold' }}>{productData.name}</h3>
                                     <h3 style={{ fontWeight: 'bold', borderBottom: `1px solid ${theme.COLORS.SHADOW}`, color: theme.COLORS.MAIN, padding: '10px 0px 10px 0px' }}>Rs: {productData.price}</h3>
                                     <label style={{ minHeight: width / 1.5, color: theme.COLORS.GRAY }}>{productData.description}</label>
                                     <Row>
-                                        <Col>
+                                        <Col lg={3} md={3} sm={6} xs={6} sm={6}>
                                             <div style={{ height: '100%', border: `2px solid ${theme.COLORS.LIGHT_GRAY}`, borderRadius: '5px', display: 'flex', flexDirection: 'row' }}>
                                                 <AiOutlineMinusSquare onClick={() => {
                                                     if (quantity > 1) {
@@ -179,12 +210,12 @@ export default function Category(props) {
                                         </Col>
                                         <Col>
                                             <CustomButton
-                                                // loading={loading}
-                                                // disabled={loading}
+                                                loading={cartLoading}
+                                                disabled={cartLoading}
                                                 title={'ADD TO CART'}
-                                                variant={'success'}
-                                                size={'lg'}
-                                            // onClick={() => handleLogin()}
+                                                // variant={'success'}
+                                                size={isMobile ? 'sm' : 'lg'}
+                                                onClick={() => handleAddToCart()}
                                             />
                                         </Col>
                                     </Row>
@@ -222,7 +253,7 @@ export default function Category(props) {
                                                         </div>
                                                     ))
                                                     :
-                                                    <label className='w-100 h-100 text-center pt-5'>{'No Rewiews, Signin to Add Review'}</label>
+                                                    <label className='w-100 h-100 text-center pt-5'>{'No Rewiews'} {user.fullName === '' && ', Signin to Add Review'}</label>
                                                 }
                                             </Tab>
                                             {user.role === 'cutomer' &&
@@ -255,8 +286,8 @@ export default function Category(props) {
                                                             loading={reviewLoading}
                                                             disabled={rating == '' ? true : false || reviewLoading}
                                                             title={'ADD'}
-                                                            variant={'success'}
-                                                            onClick={handleSetRating}
+                                                            // variant={'success'}
+                                                            onClick={handleSetRatingReview}
                                                         />
                                                     </Row>
                                                 </Tab>
@@ -265,11 +296,16 @@ export default function Category(props) {
                                     </Card>
                                 </Col>
                             </Row>
-                            <RelatedProducts category={category} />
+                            <RelatedProducts
+                                category={category}
+                                user={user}
+                                token={token}
+                            />
                         </>
                 }
             </div>
             <Footer />
+            <StickyBottomNavbar user={user} />
             <style type="text/css">{`
                 ._product ._review{
                     margin: 2%;
@@ -290,10 +326,16 @@ export default function Category(props) {
                     ._product {
                         padding: 2% 5%;
                     }
+                    ._product .sm_xs_padding_top {
+                        padding-top: 20px;
+                    }
                 }
                 @media only screen and (min-width: 600px) {
                     ._product {
                         padding: 2% 5%;
+                    }
+                    ._product .sm_xs_padding_top {
+                        padding-top: 20px;
                     }
                 }
                 @media only screen and (min-width: 768px) {
@@ -338,7 +380,7 @@ function SmallImage(props) {
 }
 
 function RelatedProducts(props) {
-    const { category } = props;
+    const { category, user, token } = props;
 
     const { PRODUCTS_PAGE_LIMIT_LOADING, PRODUCTS_PAGE_LIMIT_ERROR, PRODUCTS_PAGE_LIMIT_PRODUCTS, PRODUCTS_PAGE_LIMIT_HAS_MORE } =
         getProductsByCategorySubCategoryPageLimit(category, null, '1', isMobile ? '9' : '12');
@@ -350,7 +392,12 @@ function RelatedProducts(props) {
                 <Row noGutters className='p-0 m-0'>
                     {PRODUCTS_PAGE_LIMIT_PRODUCTS && PRODUCTS_PAGE_LIMIT_PRODUCTS.map((element, index) => (
                         <Col lg={3} md={4} sm={12} xs={12} key={index} className='p-0 m-0' >
-                            <ProductCard element={element} key={index} />
+                            <ProductCard
+                                user={user}
+                                token={token}
+                                key={index}
+                                element={element}
+                            />
                         </Col>
                     ))}
                 </Row>

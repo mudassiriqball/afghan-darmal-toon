@@ -34,7 +34,8 @@ const SliderCarousel = (props) => {
                                 <CustomButton
                                     size='sm'
                                     title={'Shop Now'}
-                                    onClick={() => Router.push('/')}></CustomButton>
+                                    onClick={() => Router.push('/')}
+                                />
                             </Carousel.Caption>
                         </Carousel.Item>
                     )}

@@ -2,7 +2,7 @@ import Head from 'next/head'
 import { useEffect, useState } from 'react';
 import Layout from '../components/customer/Layout'
 import jwt_decode from 'jwt-decode';
-import { getDecodedTokenFromStorage } from '../utils/services/auth';
+import { getDecodedTokenFromStorage, getTokenFromStorage } from '../utils/services/auth';
 import theme from '../constants/theme';
 import Footer from '../components/customer/footer';
 import urls from '../utils/urls';
@@ -40,7 +40,7 @@ export async function getServerSideProps(context) {
 
 export default function Home(props) {
   const [user, setUser] = useState({ _id: '', fullName: '', mobile: '', city: '', licenseNo: '', address: '', email: '', status: '', role: '', wishList: '', cart: '', entry_date: '' })
-  const [cart_count, setsetCart_count] = useState(0);
+  const [token, setToken] = useState('');
   const [showChild, setShowChild] = useState(false);
 
   useEffect(() => {
@@ -50,6 +50,9 @@ export default function Home(props) {
       if (decodedToken !== null) {
         setUser(decodedToken);
         getUser(decodedToken._id);
+        const _token = await getTokenFromStorage();
+        if (_token !== null)
+          setToken(_token);
       }
     }
     getDecodedToken();
@@ -90,12 +93,13 @@ export default function Home(props) {
           <InfoRow />
         </Layout>
         <MultiCarosuel
-          products={props.products}
+          user={user}
+          token={token}
           categories_list={props.categories_list}
           sub_categories_list={props.sub_categories_list}
         />
         <Footer />
-        <StickyBottomNavbar isLoggedIn={user.fullName !== ''} />
+        <StickyBottomNavbar user={user} />
       </main>
       <style jsx>{`
         ._container {

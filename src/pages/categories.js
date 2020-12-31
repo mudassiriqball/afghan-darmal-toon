@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Row, Col } from 'react-bootstrap'
 import axios from 'axios'
 import Router from 'next/router'
@@ -6,7 +7,7 @@ import StickyBottomNavbar from '../components/customer/sticky-bottom-navbar';
 import Toolbar from '../components/customer/toolbar';
 import theme from '../constants/theme';
 import urls from '../utils/urls';
-import { getDecodedTokenFromStorage } from '../utils/services/auth';
+import { getDecodedTokenFromStorage, getTokenFromStorage } from '../utils/services/auth';
 
 export async function getServerSideProps(context) {
     let categories_list = []
@@ -28,14 +29,16 @@ export async function getServerSideProps(context) {
 
 function Categories({ categories_list, sub_categories_list }) {
     const [user, setUser] = useState({ _id: '', fullName: '', mobile: '', city: '', licenseNo: '', address: '', email: '', status: '', role: '', wishList: '', cart: '', entry_date: '' })
-
+    const [token, setToken] = useState('');
     useEffect(() => {
-        setShowChild(true);
         const getDecodedToken = async () => {
             const decodedToken = await getDecodedTokenFromStorage();
             if (decodedToken !== null) {
                 setUser(decodedToken);
                 getUser(decodedToken._id);
+                const _token = await getTokenFromStorage();
+                if (_token !== null)
+                    setToken(_token);
             }
         }
         getDecodedToken();
@@ -57,13 +60,13 @@ function Categories({ categories_list, sub_categories_list }) {
                 {categories_list && categories_list.map((element, index) =>
                     <Col key={index} className='col' lg={4} md={4} sm={12} xs={12}>
                         <div>
-                            <label className='category' onClick={() => Router.push('/products/category/[category]', `/products/category/${element.value}`)}>{element.value}</label>
+                            <label className='category' onClick={() => Router.push('/products/[category]', `/products/${element._id}`)}>{element.value}</label>
                         </div>
                         <hr className='hr' />
                         {sub_categories_list && sub_categories_list.map((e, i) =>
                             element._id == e.category_id ?
                                 <div key={i}>
-                                    <label className='sub-category' onClick={() => Router.push('/products/category/[category]/[sub_category]', `/products/category/${element.value}/${e.value}`)}>{e.value}</label>
+                                    <label className='sub-category' onClick={() => Router.push('/products/[category]/[sub_category]', `/products/${element._id}/${e._id}`)}>{e.value}</label>
                                 </div>
                                 :
                                 null
@@ -74,7 +77,7 @@ function Categories({ categories_list, sub_categories_list }) {
             <div className='footer'>
                 <Footer />
             </div>
-            <StickyBottomNavbar isLoggedIn={user.fullName !== ''} />
+            <StickyBottomNavbar user={user} />
             <style type="text/css">{`
                 .categories{
                     min-height: 100vh;

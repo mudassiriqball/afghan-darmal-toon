@@ -135,7 +135,8 @@ class Admin extends Component {
             this.getUser(_decodedToken._id);
             // Token
             const _token = await getTokenFromStorage();
-            this.setState({ token: _token });
+            if (_token !== null)
+                this.setState({ token: _token });
         } else {
             Router.push('/')
         }

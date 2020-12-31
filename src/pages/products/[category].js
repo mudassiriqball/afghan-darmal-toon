@@ -13,9 +13,10 @@ import getProductsByCategorySubCategoryPageLimit from '../../hooks/customer/getP
 import Loading from '../../components/loading';
 import NoDataFound from '../../components/no-data-found';
 import ProductCard from '../../components/customer/product-card';
-import { getDecodedTokenFromStorage } from '../../utils/services/auth';
+import { getDecodedTokenFromStorage, getTokenFromStorage } from '../../utils/services/auth';
 import urls from '../../utils/urls';
 import Layout from '../../components/customer/Layout';
+import StickyBottomNavbar from '../../components/customer/sticky-bottom-navbar';
 
 export async function getServerSideProps(context) {
     let categories_list = [];
@@ -38,12 +39,16 @@ export default function Category(props) {
     const { category } = router.query;
     // User
     const [user, setUser] = useState({ _id: '', fullName: '', mobile: '', city: '', licenseNo: '', address: '', email: '', status: '', role: '', wishList: '', cart: '', entry_date: '' })
+    const [token, setToken] = useState('');
     useEffect(() => {
         const getDecodedToken = async () => {
             const decodedToken = await getDecodedTokenFromStorage();
             if (decodedToken !== null) {
                 setUser(decodedToken);
                 getUser(decodedToken._id);
+                const _token = await getTokenFromStorage();
+                if (_token !== null)
+                    setToken(_token);
             }
         }
         getDecodedToken();
@@ -90,7 +95,12 @@ export default function Category(props) {
                     <Row noGutters className='p-0 m-0'>
                         {PRODUCTS_PAGE_LIMIT_PRODUCTS && PRODUCTS_PAGE_LIMIT_PRODUCTS.map((element, index) => (
                             <Col ref={lastProducrRef} lg={3} md={4} sm={12} xs={12} key={index} className='p-0 m-0' >
-                                <ProductCard element={element} key={index} />
+                                <ProductCard
+                                    user={user}
+                                    token={token}
+                                    key={index}
+                                    element={element}
+                                />
                             </Col>
                         ))}
                     </Row>
@@ -99,6 +109,7 @@ export default function Category(props) {
                 }
                 {PRODUCTS_PAGE_LIMIT_LOADING && <Loading />}
             </div>
+            <StickyBottomNavbar user={user} />
             <style type="text/css">{`
                 @media only screen and (max-width: 600px) {
                     ._category {

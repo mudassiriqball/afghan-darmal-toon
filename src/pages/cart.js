@@ -1,17 +1,18 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react'
 import { Row, Col, Button, Form, Image, Card, Spinner, InputGroup, Nav } from 'react-bootstrap'
 import axios from 'axios'
+import { isMobile } from "react-device-detect";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faThumbsUp, faTimes } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
 import useDimensions from "react-use-dimensions";
+import Router from 'next/router'
+React.useLayoutEffect = React.useEffect;
+
 import theme from '../constants/theme';
 import { getDecodedTokenFromStorage, getTokenFromStorage, checkTokenExpAuth } from '../utils/services/auth';
-import Router from 'next/router'
 import CustomButton from '../components/CustomButton'
 import AlertModal from '../components/alert-modal'
-
-React.useLayoutEffect = React.useEffect;
 
 import CustomFormControl from '../components/custom-form-control';
 import CalculateDiscountPrice from '../hooks/customer/calculate-discount';
@@ -26,6 +27,7 @@ import { HiOutlineLocationMarker, HiOutlineMailOpen } from 'react-icons/hi';
 import { AiOutlinePhone, AiFillTwitterCircle, AiFillInstagram, AiOutlineClose } from 'react-icons/ai';
 import { FaFacebook } from 'react-icons/fa';
 import Toolbar from '../components/customer/toolbar'
+import StickyBottomNavbar from '../components/customer/sticky-bottom-navbar';
 
 
 export async function getServerSideProps(context) {
@@ -286,16 +288,16 @@ export default function Cart(props) {
             <Card className="text-black" style={{ background: `${theme.COLORS.WHITE}`, border: 'none' }}>
                 <Card.Img src="cart_background.jpg" alt="Card image"
                     style={{
-                        width: '100%', height: '35vw', border: 'none',
+                        minWidth: '100%', maxWidth: '100%', minHeight: isMobile ? '60vw' : '35vw', maxHeight: isMobile ? '60vw' : '35vw', border: 'none',
                         borderBottomLeftRadius: '20%', borderBottomRightRadius: '20%',
                         borderBottom: `5px solid ${theme.COLORS.MAIN}`,
                     }} />
                 <Card.ImgOverlay className='justify-content-center flex align-items-center'>
-                    <Card.Title style={{ fontSize: '70px', fontWeight: 'bolder', color: `${theme.COLORS.MAIN}` }}>CART</Card.Title>
-                    <Card.Text style={{ fontSize: '30px', fontWeight: 'bolder', color: `${theme.COLORS.MAIN}` }}>Your Partner for Medical Cannabis</Card.Text>
-                    <div className='d-flex flex-row justify-content-center flex' style={{ position: 'absolute', bottom: '-40px', left: '0px', right: '0px' }}>
+                    <Card.Title style={{ fontSize: isMobile ? '25px' : '70px', fontWeight: 'bolder', color: `${theme.COLORS.MAIN}` }}>CART</Card.Title>
+                    <Card.Text style={{ fontSize: isMobile ? '16px' : '30px', fontWeight: 'bolder', color: `${theme.COLORS.MAIN}` }}>Your Partner for Medical Cannabis</Card.Text>
+                    <div className='d-flex flex-row justify-content-center flex' style={{ position: 'absolute', bottom: isMobile ? '-25px' : '-40px', left: '0px', right: '0px' }}>
                         <div className='cart_link'>
-                            <Nav.Link href="/" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '80px', height: '80px', color: 'whitesmoke' }}>
+                            <Nav.Link href="/" style={styles.boxStyle}>
                                 <FiHome style={{
                                     color: theme.COLORS.WHITE,
                                     fontSize: '30px',
@@ -304,7 +306,7 @@ export default function Cart(props) {
                             </Nav.Link>
                         </div>
                         <div className='cart_link'>
-                            <Nav.Link href="#" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '80px', height: '80px', color: 'whitesmoke' }}>
+                            <Nav.Link href="#" style={styles.boxStyle}>
                                 <ImCart style={{
                                     color: theme.COLORS.WHITE,
                                     fontSize: '30px',
@@ -314,7 +316,7 @@ export default function Cart(props) {
                             </Nav.Link>
                         </div>
                         <div className='cart_link'>
-                            <Nav.Link href="#" onClick={() => setshowDotView(!showDotView)} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '80px', height: '80px', color: 'whitesmoke' }}>
+                            <Nav.Link href="#" onClick={() => setshowDotView(!showDotView)} style={styles.boxStyle}>
                                 <BiDotsVertical style={{
                                     color: theme.COLORS.WHITE,
                                     fontSize: '30px',
@@ -326,8 +328,8 @@ export default function Cart(props) {
                 </Card.ImgOverlay>
             </Card>
             <CssTransition show={showDotView} hide={() => setshowDotView(false)} />
-            <label style={{ fontSize: '20px', color: `${theme.COLORS.MAIN}`, fontWeight: 'bold', textAlign: 'center', marginTop: '100px', width: '100%' }}>{'----  SHOPPING  ----'}</label>
-            <label style={{ fontSize: '30px', color: `${theme.COLORS.SEC}`, fontWeight: 1000, textAlign: 'center', marginTop: '10px', width: '100%' }}>{'CART DATA'}</label>
+            <label style={{ fontSize: isMobile ? '16px' : '20px', color: `${theme.COLORS.MAIN}`, fontWeight: 'bold', textAlign: 'center', marginTop: '100px', width: '100%' }}>{'----  SHOPPING  ----'}</label>
+            <label style={{ fontSize: isMobile ? '20px' : '30px', color: `${theme.COLORS.SEC}`, fontWeight: 1000, textAlign: 'center', marginTop: '10px', width: '100%' }}>{'CART DATA'}</label>
 
 
             <div className='cart'>
@@ -350,8 +352,8 @@ export default function Cart(props) {
                             <div style={{ minHeight: '70vh' }} className='w-100 d-flex align-items-center justify-content-center'>
                                 <CustomButton
                                     title={'Continue Shopping'}
-                                    onClick={() => Router.push('/')}>
-                                </CustomButton>
+                                    onClick={() => Router.push('/')}
+                                />
                             </div>
                             :
                             < Row noGutters>
@@ -375,8 +377,8 @@ export default function Cart(props) {
                                                     {element.product.product_type == "simple-product" ?
                                                         <Row className='w-100 p-0 m-0'>
                                                             <Col lg={2} md={2} sm={2} xs={3} className='_padding'>
-                                                                <Image ref={ref} className='cart_img' thumbnail
-                                                                    style={{ maxHeight: width + 15 || '200px', minHeight: width + 15 || '200px' }}
+                                                                <Image ref={ref} className='cart_img'
+                                                                    style={{ maxHeight: width + width / theme.SIZES.IMAGE_HEIGHT_DIVIDE, minHeight: width + width / theme.SIZES.IMAGE_HEIGHT_DIVIDE }}
                                                                     src={element.product.product_image_link[0].url}
                                                                 />
                                                             </Col>
@@ -408,7 +410,7 @@ export default function Cart(props) {
                                                         <Row className='w-100 p-0 m-0'>
                                                             <Col lg={2} md={2} sm={2} xs={3} className='_padding'>
                                                                 <Image ref={ref} className='cart_img' thumbnail
-                                                                    style={{ maxHeight: width + 15 || '200px', minHeight: width + 15 || '200px' }}
+                                                                    style={{ maxHeight: width + width / theme.SIZES.IMAGE_HEIGHT_DIVIDE, minHeight: width + width / theme.SIZES.IMAGE_HEIGHT_DIVIDE }}
                                                                     src={element.variation.image_link[0].url}
                                                                 />
                                                             </Col>
@@ -471,12 +473,9 @@ export default function Cart(props) {
                             </Row>
                 }
             </div>
-
-
+            <StickyBottomNavbar user={user} />
             <style type="text/css">{`
                 .cart_link {
-                    width: 80px;
-                    height: 80px;
                     border-radius: 20px;
                     overflow: hidden;
                     margin: 0px 2px;
@@ -831,4 +830,15 @@ function ProcedeOrder(props) {
             `}</style>
         </div>
     )
+}
+
+const styles = {
+    boxStyle: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: isMobile ? '60px' : '80px',
+        height: isMobile ? '60px' : '80px',
+        color: 'whitesmoke'
+    },
 }

@@ -15,6 +15,7 @@ import MyWishlist from '../components/profile/my-wishlist';
 import urls from '../utils/urls';
 import theme from '../constants/theme';
 import Toolbar from '../components/customer/toolbar';
+import StickyBottomNavbar from '../components/customer/sticky-bottom-navbar';
 
 export async function getServerSideProps(context) {
     let categories_list = []
@@ -85,8 +86,9 @@ export default function Profile(props) {
                 // }).catch((error) => {
                 //     console.log('user order count error in profile',error)
                 // })
-                const _token = await getTokenFromStorage()
-                setToken(_token)
+                const _token = await getTokenFromStorage();
+                if (_token !== null)
+                    setToken(_token)
             } else {
                 Router.replace('/')
             }
@@ -301,7 +303,7 @@ export default function Profile(props) {
                     </Col>
                 </Row>
             </div>
-            {/* </Layout> */}
+            <StickyBottomNavbar user={user} />
             <style type="text/css">{`
                 .profile {
                     min-height: 100vh;
