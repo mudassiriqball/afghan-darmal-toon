@@ -29,7 +29,7 @@ router.get("/all-users/search/by-status/:_role", UserController.get_users_by_que
 router.put("/user-avatar/:_id", checkAuth, UserController.set_avatar);
 router.put("/status/id/customer-only/:_id", checkAuth, UserController.update_status);
 router.put("/reset-password/:_id", UserController.reset_password);
-router.put("/add-to-cart/:_id", checkAuth, UserController.add_to_cart);
+router.put("/cart/id/add/:_id", checkAuth, UserController.add_to_cart);
 router.put("/clear-cart-obj/id/clear-by-id/:_id", UserController.deleteCartData);
 router.put("/profile/id/update-all/:_id", UserController.update_profile);
 // router.put("/:_id", UserController.updateUser);

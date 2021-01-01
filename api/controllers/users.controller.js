@@ -697,10 +697,6 @@ usersController.reset_password = async (req, res) => {
 
 usersController.add_to_cart = async (req, res) => {
   const body = req.body;
-  if (body.variation_id === "") {
-    body.variation_id = undefined;
-    body.index = undefined;
-  }
   if (!req.params._id) {
     Fu;
     res.status(500).send({

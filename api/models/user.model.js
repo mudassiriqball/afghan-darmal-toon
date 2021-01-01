@@ -130,6 +130,13 @@ const User = new Schema({
     status: {
         type: String,
     },
+    cart:[
+        {
+            p_id:{type: Schema.Types.ObjectId},
+            vendor_id:{type: Schema.Types.ObjectId},
+            quantity:{type:Number}
+        }
+    ]
 });
 
 User.plugin(mongoosePaginate);
