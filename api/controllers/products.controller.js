@@ -618,6 +618,55 @@ productsController.get_admin_products = async (req, res) => {
   }
 };
 
+
+productsController.get_admin_inventory = async (req, res) => {
+  try {
+    const total = await Products.countDocuments({
+      isdeleted: false,
+    });
+    const products = await Products.aggregate([
+      {
+        $match: {
+          isdeleted: false,
+        },
+      },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "category",
+          foreignField: "_id",
+          as: "category",
+        },
+      },
+      { $unwind: "$category" },
+      {
+        $lookup: {
+          from: "sub_categories",
+          localField: "sub_category",
+          foreignField: "_id",
+          as: "sub_category",
+        },
+      },
+      { $unwind: "$sub_category" },
+      {
+        $skip: (req.query.page - 1) * req.query.limit,
+      },
+      {
+        $limit: parseInt(req.query.limit),
+      },
+    ]);
+    res.status(200).send({
+      code: 200,
+      message: "Successful",
+      data: products,
+      total,
+    });
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+};
+
+
 productsController.get_products_by_category = async (req, res) => {
   try {
     if (req.query.subCategory) {
