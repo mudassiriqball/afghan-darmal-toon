@@ -690,6 +690,7 @@ function ProcedeOrder(props) {
                                     block
                                     title={onlinePaymentChecked ? 'PROCEED TO PAYMENT' : 'PLACE ORDER'}
                                     onClick={confirmOrder}
+                                    disabled={!onlinePaymentChecked && !cashOnDeliveryChecked}
                                     loading={loading}
                                 />
                             </div>
