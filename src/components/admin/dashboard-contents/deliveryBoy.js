@@ -98,10 +98,8 @@ class deliveryBoy extends React.Component {
                 <AlertModal
                     onHide={() => this.setState({ viewShowAlertModal: false })}
                     show={this.state.viewShowAlertModal}
-                    header={'Success'}
+                    alertType={'success'}
                     message={this.state.viewAlertModalMsg}
-                    iconname={faThumbsUp}
-                    color={'green'}
                 />
                 {!this.state.isViewUser ?
                     <div >
@@ -375,10 +373,8 @@ function DeliveryBoyTable(props) {
                 <AlertModal
                     onHide={(e) => setShowAlertModal(false)}
                     show={showAlertModal}
-                    header={'Success'}
+                    alertType={'success'}
                     message={alertModalMsg}
-                    iconname={faThumbsUp}
-                    color={'green'}
                 />
                 {!isSearch ?
                     USERS_PAGE_LOADING ?

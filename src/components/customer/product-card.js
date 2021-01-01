@@ -8,18 +8,28 @@ import Link from 'next/link';
 import CustomButton from '../CustomButton';
 import axios from 'axios';
 import urls from '../../utils/urls';
+import AlertModal from '../alert-modal';
 
 export default function ProductCard(props) {
-    const { element, user, token } = props;
+    const { element, user, token, getUser } = props;
     const [ref, { x, y, width }] = useDimensions();
     const [isCartHover, setIsCartHover] = useState(false);
+    // Alert Stuff
+    const [showAlertModal, setShowAlertModal] = useState(false)
+    const [alertMsg, setAlertMsg] = useState('');
+    const [alertType, setAlertType] = useState('');
 
     // Add to cart
-    const [quantity, setQuantity] = useState(1);
     const [cartLoading, setCartLoading] = useState(false);
     const handleAddToCart = async () => {
-        if (user.full_name == '') {
-            alert('Please Login Before Add to Cart!');
+        if (user.role == '') {
+            setAlertType('error');
+            setAlertMsg('Please Login Before Add to Cart!');
+            setShowAlertModal(true);
+        } else if (user.role === 'admin' || user.role === 'delivery') {
+            setAlertType('error');
+            setAlertMsg('Please Login as Customer!');
+            setShowAlertModal(true);
         } else {
             setCartLoading(true);
             let data = {
@@ -33,19 +43,29 @@ export default function ProductCard(props) {
                 }
             }).then(function (res) {
                 setCartLoading(false);
+                setAlertType('success');
+                setAlertMsg('Product Successfully Added to Cart');
                 setShowAlertModal(true);
                 getUser(user._id);
             }).catch(function (err) {
                 setCartLoading(false)
+                setAlertType('error');
+                setAlertMsg('Product Not Added to Cart, Please Try Again Later');
+                setShowAlertModal(true);
                 console.log('Add to cart error:', err);
-                alert('Error');
             });
         }
     }
-    // End of Add to cart
+    // ENd of Add to cart
 
     return (
         <div className='_productCard'>
+            <AlertModal
+                onHide={() => setShowAlertModal(false)}
+                show={showAlertModal}
+                alertType={alertType}
+                message={alertMsg}
+            />
             <Link href='/products/[category]/[sub_category]/[product]' as={`/products/${element.categoryId}/${element.subCategoryId}/${element._id}`}>
                 <Card className='_card' >
                     <Card.Body className='p-3'>

@@ -136,10 +136,8 @@ export default function Profile(props) {
             <AlertModal
                 onHide={(e) => setShowAlertModal(false)}
                 show={showAlertModal}
-                header={'Success'}
+                alertType={'success'}
                 message={alertMsg}
-                iconname={faThumbsUp}
-                color={'green'}
             />
             {/* <Layout
                 role={user.role}

@@ -1,16 +1,13 @@
-import { Modal, Form, Button } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Modal, Form } from 'react-bootstrap';
+import useDimensions from "react-use-dimensions";
+import theme from '../constants/theme';
+
+import { IoIosCheckmarkCircleOutline } from 'react-icons/io';
+import { VscError } from 'react-icons/vsc';
 
 function AlertModal(props) {
-
-    // React.useEffect(() => {
-    //     setTimeout(() => {
-    //         props.onHide()
-    //     }, 3000);
-    //     return () => {
-    //         props.onHide()
-    //     }
-    // }, [])
+    const { onHide, show, alertType, message } = props;
+    const [ref, { x, y, width }] = useDimensions();
 
     return (
         <Modal
@@ -19,29 +16,27 @@ function AlertModal(props) {
             aria-labelledby="alert-modal"
             centered
         >
-            <div style={{ border: `1px solid ${props.color}`, borderRadius: '5px' }}>
-                <Modal.Header closeButton style={{ color: `${props.color}`, borderBottom: `1px solid ${props.color}` }}>
-                    <FontAwesomeIcon icon={props.iconname} style={{
-                        color: `${props.color}`,
-                        marginRight: '10px',
-                        width: '35px',
-                        height: '35px',
-                        maxHeight: '35px',
-                        maxWidth: '35px',
-                    }} ></FontAwesomeIcon>
-                    <Modal.Title id="alert-modal">
-                        {props.header}
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body >
-                    <Form.Label style={{ fontSize: '14px', padding: '0%', margin: '0%' }}>
-                        {props.message}
-                    </Form.Label>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button size="sm" onClick={props.onHide}>Close</Button>
-                </Modal.Footer>
-            </div>
+            {/* <div style={{ border: `1px solid ${color}`, borderRadius: '5px' }}> */}
+            <Modal.Header closeButton className='d-flex justify-content-center align'
+                style={{
+                    color: alertType == 'success' ? theme.COLORS.SUCCESS : theme.COLORS.DANGER,
+                    borderBottom: `1px solid ${alertType == 'success' ? theme.COLORS.SUCCESS : theme.COLORS.DANGER}`
+                }}>
+                <Modal.Title id="alert-modal" style={{ textAlign: 'center', alignSelf: 'center', fontWeight: 'bold' }}>
+                    {alertType === 'success' ? 'Success' : 'Error'}
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body ref={ref} className='d-flex flex-column justify-content-center align-items-center' style={{ padding: '5%' }}>
+                {alertType == 'success' ?
+                    <IoIosCheckmarkCircleOutline style={{ fontSize: '100px', color: theme.COLORS.SUCCESS }} />
+                    :
+                    <VscError style={{ fontSize: '100px', color: theme.COLORS.DANGER }} />
+                }
+                <Form.Label style={{ fontSize: '14px', padding: '0%', margin: '2% 0%', textAlign: 'center', minWidth: '100%' }}>
+                    {message}
+                </Form.Label>
+            </Modal.Body>
+            {/* </div> */}
         </Modal>
     );
 }

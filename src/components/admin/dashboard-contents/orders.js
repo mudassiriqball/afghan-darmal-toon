@@ -116,10 +116,8 @@ export default class Orders extends Component {
                 <AlertModal
                     onHide={(e) => this.setState({ showAlertModal: false })}
                     show={this.state.showAlertModal}
-                    header={'Success'}
+                    alertType={'success'}
                     message={this.state.alertModalMsg}
-                    iconname={faThumbsUp}
-                    color={'green'}
                 />
                 {!this.state.isViewOrder ?
                     <>
@@ -396,10 +394,8 @@ function Order(props) {
             <AlertModal
                 onHide={(e) => setShowAlertModal(false)}
                 show={showAlertModal}
-                header={'Success'}
+                alertType={'success'}
                 message={alertModalMsg}
-                iconname={faThumbsUp}
-                color={'green'}
             />
 
             <CardSearchAccordion

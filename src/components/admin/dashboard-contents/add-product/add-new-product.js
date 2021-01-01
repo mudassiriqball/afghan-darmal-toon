@@ -314,18 +314,14 @@ class AddNew extends Component {
                             <AlertModal
                                 onHide={(e) => this.setState({ showToast: false })}
                                 show={this.state.showToast}
-                                header={'Success'}
+                                alertType={'success'}
                                 message={this.state.toastMessage}
-                                iconname={faThumbsUp}
-                                color={"#00b300"}
                             />
                             <AlertModal
                                 onHide={(e) => this.setState({ showImgLinkErrorrAlert: false })}
                                 show={this.state.showImgLinkErrorrAlert}
-                                header={'Error'}
+                                alertType={'error'}
                                 message={'Enter Price/Stock/Image(s) in General Tab First'}
-                                iconname={faExclamationTriangle}
-                                color={"#ff3333"}
                             />
                             <Row noGutters style={{ paddingTop: '1%' }}>
                                 <Col lg={12} md={12} sm={12} xs={12}>

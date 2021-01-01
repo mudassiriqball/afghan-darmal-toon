@@ -120,10 +120,8 @@ class Customers extends React.Component {
                 <AlertModal
                     onHide={() => this.setState({ viewShowAlertModal: false })}
                     show={this.state.viewShowAlertModal}
-                    header={'Success'}
                     message={this.state.viewAlertModalMsg}
-                    iconname={faThumbsUp}
-                    color={'green'}
+                    alertType={'success'}
                 />
                 {!this.state.isViewUser ?
                     <div>
@@ -487,10 +485,8 @@ function CustomersTable(props) {
             <AlertModal
                 onHide={(e) => setShowAlertModal(false)}
                 show={showAlertModal}
-                header={'Success'}
+                alertType={'success'}
                 message={alertModalMsg}
-                iconname={faThumbsUp}
-                color={'green'}
             />
 
             <CardSearchAccordion

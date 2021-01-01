@@ -17,8 +17,12 @@ import Loading from '../../../../components/loading';
 import theme from '../../../../constants/theme';
 import urls from '../../../../utils/urls';
 
-import { AiOutlineMinusSquare, AiOutlinePlusSquare } from 'react-icons/ai';
+import { AiOutlineMinusSquare, AiOutlinePlus, AiOutlinePlusSquare } from 'react-icons/ai';
 import StickyBottomNavbar from '../../../../components/customer/sticky-bottom-navbar';
+import AlertModal from '../../../../components/alert-modal';
+import { faThumbsDown, faThumbsUp } from '@fortawesome/free-regular-svg-icons';
+import { FaMinus } from 'react-icons/fa';
+import { TiPlus } from 'react-icons/ti';
 
 
 export async function getServerSideProps(context) {
@@ -37,10 +41,14 @@ export async function getServerSideProps(context) {
     }
 }
 
-export default function Category(props) {
+export default function Product(props) {
     const router = useRouter();
     const { category, sub_category, product } = router.query;
     const [ref, { x, y, width }] = useDimensions();
+    // Alert Stuff
+    const [showAlertModal, setShowAlertModal] = useState(false)
+    const [alertMsg, setAlertMsg] = useState('');
+    const [alertType, setAlertType] = useState('');
 
     // Product
     const [productData, setProductData] = useState(null);
@@ -70,13 +78,12 @@ export default function Category(props) {
         await axios.get(urls.GET_REQUEST.GET_PRODUCT_BY_ID + product).then((res) => {
             setProductData(res.data.data[0]);
             setProductLoading(false);
-            console.log('papapa:', res.data)
         }).catch((err) => {
             setProductLoading(false);
             console.log('Get product by id err in profile', err);
         })
     }
-    async function getUser(id) {
+    const getUser = async (id) => {
         await axios.get(urls.GET_REQUEST.USER_BY_ID + id).then((res) => {
             setUser(res.data.data[0]);
         }).catch((err) => {
@@ -89,8 +96,14 @@ export default function Category(props) {
     const [quantity, setQuantity] = useState(1);
     const [cartLoading, setCartLoading] = useState(false);
     const handleAddToCart = async () => {
-        if (user.full_name == '') {
-            alert('Please Login Before Add to Cart!');
+        if (user.role == '') {
+            setAlertType('error');
+            setAlertMsg('Please Login Before Add to Cart!');
+            setShowAlertModal(true);
+        } else if (user.role === 'admin' || user.role === 'delivery') {
+            setAlertType('error');
+            setAlertMsg('Please Login as Customer!');
+            setShowAlertModal(true);
         } else {
             setCartLoading(true);
             let data = {
@@ -104,12 +117,16 @@ export default function Category(props) {
                 }
             }).then(function (res) {
                 setCartLoading(false);
+                setAlertType('success');
+                setAlertMsg('Product Successfully Added to Cart');
                 setShowAlertModal(true);
                 getUser(user._id);
             }).catch(function (err) {
                 setCartLoading(false)
+                setAlertType('error');
+                setAlertMsg('Product Not Added to Cart, Please Try Again Later');
+                setShowAlertModal(true);
                 console.log('Add to cart error:', err);
-                alert('Error');
             });
         }
     }
@@ -121,26 +138,31 @@ export default function Category(props) {
     const [reviewError, setReviewError] = useState('')
 
     const [reviewLoading, setReviewLoading] = useState(false)
-    const [showAlertModal, setShowAlertModal] = useState(false)
 
     function ratingChanged(newRating) {
         setRating(newRating)
     }
     function handleSetRatingReview() {
-        setLoading(true)
+        setReviewLoading(true)
         axios({
             method: 'PUT',
             url: urls.PUT_REQUEST.ADD_RATING_REVIEW + productData._id,
-            headers: { 'authorization': props.token },
+            headers: { 'authorization': token },
             data: { rating: rating, review: review, c_name: user.fullName }
         }).then(res => {
             setRating(0)
             setReview('')
-            setLoading(false)
-            // setShowAlertModal(true)
+            setReviewLoading(false)
+            setAlertType('success');
+            setAlertMsg('Review Added Successfully');
+            setShowAlertModal(true);
             getProduct();
         }).catch(err => {
-            alert('Error')
+            setReviewLoading(false);
+            console.log('review add error:', err);
+            setAlertType('error');
+            setAlertMsg('Review Failed!\n Please Try Again Later');
+            setShowAlertModal(true);
         })
     }
 
@@ -152,6 +174,12 @@ export default function Category(props) {
 
     return (
         <div className='w-100 h-100' style={{ flex: 1, minHeight: '100%' }}>
+            <AlertModal
+                onHide={() => setShowAlertModal(false)}
+                show={showAlertModal}
+                alertType={alertType}
+                message={alertMsg}
+            />
             <Layout
                 user={user}
                 categories_list={props.categories_list}
@@ -195,13 +223,13 @@ export default function Category(props) {
                                     <Row>
                                         <Col lg={3} md={3} sm={6} xs={6} sm={6}>
                                             <div style={{ height: '100%', border: `2px solid ${theme.COLORS.LIGHT_GRAY}`, borderRadius: '5px', display: 'flex', flexDirection: 'row' }}>
-                                                <AiOutlineMinusSquare onClick={() => {
+                                                <FaMinus onClick={() => {
                                                     if (quantity > 1) {
                                                         setQuantity(quantity - 1)
                                                     }
                                                 }} style={{ fontSize: '30px', margin: 'auto', cursor: 'pointer', color: theme.COLORS.MAIN }} />
                                                 <label style={{ margin: 'auto' }}>{quantity}</label>
-                                                <AiOutlinePlusSquare onClick={() => {
+                                                <TiPlus onClick={() => {
                                                     if (quantity < productData.stock) {
                                                         setQuantity(quantity + 1)
                                                     }
@@ -213,7 +241,6 @@ export default function Category(props) {
                                                 loading={cartLoading}
                                                 disabled={cartLoading}
                                                 title={'ADD TO CART'}
-                                                // variant={'success'}
                                                 size={isMobile ? 'sm' : 'lg'}
                                                 onClick={() => handleAddToCart()}
                                             />
@@ -299,6 +326,7 @@ export default function Category(props) {
                             <RelatedProducts
                                 category={category}
                                 user={user}
+                                getUser={getUser}
                                 token={token}
                             />
                         </>
@@ -366,7 +394,6 @@ export default function Category(props) {
 function SmallImage(props) {
     const { index, activeImgIndex, setActiveImgIndex, imageUrl } = props;
     const [ref, { x, y, width }] = useDimensions();
-    console.log('activeImgIndex:', activeImgIndex, index)
     return (
         <div style={{ border: index === activeImgIndex ? `2px solid ${theme.COLORS.MAIN}` : 'none', marginTop: '10px', borderRadius: '5px', overflow: 'hidden' }}>
             <Image
@@ -380,7 +407,7 @@ function SmallImage(props) {
 }
 
 function RelatedProducts(props) {
-    const { category, user, token } = props;
+    const { category, user, token, getUser } = props;
 
     const { PRODUCTS_PAGE_LIMIT_LOADING, PRODUCTS_PAGE_LIMIT_ERROR, PRODUCTS_PAGE_LIMIT_PRODUCTS, PRODUCTS_PAGE_LIMIT_HAS_MORE } =
         getProductsByCategorySubCategoryPageLimit(category, null, '1', isMobile ? '9' : '12');
@@ -394,6 +421,7 @@ function RelatedProducts(props) {
                         <Col lg={3} md={4} sm={12} xs={12} key={index} className='p-0 m-0' >
                             <ProductCard
                                 user={user}
+                                getUser={getUser}
                                 token={token}
                                 key={index}
                                 element={element}

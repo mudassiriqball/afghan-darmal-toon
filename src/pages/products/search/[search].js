@@ -47,7 +47,7 @@ export default function Category(props) {
         getDecodedToken();
         return () => { }
     }, []);
-    async function getUser(id) {
+    const getUser = async (id) => {
         await axios.get(urls.GET_REQUEST.USER_BY_ID + id).then((res) => {
             setUser(res.data.data[0]);
         }).catch((err) => {
@@ -74,6 +74,7 @@ export default function Category(props) {
                             <Col lg={3} md={4} sm={12} xs={12} key={index} className='p-0 m-0' >
                                 <ProductCard
                                     user={user}
+                                    getUser={getUser}
                                     token={token}
                                     key={index}
                                     element={element}

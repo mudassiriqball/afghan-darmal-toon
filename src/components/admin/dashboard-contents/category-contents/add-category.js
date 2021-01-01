@@ -139,10 +139,8 @@ class AddCategory extends Component {
                             <AlertModal
                                 onHide={(e) => this.setState({ showToast: false })}
                                 show={this.state.showToast}
-                                header={'Success'}
+                                alertType={'success'}
                                 message={'Category Added Successfully'}
-                                iconname={faThumbsUp}
-                                color={"#00b300"}
                             />
                             <TitleRow icon={faListAlt} title={' Admin Dashboard / Add Category'} />
                             <CardAccordion title={'Add New Category'}>

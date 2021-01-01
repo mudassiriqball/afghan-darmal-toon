@@ -293,10 +293,8 @@ class AllCategories extends React.Component {
                 <AlertModal
                     onHide={(e) => this.setState({ showModal: false })}
                     show={this.state.showModal}
-                    header={'Success'}
+                    alertType={'success'}
                     message={this.state.showModalMessage}
-                    iconname={faThumbsUp}
-                    color={"#00b300"}
                 />
                 <ConfirmModal
                     onHide={() => this.setState({ showConfirmDeleteModal: false })}

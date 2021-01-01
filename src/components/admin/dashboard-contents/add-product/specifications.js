@@ -57,7 +57,7 @@ const CustomFields = props => {
             <AlertModal
                 onHide={(e) => setUserStatusAlert(false)}
                 show={userStatusAlert}
-                header={'Error'}
+                alertType={'error'}
                 message={statusAlertMessage}
                 iconname={faExclamationTriangle}
                 color={"#ff3333"}

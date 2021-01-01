@@ -231,10 +231,8 @@ export default function Inventory(props) {
             <AlertModal
                 onHide={() => setShowModal(false)}
                 show={showModal}
-                header={'Success'}
+                alertType={'success'}
                 message={'Product Deleted Successfully'}
-                iconname={faThumbsUp}
-                color={"#00b300"}
             />
             <ConfirmModal
                 onHide={() => setShowConfirmDeleteModal(false)}

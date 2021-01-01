@@ -45,17 +45,18 @@ export default function Toolbar(props) {
                 mobile: '+' + mobile,
                 password: password
             };
-            await axios.post(urls.POST_REQUEST.LOGIN, data).then(function (res) {
-                console.log('ttoao:', res.data)
-                setLoading(false);
-                saveTokenToStorage(res.data.token);
+            await axios.post(urls.POST_REQUEST.LOGIN, data).then(async function (res) {
+                await saveTokenToStorage(res.data.token);
                 const decodedToken = jwt_decode(res.data.token);
-                if (decodedToken.data.role == 'customer') {
-                    Router.replace('/')
-                } else if (decodedToken.data.role == 'admin') {
+                if (decodedToken.data.role === 'customer') {
+                    setLoading(false);
+                    Router.reload('/');
+                } else if (decodedToken.data.role === 'admin') {
+                    setLoading(false);
                     Router.replace('/admin')
                 } else {
-                    Router.replace('/')
+                    setLoading(false);
+                    Router.reload('/');
                 }
             }).catch(function (err) {
                 setLoading(false);
@@ -77,6 +78,7 @@ export default function Toolbar(props) {
         const loggedOut = await removeTokenFromStorage();
         if (loggedOut) {
             Router.replace('/');
+            Router.reload('/');
         }
     }
     // End Of Acccount
@@ -103,7 +105,7 @@ export default function Toolbar(props) {
                                 <Dropdown.Menu style={{ width: '18rem', }} className='dropdown-menu dropdown-menu-right' >
                                     <div style={{ width: '18rem', marginTop: '10px', marginBottom: '10px', textAlign: 'center', color: theme.COLORS.MUTED }}>
                                         {'Don\'t have account ? '}
-                                        <span className='signupSpan'><Link href='/signup'>{'Signup'}</Link></span>
+                                        <span className='signupSpan'><Link onClick={() => setShowDropdown(false)} href='/signup'>{'Signup'}</Link></span>
                                     </div>
                                     <Card style={{ border: 'none' }}>
                                         <Card.Body>
@@ -116,7 +118,7 @@ export default function Toolbar(props) {
                                                         onlyCountries={['pk', 'af']}
                                                         value={''}
                                                         disableDropdown
-                                                        onChange={phone => { setMobile(phone), setmobileError('') }}
+                                                        onChange={phone => { setMobile(phone), setmobileError(''), setError('') }}
                                                         onKeyPress={(e) => handleEnterKeyPress(e)}
                                                     />
                                                     {mobileError !== '' && renderError(mobileError)}
@@ -125,7 +127,7 @@ export default function Toolbar(props) {
                                                     <Form.Control
                                                         type="password"
                                                         value={password}
-                                                        onChange={(e) => { setPassword(e.target.value), setpasswordError('') }}
+                                                        onChange={(e) => { setPassword(e.target.value), setpasswordError(''), setError('') }}
                                                         placeholder="Password"
                                                         onKeyPress={(e) => handleEnterKeyPress(e)}
                                                     />

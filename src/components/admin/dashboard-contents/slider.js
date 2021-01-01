@@ -310,10 +310,8 @@ class Slider extends Component {
                             <AlertModal
                                 onHide={(e) => this.setState({ showToast: false })}
                                 show={this.state.showToast}
-                                header={'Success'}
+                                alertType={'success'}
                                 message={this.state.toastMsg}
-                                iconname={faThumbsUp}
-                                color={"#00b300"}
                             />
                             <TitleRow icon={faListAlt} title={' Admin Dashboard / Slider'} />
                             <CardAccordion title={'Add Slider'}>
