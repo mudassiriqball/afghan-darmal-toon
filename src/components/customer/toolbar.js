@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Card, Dropdown, Form, Nav, Navbar } from 'react-bootstrap'
-import theme from '../../constants/theme'
+import consts from '../../constants'
 import PhoneInput from 'react-phone-input-2'
 import renderError from '../renderError'
 import globalStyle from '../../utils/styles/globalStyle';
@@ -85,7 +85,7 @@ export default function Toolbar(props) {
 
     return (
         <div className='toolbar'>
-            <Navbar collapseOnSelect expand="md" style={{ background: theme.COLORS.SEC, padding: '0.45% 6%', width: '100vw', minWidth: '100%', width: '100%' }} variant='dark'>
+            <Navbar collapseOnSelect expand="md" style={{ background: consts.COLORS.SEC, padding: '0.45% 6%', width: '100vw', minWidth: '100%', width: '100%' }} variant='dark'>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" style={{ marginTop: '10px', marginBottom: '10px', marginRight: 'auto' }} />
                 <Navbar.Collapse id="responsive-navbar-nav ">
                     <Nav className="mr-auto">
@@ -103,13 +103,13 @@ export default function Toolbar(props) {
                                     {'Login / Signup'}
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu style={{ width: '18rem', }} className='dropdown-menu dropdown-menu-right' >
-                                    <div style={{ width: '18rem', marginTop: '10px', marginBottom: '10px', textAlign: 'center', color: theme.COLORS.MUTED }}>
+                                    <div style={{ width: '18rem', marginTop: '10px', marginBottom: '10px', textAlign: 'center', color: consts.COLORS.MUTED }}>
                                         {'Don\'t have account ? '}
                                         <span className='signupSpan'><Link onClick={() => setShowDropdown(false)} href='/signup'>{'Signup'}</Link></span>
                                     </div>
                                     <Card style={{ border: 'none' }}>
                                         <Card.Body>
-                                            <Card.Title style={{ color: theme.COLORS.MAIN, textAlign: 'center', marginBottom: '20px' }}>Signin</Card.Title>
+                                            <Card.Title style={{ color: consts.COLORS.MAIN, textAlign: 'center', marginBottom: '20px' }}>Signin</Card.Title>
                                             <Form>
                                                 <Form.Group controlId="formBasicEmail">
                                                     <PhoneInput
@@ -167,30 +167,30 @@ export default function Toolbar(props) {
                                 <Dropdown.Menu className='dropdown-menu dropdown-menu-right' style={{ border: 'none', paddingTop: '7px', background: 'none' }} >
                                     <Card style={{ boxShadow: `1px 0px 3px lightgray` }}>
                                         <div className='link_div'>
-                                            <Nav.Link href="/profile" onClick={() => setShowDropdown(false)} style={{ fontWeight: 'bolder', padding: '10px', color: theme.COLORS.SEC, fontSize: '12px', flexDirection: "row", alignItems: 'center' }}>
-                                                <CgProfile style={{ color: theme.COLORS.SEC, fontSize: '20px', marginRight: '10px' }} />
+                                            <Nav.Link href="/profile" onClick={() => setShowDropdown(false)} style={{ fontWeight: 'bolder', padding: '10px', color: consts.COLORS.SEC, fontSize: '12px', flexDirection: "row", alignItems: 'center' }}>
+                                                <CgProfile style={{ color: consts.COLORS.SEC, fontSize: '20px', marginRight: '10px' }} />
                                                 {'PROFILE'}
                                             </Nav.Link>
                                         </div>
                                         {user.role == 'admin' &&
                                             <div className='link_div'>
-                                                <Nav.Link href="/admin" onClick={() => setShowDropdown(false)} style={{ fontWeight: 'bolder', padding: '10px', color: theme.COLORS.SEC, fontSize: '12px', flexDirection: "row", alignItems: 'center' }}>
-                                                    <RiDashboardFill style={{ color: theme.COLORS.SEC, fontSize: '20px', marginRight: '10px' }} />
+                                                <Nav.Link href="/admin" onClick={() => setShowDropdown(false)} style={{ fontWeight: 'bolder', padding: '10px', color: consts.COLORS.SEC, fontSize: '12px', flexDirection: "row", alignItems: 'center' }}>
+                                                    <RiDashboardFill style={{ color: consts.COLORS.SEC, fontSize: '20px', marginRight: '10px' }} />
                                                     {'DASHBOARD'}
                                                 </Nav.Link>
                                             </div>
                                         }
                                         {user.role == 'ministory' &&
                                             <div className='link_div'>
-                                                <Nav.Link href="/admin" onClick={() => setShowDropdown(false)} style={{ fontWeight: 'bolder', padding: '10px', color: theme.COLORS.SEC, fontSize: '12px', flexDirection: "row", alignItems: 'center' }}>
-                                                    <RiDashboardFill style={{ color: theme.COLORS.SEC, fontSize: '20px', marginRight: '10px' }} />
+                                                <Nav.Link href="/admin" onClick={() => setShowDropdown(false)} style={{ fontWeight: 'bolder', padding: '10px', color: consts.COLORS.SEC, fontSize: '12px', flexDirection: "row", alignItems: 'center' }}>
+                                                    <RiDashboardFill style={{ color: consts.COLORS.SEC, fontSize: '20px', marginRight: '10px' }} />
                                                     {'DASHBOARD'}
                                                 </Nav.Link>
                                             </div>
                                         }
                                         <div className='link_div'>
-                                            <Nav.Link href="#" onClick={() => logoutUser()} style={{ fontWeight: 'bolder', padding: '10px', color: theme.COLORS.SEC, fontSize: '12px', flexDirection: "row", alignItems: 'center' }}>
-                                                <BiLogOutCircle style={{ color: theme.COLORS.SEC, fontSize: '20px', marginRight: '10px' }} />
+                                            <Nav.Link href="#" onClick={() => logoutUser()} style={{ fontWeight: 'bolder', padding: '10px', color: consts.COLORS.SEC, fontSize: '12px', flexDirection: "row", alignItems: 'center' }}>
+                                                <BiLogOutCircle style={{ color: consts.COLORS.SEC, fontSize: '20px', marginRight: '10px' }} />
                                                 {'LOGOUT'}
                                             </Nav.Link>
                                         </div>
@@ -215,17 +215,17 @@ export default function Toolbar(props) {
                     width: 60px;
                     height: 60px;
                     margin-left: 5%;
-                    background: ${theme.COLORS.MAIN};
+                    background: ${consts.COLORS.MAIN};
                 }
                 .toolbar .cart:hover {
-                    background: ${theme.COLORS.SEC};
+                    background: ${consts.COLORS.SEC};
                 }
                 .toolbar .link_div {
-                    color: ${theme.COLORS.SEC};
+                    color: ${consts.COLORS.SEC};
                 }
                 .toolbar .link_div:hover {
-                    background: ${theme.COLORS.MAIN};
-                    color: ${theme.COLORS.WHITE};
+                    background: ${consts.COLORS.MAIN};
+                    color: ${consts.COLORS.WHITE};
                 }
             `}</style>
             <style jsx global>{`

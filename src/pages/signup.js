@@ -3,7 +3,7 @@ import { Formik } from 'formik'
 import { Form, InputGroup, Col, Row, ButtonGroup, Alert } from 'react-bootstrap';
 import * as yup from 'yup';
 import CustomButton from '../components/CustomButton';
-import theme from '../constants/theme';
+import consts from '../constants';
 import globalStyle from '../utils/styles/globalStyle';
 import PhoneInput from 'react-phone-input-2';
 import firebase from '../utils/services/firebase'
@@ -328,7 +328,7 @@ class Signup extends Component {
                                                     </CustomButton>
                                                 }
                                             </Form.Group>
-                                            <div style={{ borderBottom: `0.5px solid ${theme.COLORS.MUTED}`, width: '100%', marginBottom: '10px' }}></div>
+                                            <div style={{ borderBottom: `0.5px solid ${consts.COLORS.MUTED}`, width: '100%', marginBottom: '10px' }}></div>
                                         </Form.Row>
                                     </>
                                 }
@@ -510,9 +510,9 @@ class Signup extends Component {
                                             </Form.Group>
                                         </Form.Row>
                                         <Form.Group>
-                                            <label className='w-100' style={{ textAlign: 'center', fontSize: 12, color: theme.COLORS.SEC }}>By Signing up you are agree to Terms & Condition and Privacy Statement</label>
+                                            <label className='w-100' style={{ textAlign: 'center', fontSize: 12, color: consts.COLORS.SEC }}>By Signing up you are agree to Terms & Condition and Privacy Statement</label>
                                         </Form.Group>
-                                        <Form.Label style={{ fontSize: theme.SIZES.LABEL, color: theme.COLORS.ERROR }}>
+                                        <Form.Label style={{ fontSize: consts.SIZES.LABEL, color: consts.COLORS.ERROR }}>
                                             <span>{this.state.serverErrorMsg}</span>
                                         </Form.Label>
                                         <Row>
@@ -548,7 +548,7 @@ class Signup extends Component {
                 <style jsx>{`
                     .signup {
                         min-height: 100vh;
-                        background: ${theme.COLORS.SECONDARY};
+                        background: ${consts.COLORS.SECONDARY};
                         position: absolute;
                         top: 0;
                         left: 0;
@@ -559,7 +559,7 @@ class Signup extends Component {
                         min-height: 100vh;
                         justify-contents: center;
                         display: flex;
-                        padding: ${theme.SIZES.BASE};
+                        padding: ${consts.SIZES.BASE};
                     }
                     .signup .feedback{
                         display: flex;
@@ -573,9 +573,9 @@ class Signup extends Component {
                         cursor: pointer;
                     }
                     .signup .container {
-                        background: ${theme.COLORS.WHITE};
+                        background: ${consts.COLORS.WHITE};
                         border-radius: 5px;
-                        border: 1px solid ${theme.COLORS.MUTED};
+                        border: 1px solid ${consts.COLORS.MUTED};
                         padding: 2%;
                         align-self: center;
                     };

@@ -19,7 +19,7 @@ import PaginationRow from '../../pagination-row'
 import ReactToPrint from 'react-to-print'
 
 import urls from '../../../utils/urls/index'
-import theme from '../../../constants/theme'
+import consts from '../../../constants'
 
 export default class Orders extends Component {
     constructor(props) {

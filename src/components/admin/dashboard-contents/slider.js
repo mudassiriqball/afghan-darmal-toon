@@ -4,7 +4,7 @@ import { Form, Row, Image, Col, InputGroup, Button, Spinner } from 'react-bootst
 import { faListAlt } from '@fortawesome/free-solid-svg-icons'
 import { faThumbsUp } from '@fortawesome/free-regular-svg-icons'
 import urls from '../../../utils/urls/index'
-import theme from '../../../constants/theme'
+import consts from '../../../constants'
 import AlertModal from '../../alert-modal';
 import TitleRow from '../../title-row';
 import CardAccordion from '../../card-accordion';
@@ -483,8 +483,8 @@ class Slider extends Component {
                                         margin: 2%;
                                     } 
                                     .slider .card_header{
-                                        background: ${theme.COLORS.SEC};
-                                        font-size: ${theme.SIZES.HEADER};
+                                        background: ${consts.COLORS.SEC};
+                                        font-size: ${consts.SIZES.HEADER};
                                     }
                                 `}</style>
                             <style jsx>{`
@@ -511,6 +511,6 @@ export default Slider;
 
 const styles = {
     label: {
-        fontSize: `${theme.SIZES.LABEL}`
+        fontSize: `${consts.SIZES.LABEL}`
     },
 }

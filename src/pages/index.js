@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Layout from '../components/customer/Layout'
 import jwt_decode from 'jwt-decode';
 import { getDecodedTokenFromStorage, getTokenFromStorage } from '../utils/services/auth';
-import theme from '../constants/theme';
+import consts from '../constants';
 import Footer from '../components/customer/footer';
 import urls from '../utils/urls';
 import axios from 'axios';
@@ -82,6 +82,7 @@ export default function Home(props) {
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
           crossorigin="anonymous"
         />
+        {/* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"></link> */}
         {/* <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossOrigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossOrigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossOrigin="anonymous"></script> */}
@@ -112,7 +113,7 @@ export default function Home(props) {
       </main>
       <style jsx>{`
         ._container {
-          background: ${theme.COLORS.WHITE};
+          background: ${consts.COLORS.WHITE};
           min-height: 100vh;
           position: absolute;
           top: 0;

@@ -8,6 +8,7 @@ const handle = app.getRequestHandler();
 // const path=require("path");
 // const aws = require('aws-sdk')
 // const multerS3 = require('multer-s3')
+
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -67,8 +68,8 @@ app
     require("dotenv").config();
 
     const errorHandler = require("./api/middleware/error-handler");
-    const errorMessage = require("./api//middleware/error-message");
-    const accessControls = require("./api//middleware/access-controls");
+    const errorMessage = require("./api/middleware/error-message");
+    const accessControls = require("./api/middleware/access-controls");
     const mongoose = require("mongoose");
     const cors = require("cors");
     const bodyParser = require("body-parser");
@@ -116,6 +117,7 @@ app
     // in case you want to serve images
     app.use(express.static("public"));
 
+    app.use(cors())
     app.get("/api", function (req, res) {
       res.status(200).send({
         message: "Express backend server"
@@ -124,21 +126,19 @@ app
 
     app.set("port", process.env.PORT);
 
-    app.use(cors());
     app.use(accessControls);
 
     const UsersRoutes = require("./api/routes/users.routes");
     const ProductRoutes = require("./api/routes/products.routes");
     const CategoryRoutes = require("./api/routes/categories.routes");
     const SlidersRoutes = require("./api/routes/sliders.routes");
-
-
-
+    const PaymentsRoutes = require("./api/routes/payments.routes");
 
     app.use("/api/users", UsersRoutes);
     app.use("/api/products", ProductRoutes);
     app.use("/api/categories", CategoryRoutes);
     app.use("/api/sliders", SlidersRoutes);
+    app.use("/api/payments", PaymentsRoutes);
 
 
 

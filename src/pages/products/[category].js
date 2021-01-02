@@ -2,14 +2,9 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import axios from 'axios';
-import {
-    BrowserView,
-    MobileView,
-    isBrowser,
-    isMobile
-} from "react-device-detect";
 
 import getProductsByCategorySubCategoryPageLimit from '../../hooks/customer/getProductsByCategorySubCategoryPageLimit';
+import DetectDeviceView from "../../hooks/detect-device-view";
 import Loading from '../../components/loading';
 import NoDataFound from '../../components/no-data-found';
 import ProductCard from '../../components/customer/product-card';
@@ -35,6 +30,7 @@ export async function getServerSideProps(context) {
 }
 
 export default function Category(props) {
+    const { isMobile } = DetectDeviceView();
     const router = useRouter();
     const { category } = router.query;
     // User

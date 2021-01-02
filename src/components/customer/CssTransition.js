@@ -3,7 +3,7 @@ import { AiOutlinePhone, AiFillTwitterCircle, AiFillInstagram, AiOutlineClose } 
 import { FaFacebook } from 'react-icons/fa';
 import { Card } from 'react-bootstrap';
 import { CSSTransition } from 'react-transition-group';
-import theme from '../../constants/theme';
+import consts from '../../constants';
 
 const CssTransition = props => {
     return (
@@ -16,7 +16,7 @@ const CssTransition = props => {
             >
                 <div className='dots_view'>
                     <Card style={{ width: '100%', height: '100%', border: 'none' }}>
-                        <AiOutlineClose onClick={props.hide} style={{ color: `${theme.COLORS.MUTED}`, fontSize: '30px', marginLeft: 'auto', marginTop: '30px', marginBlock: '10px', marginRight: '10px', cursor: 'pointer' }} />
+                        <AiOutlineClose onClick={props.hide} style={{ color: `${consts.COLORS.MUTED}`, fontSize: '30px', marginLeft: 'auto', marginTop: '30px', marginBlock: '10px', marginRight: '10px', cursor: 'pointer' }} />
                         <Card.Img variant="top" src="logo.jpg" style={{ width: '80%', alignSelf: 'center' }} />
                         <div style={{ marginTop: 'auto', padding: '8%' }}>
                             <Card.Title style={{ fontWeight: 'bolder' }}>Contact Us</Card.Title>
@@ -33,7 +33,7 @@ const CssTransition = props => {
                                 <label className='dotViewLabel'>afghandarmaltoon@gmail.com</label>
                             </div>
                         </div>
-                        <div className='flex-row d-flex justify-content-center align-items-center' style={{ background: `${theme.COLORS.MAIN}` }}>
+                        <div className='flex-row d-flex justify-content-center align-items-center' style={{ background: `${consts.COLORS.MAIN}` }}>
                             <div className='dotViewIcon'>
                                 <FaFacebook style={styles.dotsSocialIconFB} />
                             </div>
@@ -61,10 +61,10 @@ const CssTransition = props => {
                     width: 60px;
                     height: 60px;
                     margin-left: 5%;
-                    background: ${theme.COLORS.MAIN};
+                    background: ${consts.COLORS.MAIN};
                 }
                 .dotViewDiv .cart:hover {
-                    background: ${theme.COLORS.SEC};
+                    background: ${consts.COLORS.SEC};
                 }
 
                 // dots_view
@@ -81,14 +81,14 @@ const CssTransition = props => {
                 .dotViewDiv .dotViewLabel {
                     font-size: 14;
                     font-weight: bolder;
-                    color: ${theme.COLORS.TEXT};
+                    color: ${consts.COLORS.TEXT};
                 }
                 .dotViewDiv .dotViewIcon{
                     cursor: pointer;
                     height: 100%;
                 }
                 .dotViewDiv .dotViewIcon:hover {
-                    background: ${theme.COLORS.WHITE};
+                    background: ${consts.COLORS.WHITE};
                 }
                 .my-node-enter {
                 opacity: 0;
@@ -116,23 +116,23 @@ const CssTransition = props => {
 
 const styles = {
     cart: {
-        color: theme.COLORS.WHITE,
+        color: consts.COLORS.WHITE,
         fontSize: '30px',
         alignSelf: 'center'
     },
     dotsIcon: {
-        color: theme.COLORS.MAIN,
+        color: consts.COLORS.MAIN,
         fontSize: '30px',
         alignSelf: 'center',
         marginRight: '15px',
     },
     dotsSocialIcon: {
-        color: theme.COLORS.SEC,
+        color: consts.COLORS.SEC,
         fontSize: '50px',
         margin: '15px',
     },
     dotsSocialIconFB: {
-        color: theme.COLORS.SEC,
+        color: consts.COLORS.SEC,
         fontSize: '47px',
         margin: '15px',
     }

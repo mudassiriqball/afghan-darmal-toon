@@ -1,6 +1,6 @@
 import React from 'react';
 import { Col, Row } from 'react-bootstrap';
-import theme from '../../constants/theme';
+import consts from '../../constants';
 import { GrDeliver, GrSupport } from 'react-icons/gr';
 import { GiMoneyStack } from 'react-icons/gi';
 
@@ -33,7 +33,7 @@ export default function InfoRow(props) {
             <style type='text/css'>{`
                 .infoRow {
                     padding: 2% 5%;
-                    background: ${theme.COLORS.SHADOW};
+                    background: ${consts.COLORS.SHADOW};
                     margin: 2% 0%;  
                 }
                 .infoRow ._col {

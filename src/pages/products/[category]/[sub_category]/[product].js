@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Card, Col, Form, Image, InputGroup, Nav, Row, Tab, Table, Tabs } from 'react-bootstrap';
 import ReactStars from 'react-rating-stars-component';
 import useDimensions from "react-use-dimensions";
-import { isMobile } from "react-device-detect";
+import DetectDeviceView from "../../../../hooks/detect-device-view";
 import { useRouter } from 'next/router';
 import axios from 'axios';
 
@@ -14,16 +14,13 @@ import CustomButton from '../../../../components/CustomButton';
 import Layout from '../../../../components/customer/Layout';
 import Footer from '../../../../components/customer/footer';
 import Loading from '../../../../components/loading';
-import theme from '../../../../constants/theme';
+import consts from '../../../../constants';
 import urls from '../../../../utils/urls';
 
-import { AiOutlineMinusSquare, AiOutlinePlus, AiOutlinePlusSquare } from 'react-icons/ai';
 import StickyBottomNavbar from '../../../../components/customer/sticky-bottom-navbar';
 import AlertModal from '../../../../components/alert-modal';
-import { faThumbsDown, faThumbsUp } from '@fortawesome/free-regular-svg-icons';
 import { FaMinus } from 'react-icons/fa';
 import { TiPlus } from 'react-icons/ti';
-
 
 export async function getServerSideProps(context) {
     let categories_list = [];
@@ -42,6 +39,7 @@ export async function getServerSideProps(context) {
 }
 
 export default function Product(props) {
+    const { isMobile } = DetectDeviceView();
     const router = useRouter();
     const { category, sub_category, product } = router.query;
     const [ref, { x, y, width }] = useDimensions();
@@ -211,29 +209,29 @@ export default function Product(props) {
                                             <Image
                                                 ref={ref}
                                                 src={productData.imagesUrl[activeImgIndex].imageUrl}
-                                                style={{ minWidth: '100%', maxWidth: '100%', minHeight: width + width / theme.SIZES.IMAGE_HEIGHT_DIVIDE, maxHeight: width + width / theme.SIZES.IMAGE_HEIGHT_DIVIDE }}
+                                                style={{ minWidth: '100%', maxWidth: '100%', minHeight: width + width / consts.SIZES.IMAGE_HEIGHT_DIVIDE, maxHeight: width + width / consts.SIZES.IMAGE_HEIGHT_DIVIDE }}
                                             />
                                         </Col>
                                     </Row>
                                 </Col>
                                 <Col lg={7} md={7} sm={12} xs={12} className='sm_xs_padding_top'>
                                     <h3 style={{ fontWeight: 'bold' }}>{productData.name}</h3>
-                                    <h3 style={{ fontWeight: 'bold', borderBottom: `1px solid ${theme.COLORS.SHADOW}`, color: theme.COLORS.MAIN, padding: '10px 0px 10px 0px' }}>Rs: {productData.price}</h3>
-                                    <label style={{ minHeight: width / 1.5, color: theme.COLORS.GRAY }}>{productData.description}</label>
+                                    <h3 style={{ fontWeight: 'bold', borderBottom: `1px solid ${consts.COLORS.SHADOW}`, color: consts.COLORS.MAIN, padding: '10px 0px 10px 0px' }}>Rs: {productData.price}</h3>
+                                    <label style={{ minHeight: width / 1.5, color: consts.COLORS.GRAY }}>{productData.description}</label>
                                     <Row>
                                         <Col lg={3} md={3} sm={6} xs={6} sm={6}>
-                                            <div style={{ height: '100%', border: `2px solid ${theme.COLORS.LIGHT_GRAY}`, borderRadius: '5px', display: 'flex', flexDirection: 'row' }}>
+                                            <div style={{ height: '100%', border: `2px solid ${consts.COLORS.LIGHT_GRAY}`, borderRadius: '5px', display: 'flex', flexDirection: 'row' }}>
                                                 <FaMinus onClick={() => {
                                                     if (quantity > 1) {
                                                         setQuantity(quantity - 1)
                                                     }
-                                                }} style={{ fontSize: '30px', margin: 'auto', cursor: 'pointer', color: theme.COLORS.MAIN }} />
+                                                }} style={{ fontSize: '30px', margin: 'auto', cursor: 'pointer', color: consts.COLORS.MAIN }} />
                                                 <label style={{ margin: 'auto' }}>{quantity}</label>
                                                 <TiPlus onClick={() => {
                                                     if (quantity < productData.stock) {
                                                         setQuantity(quantity + 1)
                                                     }
-                                                }} style={{ fontSize: '30px', margin: 'auto', cursor: 'pointer', color: theme.COLORS.MAIN }} />
+                                                }} style={{ fontSize: '30px', margin: 'auto', cursor: 'pointer', color: consts.COLORS.MAIN }} />
                                             </div>
                                         </Col>
                                         <Col>
@@ -253,7 +251,7 @@ export default function Product(props) {
                                     <Card style={{ width: '100%', minHeight: width }} body>
                                         <Tabs fill variant="tabs" justify defaultActiveKey="description" id="uncontrolled-tab-example" >
                                             <Tab eventKey="description" title="Description" style={{ paddingTop: '50px' }}>
-                                                <label style={{ minHeight: width / 1.5, color: theme.COLORS.GRAY }}>{productData.description}</label>
+                                                <label style={{ minHeight: width / 1.5, color: consts.COLORS.GRAY }}>{productData.description}</label>
                                             </Tab>
                                             <Tab eventKey="additional" title="Additional information" style={{ paddingTop: '50px' }}>
                                                 <Table striped bordered hover>
@@ -283,7 +281,7 @@ export default function Product(props) {
                                                     <label className='w-100 h-100 text-center pt-5'>{'No Rewiews'} {user.fullName === '' && ', Signin to Add Review'}</label>
                                                 }
                                             </Tab>
-                                            {user.role === 'cutomer' &&
+                                            {user.role === 'customer' &&
                                                 <Tab eventKey="add_reviews" title="Add Review" style={{ paddingTop: '50px' }}>
                                                     <Row style={{ padding: '2% 5%' }}>
                                                         <div className='d-flex flex-row align-items-center justify-content-center mb-2'>
@@ -394,13 +392,15 @@ export default function Product(props) {
 function SmallImage(props) {
     const { index, activeImgIndex, setActiveImgIndex, imageUrl } = props;
     const [ref, { x, y, width }] = useDimensions();
+    const { isMobile } = DetectDeviceView();
+
     return (
-        <div style={{ border: index === activeImgIndex ? `2px solid ${theme.COLORS.MAIN}` : 'none', marginTop: '10px', borderRadius: '5px', overflow: 'hidden' }}>
+        <div style={{ border: index === activeImgIndex ? `2px solid ${consts.COLORS.MAIN}` : 'none', marginTop: '10px', borderRadius: '5px', overflow: 'hidden' }}>
             <Image
                 ref={ref}
                 src={imageUrl}
                 onClick={setActiveImgIndex}
-                style={{ minWidth: '100%', maxWidth: '100%', minHeight: width + width / theme.SIZES.IMAGE_HEIGHT_DIVIDE, maxHeight: width + width / theme.SIZES.IMAGE_HEIGHT_DIVIDE, cursor: 'pointer' }}
+                style={{ minWidth: '100%', maxWidth: '100%', minHeight: width + width / consts.SIZES.IMAGE_HEIGHT_DIVIDE, maxHeight: width + width / consts.SIZES.IMAGE_HEIGHT_DIVIDE, cursor: 'pointer' }}
             />
         </div>
     )
@@ -408,13 +408,13 @@ function SmallImage(props) {
 
 function RelatedProducts(props) {
     const { category, user, token, getUser } = props;
-
+    const { isMobile } = DetectDeviceView();
     const { PRODUCTS_PAGE_LIMIT_LOADING, PRODUCTS_PAGE_LIMIT_ERROR, PRODUCTS_PAGE_LIMIT_PRODUCTS, PRODUCTS_PAGE_LIMIT_HAS_MORE } =
         getProductsByCategorySubCategoryPageLimit(category, null, '1', isMobile ? '9' : '12');
 
     return (
         <div>
-            <h2 style={{ color: theme.COLORS.GRAY, fontWeight: 'bolder', marginTop: '100px' }}>{'Related Products'}</h2>
+            <h2 style={{ color: consts.COLORS.GRAY, fontWeight: 'bolder', marginTop: '100px' }}>{'Related Products'}</h2>
             {PRODUCTS_PAGE_LIMIT_PRODUCTS && PRODUCTS_PAGE_LIMIT_PRODUCTS.length > 0 ?
                 <Row noGutters className='p-0 m-0'>
                     {PRODUCTS_PAGE_LIMIT_PRODUCTS && PRODUCTS_PAGE_LIMIT_PRODUCTS.map((element, index) => (

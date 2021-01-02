@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Card, Col, Row } from 'react-bootstrap';
 import { FiShoppingCart } from 'react-icons/fi';
 import ReactStars from 'react-rating-stars-component';
-import theme from '../../constants/theme';
+import consts from '../../constants';
 import useDimensions from "react-use-dimensions";
 import Link from 'next/link';
 import CustomButton from '../CustomButton';
@@ -73,17 +73,17 @@ export default function ProductCard(props) {
                             textOverflow: 'ellipsis',
                             overflow: 'hidden',
                             whiteSpace: 'nowrap',
-                            color: theme.COLORS.GRAY
+                            color: consts.COLORS.GRAY
                         }}
                         >{element.name}</Card.Title>
-                        <Card.Text className='abc' >
+                        <Card.Text className='descriptions' >
                             {element.description}
                         </Card.Text>
                         <Card.Img
                             variant="top"
                             ref={ref}
                             src={element.imagesUrl[0].imageUrl}
-                            style={{ minWidth: '100%', minHeight: width + (width / theme.SIZES.IMAGE_HEIGHT_DIVIDE), maxHeight: width + (width / theme.SIZES.IMAGE_HEIGHT_DIVIDE) }}
+                            style={{ minWidth: '100%', minHeight: width + (width / consts.SIZES.IMAGE_HEIGHT_DIVIDE), maxHeight: width + (width / consts.SIZES.IMAGE_HEIGHT_DIVIDE) }}
                         />
                         <div style={{ borderTop: `1px solid lightgray`, margin: '5px 0px' }} />
                         <Row noGutters>
@@ -95,7 +95,7 @@ export default function ProductCard(props) {
                                     size={15}
                                     activeColor='orange'
                                 />
-                                <h6 className='p-0 m-0' style={{ color: theme.COLORS.MAIN, fontWeight: 'bold' }}>{'Rs: ' + element.price}</h6>
+                                <h6 className='p-0 m-0' style={{ color: consts.COLORS.MAIN, fontWeight: 'bold' }}>{'Rs: ' + element.price}</h6>
                             </Col>
                             <Col
                                 onMouseEnter={() => setIsCartHover(true)}
@@ -117,8 +117,8 @@ export default function ProductCard(props) {
                                         />
                                     </div>
                                     :
-                                    <div style={{ border: `1px solid ${theme.COLORS.LIGHT_GRAY}`, borderRadius: '3px', padding: '5px' }}>
-                                        <FiShoppingCart style={{ fontSize: '20px', color: theme.COLORS.GRAY }} />
+                                    <div style={{ border: `1px solid ${consts.COLORS.LIGHT_GRAY}`, borderRadius: '3px', padding: '5px' }}>
+                                        <FiShoppingCart style={{ fontSize: '20px', color: consts.COLORS.GRAY }} />
                                     </div>}
                             </Col>
                         </Row>
@@ -129,17 +129,17 @@ export default function ProductCard(props) {
                 ._productCard ._card {
                     margin: 3%;
                 }
-                .abc {
+                .descriptions {
                     overflow: hidden;
                     text-overflow: ellipsis;
                     display: -webkit-box;
                     -webkit-line-clamp: 2; /* number of lines to show */
                     -webkit-box-orient: vertical;
                     font-size: 12px;
-                    color: ${theme.COLORS.GRAY}
+                    color: ${consts.COLORS.GRAY}
                 }
                 ._productCard ._card:hover{
-                    box-shadow: 0px 0px 10px 0.5px ${theme.COLORS.SHADOW};
+                    box-shadow: 0px 0px 10px 0.5px ${consts.COLORS.SHADOW};
                     transition: width 0.5s, height 0.5s, opacity 0.5s 0.5s;
                     cursor: pointer;
                     border: none;

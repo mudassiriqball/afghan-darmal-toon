@@ -2,16 +2,16 @@ import React, { Component } from 'react';
 import { Accordion, Form, InputGroup, Col, Button, Row, Card, Modal, Nav } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-import theme from '../../../../constants/theme';
+import consts from '../../../../constants';
 import Select, { components } from 'react-select';
 import AlertModal from '../../../alert-modal'
 
 
 const groupStyles = {
-    border: `1px solid ${theme.COLORS.ADMIN_MAIN}`,
+    border: `1px solid ${consts.COLORS.ADMIN_MAIN}`,
     borderRadius: '5px',
     background: 'white',
-    color: `${theme.COLORS.ADMIN_MAIN}`,
+    color: `${consts.COLORS.ADMIN_MAIN}`,
 };
 
 const Group = props => (
@@ -62,7 +62,7 @@ const CustomFields = props => {
                 iconname={faExclamationTriangle}
                 color={"#ff3333"}
             />
-            <Form.Row style={{ margin: '0%', padding: '1.5%', background: `${theme.COLORS.SECONDARY}` }}>
+            <Form.Row style={{ margin: '0%', padding: '1.5%', background: `${consts.COLORS.SECONDARY}` }}>
                 <Form.Group as={Col} lg={5} md={5} sm={12} xs={12}>
                     <Form.Label style={styles.label}>Field Name</Form.Label>
                     <Form.Control
@@ -90,7 +90,7 @@ const CustomFields = props => {
             </Form.Row>
 
             {/* Map */}
-            <div style={{ background: `${theme.COLORS.SECONDARY}`, marginTop: '1%' }}>
+            <div style={{ background: `${consts.COLORS.SECONDARY}`, marginTop: '1%' }}>
                 {props.customFieldsArray && props.customFieldsArray.map((element, index) =>
                     <Form.Row style={{ padding: '1% 2%' }} key={index}>
                         <Col lg={5} md={5} sm={12} xs={12}>
@@ -149,14 +149,14 @@ const styles = {
         width: '100%',
         alignItems: 'center',
         // color: '#6A7074',
-        fontSize: `${theme.SIZES.HEADER}`,
-        background: `${theme.COLORS.HEADER_BACKGROUND}`,
+        fontSize: `${consts.SIZES.HEADER}`,
+        background: `${consts.COLORS.HEADER_BACKGROUND}`,
     },
     label: {
         fontSize: '13px',
     },
     accordin_fontawesome: {
-        color: `${theme.COLORS.ADMIN_MAIN}`,
+        color: `${consts.COLORS.ADMIN_MAIN}`,
         marginRight: '10%',
         width: '15px',
         height: '15px',

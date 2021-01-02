@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { Image, Row, Col, Card } from 'react-bootstrap'
 import useDimensions from "react-use-dimensions";
 import NoDataFound from '../no-data-found'
-import theme from '../../constants/theme'
+import consts from '../../constants'
 import urls from '../../utils/urls'
 
 export default function WishlistScreen(props) {
@@ -113,7 +113,7 @@ export default function WishlistScreen(props) {
                 .wishlist .card {
                     border: none;
                     background: rgb(165,64,162);
-                    // background: linear-gradient(135deg, ${theme.COLORS.MAIN} 0%, ${theme.COLORS.SEC} 100%);
+                    // background: linear-gradient(135deg, ${consts.COLORS.MAIN} 0%, ${consts.COLORS.SEC} 100%);
                     background: white;
                     margin-bottom: 1.5%;
                 }
@@ -133,7 +133,7 @@ export default function WishlistScreen(props) {
                     align-items: center;
                     font-size: 15px;
                     font-weight: bold;
-                    color: ${theme.COLORS.TEXT};
+                    color: ${consts.COLORS.TEXT};
                     border: none;
                     padding-bottom: 0%;
                     background: none;
@@ -146,11 +146,11 @@ export default function WishlistScreen(props) {
                 
                 .wishlist .form_label {
                     font-size: 11px;
-                    color: ${theme.COLORS.TEXT};
+                    color: ${consts.COLORS.TEXT};
                 }
                 .wishlist .form_control:disabled {
                     background: none;
-                    color: ${theme.COLORS.TEXT};
+                    color: ${consts.COLORS.TEXT};
                     border: none;
                     padding-left: 0%;
                     padding-top: 0%;

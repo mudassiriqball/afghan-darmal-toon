@@ -5,7 +5,7 @@ import Router from 'next/router'
 import Footer from '../components/customer/footer'
 import StickyBottomNavbar from '../components/customer/sticky-bottom-navbar';
 import Toolbar from '../components/customer/toolbar';
-import theme from '../constants/theme';
+import consts from '../constants';
 import urls from '../utils/urls';
 import { getDecodedTokenFromStorage, getTokenFromStorage } from '../utils/services/auth';
 
@@ -81,7 +81,7 @@ function Categories({ categories_list, sub_categories_list }) {
             <style type="text/css">{`
                 .categories{
                     min-height: 100vh;
-                    background: ${theme.COLORS.SECONDARY};
+                    background: ${consts.COLORS.SECONDARY};
                     position: absolute;
                     top: 0;
                     left: 0;
@@ -107,7 +107,7 @@ function Categories({ categories_list, sub_categories_list }) {
                 }
                 .categories .category:hover{
                     cursor: pointer;
-                    color: ${theme.COLORS.MAIN};
+                    color: ${consts.COLORS.MAIN};
                     text-decoration: underline;
                 }
 
@@ -118,7 +118,7 @@ function Categories({ categories_list, sub_categories_list }) {
                 }
                .categories  .sub-category:hover{
                     cursor: pointer;
-                    color: ${theme.COLORS.MAIN};
+                    color: ${consts.COLORS.MAIN};
                     text-decoration: underline;
                 }
                 

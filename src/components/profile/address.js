@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Card, Form, Col, Row, Image, InputGroup, Button, Spinner } from 'react-bootstrap'
-import theme from '../../constants/theme';
+import consts from '../../constants';
 import urls from '../../utils/urls';
 import CustomButton from '../CustomButton';
 
@@ -63,7 +63,7 @@ export default function Address(props) {
                                     type='text'
                                     value={city}
                                     onChange={(e) => setCity(e.target.value)}
-                                    style={{ color: isEditProfile ? theme.COLORS.TEXT : theme.COLORS.MUTED }}
+                                    style={{ color: isEditProfile ? consts.COLORS.TEXT : consts.COLORS.MUTED }}
                                     disabled={!isEditProfile}
                                 />
                             </InputGroup>
@@ -79,7 +79,7 @@ export default function Address(props) {
                                     type='text'
                                     value={address}
                                     onChange={(e) => { setAddress(e.target.value) }}
-                                    style={{ color: isEditProfile ? theme.COLORS.TEXT : theme.COLORS.MUTED }}
+                                    style={{ color: isEditProfile ? consts.COLORS.TEXT : consts.COLORS.MUTED }}
                                     disabled={!isEditProfile}
                                 />
                             </InputGroup>
@@ -112,7 +112,7 @@ export default function Address(props) {
                 .address .card {
                     border: none;
                     background: rgb(165,64,162);
-                    // background: linear-gradient(135deg, ${theme.COLORS.MAIN} 0%, ${theme.COLORS.SEC} 100%);
+                    // background: linear-gradient(135deg, ${consts.COLORS.MAIN} 0%, ${consts.COLORS.SEC} 100%);
                     background: white;
                     min-height: 200px;
                 }
@@ -121,7 +121,7 @@ export default function Address(props) {
                     align-items: center;
                     font-size: 15px;
                     font-weight: bold;
-                    color: ${theme.COLORS.TEXT};
+                    color: ${consts.COLORS.TEXT};
                     border: none;
                     padding-bottom: 0%;
                     background: none;
@@ -133,7 +133,7 @@ export default function Address(props) {
                 }
                 .address .form_label {
                     font-size: 13px;
-                    color: ${theme.COLORS.TEXT};
+                    color: ${consts.COLORS.TEXT};
                 }
                 .address .form_control:disabled {
                     background: none;

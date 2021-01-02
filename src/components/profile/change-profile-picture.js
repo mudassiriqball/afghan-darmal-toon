@@ -2,7 +2,7 @@ import React from 'react'
 import axios from 'axios'
 import { Card, Form, Col, Row, Image, Button, InputGroup, Spinner } from 'react-bootstrap'
 import urls from '../../utils/urls'
-import theme from '../../constants/theme'
+import consts from '../../constants'
 import CustomButton from '../CustomButton'
 
 import { BsUpload } from 'react-icons/bs';
@@ -82,7 +82,7 @@ export default function ChangrProfilePicture(props) {
                             title={'Upload'}
                             onClick={handleImgUpload}
                         >
-                            {!isLoading && <BsUpload style={{ fontSize: '20px', marginRight: '10px', color: theme.COLORS.WHITE }} />}
+                            {!isLoading && <BsUpload style={{ fontSize: '20px', marginRight: '10px', color: consts.COLORS.WHITE }} />}
                         </CustomButton>
                     </Form.Group>
                 </Card.Body>
@@ -91,7 +91,7 @@ export default function ChangrProfilePicture(props) {
                 .change_picture .card {
                     border: none;
                     background: rgb(165,64,162);
-                    // background: linear-gradient(135deg, ${theme.COLORS.MAIN} 0%, ${theme.COLORS.SEC} 100%);
+                    // background: linear-gradient(135deg, ${consts.COLORS.MAIN} 0%, ${consts.COLORS.SEC} 100%);
                     background: white;
                     min-height: 200px;
                 }
@@ -100,7 +100,7 @@ export default function ChangrProfilePicture(props) {
                     align-items: center;
                     font-size: 15px;
                     font-weight: bold;
-                    color: ${theme.COLORS.TEXT};
+                    color: ${consts.COLORS.TEXT};
                     border: none;
                     padding-bottom: 0%;
                     background: none;

@@ -20,7 +20,7 @@ import AllCategories from './dashboard-contents/category-contents/all-categories
 
 import Inventory from './dashboard-contents/inventory';
 import Orders from './dashboard-contents/orders'
-import theme from '../../constants/theme';
+import consts from '../../constants';
 
 const Dashboard = props => {
     let wprapper_Casses = "wrapper";
@@ -220,7 +220,7 @@ const Dashboard = props => {
                     padding: 3% 5%;
                 }
                 .admin_dashboard .dropdown_item:hover{
-                    background: ${theme.COLORS.ADMIN_MAIN};
+                    background: ${consts.COLORS.ADMIN_MAIN};
                     color: white;
                 }
                 .admin_dashboard .search_form{
@@ -244,7 +244,7 @@ const Dashboard = props => {
                     padding: 3% 5%;
                 }
                 .admin_dashboard .profile_md_lg:hover {
-                    background: ${theme.COLORS.ADMIN_MAIN};
+                    background: ${consts.COLORS.ADMIN_MAIN};
                     color: white;
                 }
                 .admin_dashboard .profile_xs_sm {
@@ -300,28 +300,28 @@ const Dashboard = props => {
                     display: none;
                 }
                 .wrapper.open{
-                    backgroung:  ${theme.COLORS.ADMIN_MAIN};
+                    backgroung:  ${consts.COLORS.ADMIN_MAIN};
                     display: block;
                     height: 93vh;
                     overflow-y: auto;
                 }
                 .nav_link {
-                    background: ${theme.COLORS.ADMIN_MAIN};
+                    background: ${consts.COLORS.ADMIN_MAIN};
                     // border-top: 0.5px solid #434556;
                     // border-bottom: 0.5px solid #434556;
                     margin: 0px;
                 }
                 .nav_link:hover {
-                    background: ${theme.COLORS.SEC_HOVER};
+                    background: ${consts.COLORS.SEC_HOVER};
                 }
                 .limk_submenue {
-                    background: ${theme.COLORS.ADMIN_MAIN};
+                    background: ${consts.COLORS.ADMIN_MAIN};
                     // border-top: 0.5px solid #434556;
                     // border-bottom: 0.5px solid #434556;
                     margin: 0% 0% 0% 6%;
                 }
                 .limk_submenue:hover {
-                    background: ${theme.COLORS.SEC_HOVER};
+                    background: ${consts.COLORS.SEC_HOVER};
                     // background: #30313E;
                 }
                 .side_tab_toogle_btn {
@@ -372,7 +372,7 @@ const styles = {
         maxHeight: '100px',
     },
     muhalik: {
-        color: `${theme.COLORS.ADMIN_MAIN}`,
+        color: `${consts.COLORS.ADMIN_MAIN}`,
         fontSize: '14px',
         margin: '0%',
         padding: '1%',
@@ -381,17 +381,17 @@ const styles = {
         background: 'none'
     },
     wrapper_col: {
-        background: `${theme.COLORS.ADMIN_MAIN}`,
+        background: `${consts.COLORS.ADMIN_MAIN}`,
     },
     navbar: {
-        background: theme.COLORS.ADMIN_MAIN,
+        background: consts.COLORS.ADMIN_MAIN,
         padding: '0.5% 1%',
     },
     toolbar_btn_div: {
         marginRight: '1%',
     },
     toolbar_btn: {
-        background: `${theme.COLORS.ADMIN_MAIN}`,
+        background: `${consts.COLORS.ADMIN_MAIN}`,
         border: 'none',
         width: '31px',
         height: '31px',
@@ -401,7 +401,7 @@ const styles = {
         padding: '0px',
     },
     toolbar_fontawesomer: {
-        color: `${theme.COLORS.WHITE}`,
+        color: `${consts.COLORS.WHITE}`,
         width: '25px',
         height: '25px',
         maxHeight: '25px',
@@ -427,7 +427,7 @@ const styles = {
     },
 
     fontawesome: {
-        color: `${theme.COLORS.WHITE}`,
+        color: `${consts.COLORS.WHITE}`,
         marginRight: '8%',
         width: '18px',
         height: '18px',
@@ -435,7 +435,7 @@ const styles = {
         maxWidth: '18px',
     },
     forword_fontawesome: {
-        color: `${theme.COLORS.WHITE}`,
+        color: `${consts.COLORS.WHITE}`,
         width: '10px',
         height: '10px',
         maxHeight: '10px',
@@ -443,7 +443,7 @@ const styles = {
     },
 
     cog_fontawesome: {
-        color: `${theme.COLORS.WHITE}`,
+        color: `${consts.COLORS.WHITE}`,
         margin: '0px',
         width: '18px',
         height: '18px',

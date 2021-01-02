@@ -1,5 +1,5 @@
 import { Accordion, Card, Button, Badge, Row, Form } from 'react-bootstrap';
-import theme from '../constants/theme';
+import consts from '../constants';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSlidersH } from '@fortawesome/free-solid-svg-icons';
 
@@ -29,7 +29,7 @@ const CardAccordion = props => (
         </Accordion>
         <style type="text/css">{`
             .accordion_card_toggle{
-                background: ${theme.COLORS.SEC};
+                background: ${consts.COLORS.SEC};
                 font-size: 13px;
                 color: white;
                 cursor: pointer;
@@ -37,7 +37,7 @@ const CardAccordion = props => (
                 align-items: center;
             }
             .accordion_card_toggle:hover{
-                background: ${theme.COLORS.SEC_HOVER};
+                background: ${consts.COLORS.SEC_HOVER};
             }
         `}</style>
     </>
@@ -51,8 +51,8 @@ const styles = {
     card_header: {
         display: 'flex',
         alignItems: 'center',
-        fontSize: `${theme.SIZES.HEADER}`,
-        background: `${theme.COLORS.MAIN}`,
+        fontSize: `${consts.SIZES.HEADER}`,
+        background: `${consts.COLORS.MAIN}`,
     },
     slider_fontawesome: {
         color: 'white',

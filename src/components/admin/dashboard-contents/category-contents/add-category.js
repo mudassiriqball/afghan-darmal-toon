@@ -5,7 +5,7 @@ import { faListAlt } from '@fortawesome/free-solid-svg-icons'
 import { faThumbsUp } from '@fortawesome/free-regular-svg-icons'
 
 import urls from '../../../../utils/urls'
-import theme from '../../../../constants/theme'
+import consts from '../../../../constants'
 
 import AlertModal from '../../../alert-modal';
 import TitleRow from '../../../title-row';
@@ -156,7 +156,7 @@ class AddCategory extends Component {
                                             onChange={this.handleCategoryChange}
                                             options={this.state.categories_list}
                                         />
-                                        <Form.Row style={{ color: `${theme.COLORS.ERROR}`, fontSize: '13px', marginLeft: '2px' }}>
+                                        <Form.Row style={{ color: `${consts.COLORS.ERROR}`, fontSize: '13px', marginLeft: '2px' }}>
                                             {this.state.categoryError}
                                         </Form.Row>
                                     </Form.Group>
@@ -172,7 +172,7 @@ class AddCategory extends Component {
                                             onChange={this.handleSubCategoryChange}
                                             options={this.state.sub_categories_list}
                                         />
-                                        <Form.Row style={{ color: `${theme.COLORS.ERROR}`, fontSize: '13px', marginLeft: '2px' }}>
+                                        <Form.Row style={{ color: `${consts.COLORS.ERROR}`, fontSize: '13px', marginLeft: '2px' }}>
                                             {this.state.subCategoryError}
                                         </Form.Row>
                                     </Form.Group>
@@ -218,6 +218,6 @@ export default AddCategory;
 
 const styles = {
     label: {
-        fontSize: `${theme.SIZES.LABEL}`
+        fontSize: `${consts.SIZES.LABEL}`
     },
 }

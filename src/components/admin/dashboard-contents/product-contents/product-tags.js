@@ -4,7 +4,7 @@
 // import { faThumbsUp, faThumbsDown } from '@fortawesome/free-regular-svg-icons'
 // import React, { Component } from 'react';
 // import MuhalikConfig from '../../../../../../sdk/muhalik.config'
-// import theme from '../../../../.././../styleSheet'
+// import consts from '../../../../.././../styleSheet'
 // import axios from 'axios';
 // import AlertModal from '../../../../alert-modal';
 // import TitleRow from '../../../../title-row';
@@ -416,7 +416,7 @@
 //         // padding: '5%'
 //     },
 //     label: {
-//         fontSize: `${theme.form_label_fontsize}`
+//         fontSize: `${consts.form_label_fontsize}`
 //     },
 //     error: {
 //         width: '100%',
@@ -425,7 +425,7 @@
 //         fontSize: '14px',
 //     },
 //     accordin_fontawesome: {
-//         color: `${theme.admin_primry_color}`,
+//         color: `${consts.admin_primry_color}`,
 //         marginRight: '10%',
 //         width: '15px',
 //         height: '15px',

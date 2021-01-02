@@ -6,7 +6,7 @@ import { faPlus, faTimes, faChevronLeft, faChevronRight, faSlidersH, faTrash } f
 import { faThumbsUp } from '@fortawesome/free-regular-svg-icons'
 import CardAccordion from '../../card-accordion';
 import urls from '../../../utils/urls/index'
-import theme from '../../../constants/theme'
+import consts from '../../../constants'
 import TitleRow from '../../title-row';
 // import AddNew from '../../../vendor/dashboard/dashboard-contents/product-contents/add-new'
 
@@ -822,15 +822,15 @@ function ImagePreview(props) {
 
 const styles = {
     label: {
-        fontSize: `${theme.SIZES.LABEL}`
+        fontSize: `${consts.SIZES.LABEL}`
     },
     nav_link: {
         paddingLeft: '10px',
         paddingRight: '5px',
     },
     label: {
-        fontSize: `${theme.SIZES.LABEL}`,
-        color: `${theme.COLORS.SEC}`,
+        fontSize: `${consts.SIZES.LABEL}`,
+        color: `${consts.COLORS.SEC}`,
         marginRight: '2%'
     },
     row: {
@@ -846,7 +846,7 @@ const styles = {
         maxWidth: '30px',
     },
     fontawesome: {
-        color: `${theme.COLORS.SEC}`,
+        color: `${consts.COLORS.SEC}`,
         marginRight: '10%',
         width: '17px',
         height: '17px',
@@ -854,13 +854,13 @@ const styles = {
         maxWidth: '17px',
     },
     general_info_label: {
-        fontSize: `${theme.SIZES.LABEL}`,
+        fontSize: `${consts.SIZES.LABEL}`,
         width: '100%',
         borderBottom: '1px solid gray'
     },
     field_label: {
-        border: `1px solid ${theme.COLORS.SECONDARY}`,
-        color: `${theme.COLORS.SEC}`,
+        border: `1px solid ${consts.COLORS.SECONDARY}`,
+        color: `${consts.COLORS.SEC}`,
         margin: '0%',
         width: '100%',
         padding: '2px 5px'
@@ -871,8 +871,8 @@ const styles = {
     },
     card_header: {
         alignItems: 'center',
-        fontSize: `${theme.SIZES.HEADER}`,
-        background: `${theme.COLORS.MUTED}`,
+        fontSize: `${consts.SIZES.HEADER}`,
+        background: `${consts.COLORS.MUTED}`,
     },
     slider_fontawesome: {
         color: 'white',

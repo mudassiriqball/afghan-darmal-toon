@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar, Nav } from 'react-bootstrap'
-import theme from '../../constants/theme';
+import consts from '../../constants';
 import baseUrl from '../../utils/urls/baseUrl';
 
 import { ImCart } from 'react-icons/im';
@@ -55,25 +55,25 @@ const StickyBottomNavbar = (props) => {
         <div className='stick_bottom_navbar'>
             <div className={`sticky-wrapper${isSticky ? ' sticky' : ''}`}>
                 <Navbar bg="white" className='sticky-inner'>
-                    <Nav className="d-inline-flex align-items-center w-100" style={{ borderTop: `1px solid ${theme.COLORS.SHADOW}` }}>
+                    <Nav className="d-inline-flex align-items-center w-100" style={{ borderTop: `1px solid ${consts.COLORS.SHADOW}` }}>
                         <div className='mr-auto'></div>
-                        <Nav.Link href="/" className='nav_link' style={{ color: curentHref == 'index' ? theme.COLORS.SEC : theme.COLORS.GRAY }} >
+                        <Nav.Link href="/" className='nav_link' style={{ color: curentHref == 'index' ? consts.COLORS.SEC : consts.COLORS.GRAY }} >
                             <AiFillHome style={styles.fontawesome} />
                             {'Home'}
                         </Nav.Link>
                         <div className='mr-auto'></div>
-                        <Nav.Link href="/categories" className='nav_link' style={{ color: curentHref === 'categories' ? theme.COLORS.SEC : theme.COLORS.GRAY }}>
+                        <Nav.Link href="/categories" className='nav_link' style={{ color: curentHref === 'categories' ? consts.COLORS.SEC : consts.COLORS.GRAY }}>
                             <FaListAlt style={styles.Categories_fontawesome} />
                             {'Categories'}
                         </Nav.Link>
                         <div className='mr-auto'></div>
-                        <Nav.Link href="/cart" className='nav_link' style={{ color: curentHref === 'cart' ? theme.COLORS.SEC : theme.COLORS.GRAY }} >
+                        <Nav.Link href="/cart" className='nav_link' style={{ color: curentHref === 'cart' ? consts.COLORS.SEC : consts.COLORS.GRAY }} >
                             <ImCart style={styles.fontawesome} />
                             {'Cart'}
                         </Nav.Link>
                         <div className='mr-auto'></div>
                         <Nav.Link href={user !== '' && user.fullName !== '' ? '/profile' : '/login'} className='nav_link'
-                            style={{ color: curentHref === 'profile' || curentHref === 'login' ? theme.COLORS.SEC : theme.COLORS.GRAY }}
+                            style={{ color: curentHref === 'profile' || curentHref === 'login' ? consts.COLORS.SEC : consts.COLORS.GRAY }}
                         >
                             <RiAccountPinCircleFill style={styles.fontawesome} />
                             {'Account'}

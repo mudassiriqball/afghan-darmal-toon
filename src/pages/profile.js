@@ -13,7 +13,7 @@ import ManageOrders from '../components/profile/manage-orders'
 import Orders from '../components/profile/orders'
 import MyWishlist from '../components/profile/my-wishlist';
 import urls from '../utils/urls';
-import theme from '../constants/theme';
+import consts from '../constants';
 import Toolbar from '../components/customer/toolbar';
 import StickyBottomNavbar from '../components/customer/sticky-bottom-navbar';
 
@@ -305,7 +305,7 @@ export default function Profile(props) {
             <style type="text/css">{`
                 .profile {
                     min-height: 100vh;
-                    background: ${theme.COLORS.SECONDARY};
+                    background: ${consts.COLORS.SECONDARY};
                     position: absolute;
                     top: 0;
                     left: 0;
@@ -334,7 +334,7 @@ export default function Profile(props) {
                     cursor: pointer;
                 }
                 .profile .list-group-item:hover {
-                    background: ${theme.COLORS.MAIN};
+                    background: ${consts.COLORS.MAIN};
                     color: blue;
                 }
                 .profile .row {

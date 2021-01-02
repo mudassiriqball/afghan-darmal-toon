@@ -12,7 +12,7 @@ import Select from 'react-select';
 import AlertModal from '../../../alert-modal';
 import TitleRow from '../../../title-row';
 import CardAccordion from '../../../card-accordion';
-import theme from '../../../../constants/theme';
+import consts from '../../../../constants';
 import urls from '../../../../utils/urls';
 
 import Specifications from './specifications';
@@ -439,7 +439,7 @@ class AddNew extends Component {
                                                         </InputGroup>
                                                     </Form.Group>
                                                     <Form.Group as={Col} lg={4} md={4} sm={12} xs={12} style={{ marginBottom: '5px' }}>
-                                                        <Form.Label style={{ width: '100%', fontSize: `${theme.SIZES.LABEL}` }}>Product Images <span> * </span></Form.Label>
+                                                        <Form.Label style={{ width: '100%', fontSize: `${consts.SIZES.LABEL}` }}>Product Images <span> * </span></Form.Label>
                                                         <input type="file" style={{ padding: '0.6% 2%', width: '100%', fontSize: '13px', border: '1px solid lightgray', borderRadius: '1px' }}
                                                             multiple onChange={this.fileSelectedHandler.bind(this)}
                                                             name="image" accept="image/*"
@@ -632,7 +632,7 @@ class AddNew extends Component {
                                                     id={'1'}
                                                     instanceId={'1'}
                                                     inputId={'1'}
-                                                    styles={theme.REACT_SELECT_STYLES}
+                                                    styles={consts.REACT_SELECT_STYLES}
                                                     onChange={this.handleProductCategoryChange}
                                                     options={this.state.categories_list}
                                                     value={this.state.productCategory}
@@ -652,7 +652,7 @@ class AddNew extends Component {
                                                     id={'1'}
                                                     instanceId={'1'}
                                                     inputId={'1'}
-                                                    styles={theme.REACT_SELECT_STYLES}
+                                                    styles={consts.REACT_SELECT_STYLES}
                                                     onChange={this.handleProductSubCategoryChange}
                                                     options={this.state.sub_category_options}
                                                     value={this.state.productSubCategory}
@@ -683,7 +683,7 @@ class AddNew extends Component {
                         </Form>
                         <style type="text/css">{`
                             .card_toggle{
-                                background: ${theme.COLORS.ADMIN_MAIN};
+                                background: ${consts.COLORS.ADMIN_MAIN};
                                 font-size: 13px;
                                 color: white;
                                 cursor: pointer;
@@ -691,7 +691,7 @@ class AddNew extends Component {
                                 align-items: center;
                             }
                             .card_toggle:hover{
-                                background: ${theme.COLORS.SEC_HOVER};
+                                background: ${consts.COLORS.SEC_HOVER};
                             }
                         `}</style>
                         <style jsx> {`
@@ -709,7 +709,7 @@ class AddNew extends Component {
                                 color: red;
                             }
                             .nav_link {
-                                background: ${theme.COLORS.ADMIN_MAIN};
+                                background: ${consts.COLORS.ADMIN_MAIN};
                                 border-top: 0.5px solid #434556;
                                 border-bottom: 0.5px solid #434556;
                                 margin: 1.5px 0px;
@@ -769,26 +769,26 @@ const styles = {
     card: {
         width: '100%',
         border: 'none',
-        background: theme.COLORS.SECONDARY,
+        background: consts.COLORS.SECONDARY,
     },
     card_header: {
         display: 'flex',
         alignItems: 'center',
-        fontSize: `${theme.SIZES.HEADER}`,
-        background: `${theme.COLORS.ADMIN_MAIN}`,
+        fontSize: `${consts.SIZES.HEADER}`,
+        background: `${consts.COLORS.ADMIN_MAIN}`,
     },
     label: {
-        fontSize: `${theme.SIZES.LABEL}`,
+        fontSize: `${consts.SIZES.LABEL}`,
     },
     fontawesome: {
-        color: `${theme.COLORS.WHITE}`,
+        color: `${consts.COLORS.WHITE}`,
         width: '15px',
         height: '15px',
         maxHeight: '15px',
         maxWidth: '15px',
     },
     product_fontawesome: {
-        color: `${theme.COLORS.WHITE}`,
+        color: `${consts.COLORS.WHITE}`,
         marginRight: '10%',
         width: '15px',
         height: '15px',
@@ -803,28 +803,28 @@ const styles = {
         maxWidth: '15px',
     },
     buttons: {
-        background: `${theme.COLORS.MAIN}`,
+        background: `${consts.COLORS.MAIN}`,
         border: 'none',
         fontSize: '10px',
     },
     label: {
-        fontSize: `${theme.SIZES.LABEL}`,
+        fontSize: `${consts.SIZES.LABEL}`,
     },
     term_condition_label: {
         width: '100%',
-        fontSize: `${theme.SIZES.LABEL}`,
+        fontSize: `${consts.SIZES.LABEL}`,
         paddingTop: '-10px',
         marginTop: '-10px',
     },
     fontawesome: {
-        color: `${theme.COLORS.TEXT}`,
+        color: `${consts.COLORS.TEXT}`,
         width: '15px',
         height: '15px',
         maxHeight: '15px',
         maxWidth: '15px',
     },
     product_fontawesome: {
-        color: `${theme.COLORS.TEXT}`,
+        color: `${consts.COLORS.TEXT}`,
         marginRight: '10%',
         width: '17px',
         height: '17px',
@@ -832,7 +832,7 @@ const styles = {
         maxWidth: '17px',
     },
     variations_fontawesome: {
-        color: `${theme.COLORS.ADMIN_MAIN}`,
+        color: `${consts.COLORS.ADMIN_MAIN}`,
         marginRight: '10%',
         width: '15px',
         height: '15px',

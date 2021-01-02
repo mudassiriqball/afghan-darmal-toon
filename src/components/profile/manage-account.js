@@ -1,6 +1,6 @@
 import React from 'react'
 import { Card, Row, Col, Nav, Image } from 'react-bootstrap'
-import theme from '../../constants/theme'
+import consts from '../../constants'
 
 export default function ManageAccount(props) {
     return (
@@ -57,7 +57,7 @@ export default function ManageAccount(props) {
                 .manage_account .card {
                     border: none;
                     background: rgb(165,64,162);
-                    // background: linear-gradient(135deg, ${theme.COLORS.MAIN} 0%, ${theme.COLORS.SEC} 100%);
+                    // background: linear-gradient(135deg, ${consts.COLORS.MAIN} 0%, ${consts.COLORS.SEC} 100%);
                     background: white;
                     min-height: 200px;
                     opacity: 0.8;
@@ -67,7 +67,7 @@ export default function ManageAccount(props) {
                     align-items: center;
                     font-size: 15px;
                     font-weight: bold;
-                    color: ${theme.COLORS.TEXT};
+                    color: ${consts.COLORS.TEXT};
                     border: none;
                     padding-bottom: 0%;
                     background: none;
@@ -75,15 +75,15 @@ export default function ManageAccount(props) {
                 .manage_account .label {
                     font-size: 13px;
                     width: 100%;
-                    color: ${theme.COLORS.TEXT};
+                    color: ${consts.COLORS.TEXT};
                 }
                 .manage_account .address_label {
                     font-size: 11px;
                     width: 100%;
-                    color: ${theme.COLORS.TEXT};
+                    color: ${consts.COLORS.TEXT};
                 }
                 .manage_account .count_label {
-                    color: ${theme.COLORS.TEXT};
+                    color: ${consts.COLORS.TEXT};
                     font-size: 20px;
                 }
             `}</style>

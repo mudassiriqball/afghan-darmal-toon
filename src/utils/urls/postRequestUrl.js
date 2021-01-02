@@ -16,5 +16,8 @@ export default {
     ADD_HOME_CATEGORY: baseUrl + '/api/categories/home-category',
 
     // ORDERS
-    PLACE_ORDER: baseUrl + '/api/orders/place/order/user-order/',
+    PLACE_ORDER: baseUrl + '/api/orders/place/order/id/user-order/',
+
+    // PAYMENT
+    MAKE_PAYMENT: baseUrl + '/api/paymants/add-payment/make-transaction/',
 }

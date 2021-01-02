@@ -2,16 +2,17 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import axios from 'axios';
-import { isMobile } from "react-device-detect";
 
 import getProductsByCategorySubCategoryPageLimit from '../../../hooks/customer/getProductsByCategorySubCategoryPageLimit';
-import Loading from '../../../components/loading';
-import NoDataFound from '../../../components/no-data-found';
-import ProductCard from '../../../components/customer/product-card';
 import { getDecodedTokenFromStorage, getTokenFromStorage } from '../../../utils/services/auth';
-import urls from '../../../utils/urls';
-import Layout from '../../../components/customer/Layout';
 import StickyBottomNavbar from '../../../components/customer/sticky-bottom-navbar';
+import DetectDeviceView from "../../../hooks/detect-device-view";
+
+import ProductCard from '../../../components/customer/product-card';
+import NoDataFound from '../../../components/no-data-found';
+import Layout from '../../../components/customer/Layout';
+import Loading from '../../../components/loading';
+import urls from '../../../utils/urls';
 
 export async function getServerSideProps(context) {
     let categories_list = [];
@@ -30,6 +31,7 @@ export async function getServerSideProps(context) {
 }
 
 export default function Category(props) {
+    const { isMobile } = DetectDeviceView();
     const router = useRouter();
     const { category, sub_category } = router.query;
     // User

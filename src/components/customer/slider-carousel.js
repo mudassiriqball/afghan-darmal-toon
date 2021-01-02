@@ -3,7 +3,7 @@ import Router from 'next/router'
 import { Carousel, Row, Col, ListGroup, Button, Image } from 'react-bootstrap'
 import useDimensions from "react-use-dimensions";
 
-import theme from '../../constants/theme';
+import consts from '../../constants';
 import CustomButton from '../CustomButton';
 
 const SliderCarousel = (props) => {
@@ -44,7 +44,7 @@ const SliderCarousel = (props) => {
 
             <style type="text/css">{`
                 .slider_carousel{
-                    background-image: linear-gradient(180deg, ${theme.COLORS.MAIN} 0%, ${theme.COLORS.SECONDARY} 100%);
+                    background-image: linear-gradient(180deg, ${consts.COLORS.MAIN} 0%, ${consts.COLORS.SECONDARY} 100%);
                 }
                 .slider_carousel ._row{
                     border-radius: 3px;
