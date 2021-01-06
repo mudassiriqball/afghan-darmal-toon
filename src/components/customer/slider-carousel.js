@@ -23,8 +23,8 @@ const SliderCarousel = (props) => {
                                 ref={ref}
                                 style={{
                                     width: '100vw',
-                                    maxWidth: '100%', minHeight: width > 767 ? width / 4 || '28vw' : width / 1.5,
-                                    maxHeight: width > 767 ? width / 4 || '28vw' : width / 1.5
+                                    maxWidth: '100%', minHeight: width > 767 ? width / 4 : width / 1.5,
+                                    maxHeight: width > 767 ? width / 4 : width / 1.5
                                 }}
                                 src={element.imageUrl}
                                 alt='Slide {index}'

@@ -81,7 +81,7 @@ function MultiCarosuelRow(props) {
                         <Card.Body>
                             {sub_categories_list && sub_categories_list.map((element, index) => {
                                 if (category._id === element.category_id) {
-                                    return <div onClick={() => setSubCategory_id(element._id)} className='_a'>{element.label}</div>
+                                    return <div key={index} onClick={() => setSubCategory_id(element._id)} className='_a'>{element.label}</div>
                                 }
                             })}
                         </Card.Body>

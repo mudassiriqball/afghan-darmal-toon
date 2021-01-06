@@ -13,45 +13,45 @@ export default function getInventoryPageLimit(refresh_count, page, limit) {
         }
     }, [refresh_count])
 
-    useEffect(() => {
-        let unmounted = true
-        const CancelToken = axios.CancelToken;
-        const source = CancelToken.source();
+    // useEffect(() => {
+    //     let unmounted = true
+    //     const CancelToken = axios.CancelToken;
+    //     const source = CancelToken.source();
 
-        const getData = () => {
-            setLoading(true);
-            setError(false);
-            axios({
-                method: 'GET',
-                url: urls.GET_REQUEST.INVENTRY_PAGE_LIMIT,
-                params: {
-                    page: page,
-                    limit: limit,
-                },
-                cancelToken: source.token
-            }).then(res => {
-                if (unmounted) {
-                    setLoading(false);
-                    setProducts(prevPro => {
-                        return [...new Set([...prevPro, ...res.data.data.docs])]
-                    });
-                    setPages(Math.ceil(res.data.total / limit));
-                }
-            }).catch(err => {
-                console.log('Get products by search:', err);
-                setLoading(false)
-                if (unmounted) {
-                    if (axios.isCancel(err)) return
-                    setError(true)
-                }
-            })
-        }
-        getData()
-        return () => {
-            unmounted = false
-            source.cancel();
-        };
-    }, [page]);
+    //     const getData = () => {
+    //         setLoading(true);
+    //         setError(false);
+    //         axios({
+    //             method: 'GET',
+    //             url: urls.GET_REQUEST.INVENTRY_PAGE_LIMIT,
+    //             params: {
+    //                 page: page,
+    //                 limit: limit,
+    //             },
+    //             cancelToken: source.token
+    //         }).then(res => {
+    //             if (unmounted) {
+    //                 setLoading(false);
+    //                 setProducts(prevPro => {
+    //                     return [...new Set([...prevPro, ...res.data.data.docs])]
+    //                 });
+    //                 setPages(Math.ceil(res.data.total / limit));
+    //             }
+    //         }).catch(err => {
+    //             console.log('Get products by search:', err);
+    //             setLoading(false)
+    //             if (unmounted) {
+    //                 if (axios.isCancel(err)) return
+    //                 setError(true)
+    //             }
+    //         })
+    //     }
+    //     getData()
+    //     return () => {
+    //         unmounted = false
+    //         source.cancel();
+    //     };
+    // }, [page]);
 
     return {
         INVENTORY_PRODUCTS_LOADING,
