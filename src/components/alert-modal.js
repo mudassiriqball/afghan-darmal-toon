@@ -6,7 +6,7 @@ import { VscError } from 'react-icons/vsc';
 import { useEffect } from 'react';
 
 function AlertModal(props) {
-    const { onHide, show, alertType, message } = props;
+    const { onHide, show, alerttype, message } = props;
 
     useEffect(() => {
         setTimeout(() => {
@@ -27,15 +27,15 @@ function AlertModal(props) {
             {/* <div style={{ border: `1px solid ${color}`, borderRadius: '5px' }}> */}
             <Modal.Header closeButton className='d-flex justify-content-center align'
                 style={{
-                    color: alertType == 'success' ? consts.COLORS.SUCCESS : consts.COLORS.DANGER,
-                    borderBottom: `1px solid ${alertType == 'success' ? consts.COLORS.SUCCESS : consts.COLORS.DANGER}`
+                    color: alerttype == 'success' ? consts.COLORS.SUCCESS : consts.COLORS.DANGER,
+                    borderBottom: `1px solid ${alerttype == 'success' ? consts.COLORS.SUCCESS : consts.COLORS.DANGER}`
                 }}>
                 <Modal.Title id="alert-modal" style={{ textAlign: 'center', alignSelf: 'center', fontWeight: 'bold' }}>
-                    {alertType === 'success' ? 'Success' : 'Error'}
+                    {alerttype === 'success' ? 'Success' : 'Error'}
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body className='d-flex flex-column justify-content-center align-items-center' style={{ padding: '5%' }}>
-                {alertType == 'success' ?
+                {alerttype == 'success' ?
                     <IoIosCheckmarkCircleOutline style={{ fontSize: '100px', color: consts.COLORS.SUCCESS }} />
                     :
                     <VscError style={{ fontSize: '100px', color: consts.COLORS.DANGER }} />

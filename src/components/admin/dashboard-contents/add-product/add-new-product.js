@@ -314,13 +314,13 @@ class AddNew extends Component {
                             <AlertModal
                                 onHide={(e) => this.setState({ showToast: false })}
                                 show={this.state.showToast}
-                                alertType={'success'}
+                                alerttype={'success'}
                                 message={this.state.toastMessage}
                             />
                             <AlertModal
                                 onHide={(e) => this.setState({ showImgLinkErrorrAlert: false })}
                                 show={this.state.showImgLinkErrorrAlert}
-                                alertType={'error'}
+                                alerttype={'error'}
                                 message={'Enter Price/Stock/Image(s) in General Tab First'}
                             />
                             <Row noGutters style={{ paddingTop: '1%' }}>

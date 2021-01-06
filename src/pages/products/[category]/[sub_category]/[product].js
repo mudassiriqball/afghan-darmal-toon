@@ -46,7 +46,7 @@ export default function Product(props) {
     // Alert Stuff
     const [showAlertModal, setShowAlertModal] = useState(false)
     const [alertMsg, setAlertMsg] = useState('');
-    const [alertType, setAlertType] = useState('');
+    const [alerttype, setAlertType] = useState('');
 
     // Product
     const [productData, setProductData] = useState(null);
@@ -175,7 +175,7 @@ export default function Product(props) {
             <AlertModal
                 onHide={() => setShowAlertModal(false)}
                 show={showAlertModal}
-                alertType={alertType}
+                alerttype={alerttype}
                 message={alertMsg}
             />
             <Layout

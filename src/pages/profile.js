@@ -136,7 +136,7 @@ export default function Profile(props) {
             <AlertModal
                 onHide={(e) => setShowAlertModal(false)}
                 show={showAlertModal}
-                alertType={'success'}
+                alerttype={'success'}
                 message={alertMsg}
             />
             {/* <Layout

@@ -64,7 +64,7 @@ export default function Cart(props) {
     // Alert Stuff
     const [showAlertModal, setShowAlertModal] = useState(false)
     const [alertMsg, setAlertMsg] = useState('');
-    const [alertType, setAlertType] = useState('');
+    const [alerttype, setAlertType] = useState('');
 
     useLayoutEffect(() => {
         async function getData() {
@@ -205,10 +205,16 @@ export default function Cart(props) {
             <AlertModal
                 onHide={(e) => setShowAlertModal(false)}
                 show={showAlertModal}
-                alertType={alertType}
+                alerttype={alerttype}
                 message={alertMsg}
             />
+            {/* <Image style={{
+                minWidth: '100%', maxWidth: '100%', minHeight: '100vw', maxHeight: '100vw', border: 'none',
+            }}
+                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIQAAACECAYAAABRRIOnAAAAAklEQVR4AewaftIAAAOWSURBVO3BMa5bCxYDwe4D7X/LHAcTMLqAID3722CV+YWZ/ztmyjFTjplyzJRjphwz5Zgpx0w5ZsoxU46ZcsyUY6YcM+WYKS8+pPI7JeEdKi0J36TSktBUfqckfOKYKcdMOWbKiy9Lwjep/CSVJ0loKi0J70jCN6l80zFTjplyzJQXP0zlHUl4h0pLwieS0FR+kso7kvCTjplyzJRjprz4x6g8UXmi0pLQVJpKS8Lf7Jgpx0w5ZsqLf0wSmkpLwjtUWhL+ZcdMOWbKMVNe/LAk/E4qLQlNpSXhSRKaypMkvCMJ/yXHTDlmyjFTXnyZyp+UhKbSktBUWhKaSktCU3mHyn/ZMVOOmXLMlBcfSsJ/iUpLwjeptCQ8ScLf5Jgpx0w5Zor5hQ+otCQ0lW9KwhOVloSm8o4kNJUnSWgq35SEn3TMlGOmHDPlxYeS8E1JeKLSkvBE5UkSmkpTaUl4otKS8Dc5ZsoxU46Z8uI3S0JTeaLyjiQ0lScqLQlPVFoSWhKaSkvCE5WWhKbyJAmfOGbKMVOOmWJ+4YtUWhKaSkvCO1Q+kYR3qLQkPFFpSXii8iQJv9MxU46ZcsyUF3+YSktCU2lJaCrvUGlJaCotCU3lSRKayjuS0FTekYRPHDPlmCnHTDG/8AGVloSm8okkNJV3JOGJSktCU2lJeKLSkvA3OWbKMVOOmfLihyXhEyo/KQlPktBUWhKeqLQkNJVvSsInjplyzJRjprz4YSotCU9UWhKaSktCU2kqLQlNpSWhqbwjCU2lqbQkNJWWhKbyk46ZcsyUY6a8+GFJaCotCU9UWhKaypMkvEOlJaGpNJVPqLQkNJXf6Zgpx0w5Zor5hb+YypMkfEKlJaGptCS8Q+VJEppKS8I3HTPlmCnHTHnxIZXfKQktCU9U/iSVloQnSXiShKbSkvCJY6YcM+WYKS++LAnfpPJE5UkSmkpLwhOVpvKOJPxNjplyzJRjprz4YSrvSMInktBUnqh8k8onVJ4koSXhm46ZcsyUY6a8+MeotCQ8UWlJ+ITKJ5LwROVJEj5xzJRjphwz5cU/TqUl4R0qLQlPkvAJlZaEloSm8k3HTDlmyjFTXvywJPykJDSVJyrfpPJNSfiTjplyzJRjprz4MpXfSeVJEp6oNJUnKi0JTeVJEp6o/EnHTDlmyjFTzC/M/N8xU46ZcsyUY6YcM+WYKcdMOWbKMVOOmXLMlGOmHDPlmCnHTPkf8smNMyWa6OgAAAAASUVORK5CYII=" alt="Card image" /> */}
+
             <Card className="text-black" style={{ background: `${consts.COLORS.WHITE}`, border: 'none' }}>
+
                 <Card.Img src="cart_background.jpg" alt="Card image"
                     style={{
                         minWidth: '100%', maxWidth: '100%', minHeight: isMobile ? '60vw' : '35vw', maxHeight: isMobile ? '60vw' : '35vw', border: 'none',
@@ -378,7 +384,6 @@ export default function Cart(props) {
                                 </Col>
                                 <Col lg={12} md={12} sm={12} xs={12} className='d-flex flex-row pt-5 pl-2 pr-2' style={{ justifyContent: 'center' }}>
                                     <CustomButton
-                                        rounded={false}
                                         block={productsData === '' ? false : true}
                                         size={productsData === '' ? 'lg' : 'sm'}
                                         title={'CONTINUE SHOPPING'}
@@ -431,7 +436,7 @@ export default function Cart(props) {
                                             <CustomButton
                                                 title={'PROCEED TO CHECKOUT'}
                                                 onClick={() => setIsProcedeOrder(true)}
-                                                disabled={productsData == ''}
+                                                disabled={productsData === '' ? true : false}
                                                 block
                                             >
                                             </CustomButton>
@@ -530,7 +535,7 @@ function ProcedeOrder(props) {
     // Alert Stuff
     const [showAlertModal, setShowAlertModal] = useState(false)
     const [alertMsg, setAlertMsg] = useState('');
-    const [alertType, setAlertType] = useState('');
+    const [alerttype, setAlertType] = useState('');
 
     // Payment
     const [cashOnDeliveryChecked, setCashOnDeliveryChecked] = useState(false);
@@ -592,7 +597,6 @@ function ProcedeOrder(props) {
                     products: data,
                 }
             }
-            debugger
             await axios.post(urls.POST_REQUEST.PLACE_ORDER + user._id, body,
                 {
                     headers: {
@@ -646,7 +650,7 @@ function ProcedeOrder(props) {
             <AlertModal
                 onHide={(e) => setShowAlertModal(false)}
                 show={showAlertModal}
-                alertType={alertType}
+                alerttype={alerttype}
                 message={alertMsg}
             />
             <Row>
@@ -777,6 +781,7 @@ function ProcedeOrder(props) {
                                     block
                                     title={'BACK'}
                                     onClick={cancel}
+                                    disabled={loading}
                                 />
                             </Col>
                             <Col lg={6} md={6} sm={12} xs={12} style={{ paddingTop: isMobile ? '3%' : '0%' }}>
@@ -803,7 +808,7 @@ function ProcedeOrder(props) {
                                         loading={loading}
                                         title={'CONFIRM ORDER'}
                                         onClick={() => handleConfirmOrder(null)}
-                                        disabled={(!cashOnDeliveryChecked && !onlinePaymentChecked) || loading}
+                                        disabled={!cashOnDeliveryChecked && !onlinePaymentChecked ? true : loading ? true : false}
                                     />
                                 }
                             </Col>

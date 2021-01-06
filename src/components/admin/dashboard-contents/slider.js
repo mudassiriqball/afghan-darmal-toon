@@ -310,7 +310,7 @@ class Slider extends Component {
                             <AlertModal
                                 onHide={(e) => this.setState({ showToast: false })}
                                 show={this.state.showToast}
-                                alertType={'success'}
+                                alerttype={'success'}
                                 message={this.state.toastMsg}
                             />
                             <TitleRow icon={faListAlt} title={' Admin Dashboard / Slider'} />

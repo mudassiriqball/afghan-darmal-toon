@@ -116,7 +116,7 @@ export default class Orders extends Component {
                 <AlertModal
                     onHide={(e) => this.setState({ showAlertModal: false })}
                     show={this.state.showAlertModal}
-                    alertType={'success'}
+                    alerttype={'success'}
                     message={this.state.alertModalMsg}
                 />
                 {!this.state.isViewOrder ?
@@ -394,7 +394,7 @@ function Order(props) {
             <AlertModal
                 onHide={(e) => setShowAlertModal(false)}
                 show={showAlertModal}
-                alertType={'success'}
+                alerttype={'success'}
                 message={alertModalMsg}
             />
 

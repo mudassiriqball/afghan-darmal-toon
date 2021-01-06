@@ -225,7 +225,7 @@
 //                 <AlertModal
 //                     onHide={(e) => this.setState({ showModal: false })}
 //                     show={this.state.showModal}
-// alertType = { 'success'}
+// alerttype = { 'success'}
 //                     message={this.state.showModalMessage}
 //                 />
 

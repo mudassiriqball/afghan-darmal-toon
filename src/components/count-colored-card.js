@@ -30,7 +30,7 @@ export default function CountColoredCard(props) {
                     color: #404040;
                     width: 30px;
                     height: 30px;
-                    maxHeight: 30px;
+                    max-height: 30px;
                     maxWidth: 30px;
                     float: right;
                 }

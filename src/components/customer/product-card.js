@@ -17,7 +17,7 @@ export default function ProductCard(props) {
     // Alert Stuff
     const [showAlertModal, setShowAlertModal] = useState(false)
     const [alertMsg, setAlertMsg] = useState('');
-    const [alertType, setAlertType] = useState('');
+    const [alerttype, setAlertType] = useState('');
 
     // Add to cart
     const [cartLoading, setCartLoading] = useState(false);
@@ -63,7 +63,7 @@ export default function ProductCard(props) {
             <AlertModal
                 onHide={() => setShowAlertModal(false)}
                 show={showAlertModal}
-                alertType={alertType}
+                alerttype={alerttype}
                 message={alertMsg}
             />
             <Link href='/products/[category]/[sub_category]/[product]' as={`/products/${element.categoryId}/${element.subCategoryId}/${element._id}`}>

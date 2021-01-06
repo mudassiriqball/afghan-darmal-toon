@@ -121,7 +121,7 @@ class Customers extends React.Component {
                     onHide={() => this.setState({ viewShowAlertModal: false })}
                     show={this.state.viewShowAlertModal}
                     message={this.state.viewAlertModalMsg}
-                    alertType={'success'}
+                    alerttype={'success'}
                 />
                 {!this.state.isViewUser ?
                     <div>
@@ -485,7 +485,7 @@ function CustomersTable(props) {
             <AlertModal
                 onHide={(e) => setShowAlertModal(false)}
                 show={showAlertModal}
-                alertType={'success'}
+                alerttype={'success'}
                 message={alertModalMsg}
             />
 
