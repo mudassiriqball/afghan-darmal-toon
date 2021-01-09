@@ -1,27 +1,63 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Card, Col, Dropdown, Nav, Navbar, Row, Form } from 'react-bootstrap'
-import theme from '../../constants/theme'
+import { Card, Col, Dropdown, Nav, Navbar, Row, Form, Badge, Modal, Button } from 'react-bootstrap'
+import consts from '../../constants'
 import CssTransition from './CssTransition'
 import Toolbar from './toolbar';
-import Link from 'next/link'
-import { removeTokenFromStorage } from '../../utils/services/auth'
-import Router from 'next/router';
+import Link from 'next/link';
 
 import { BiDotsVertical } from 'react-icons/bi';
 import { ImCart } from 'react-icons/im';
 import { RiSearch2Line } from 'react-icons/ri';
 
+function SearchModal(props) {
+    const [searchQuery, setSearchQuery] = useState('');
+    return (
+        <Modal
+            {...props}
+            size="lg"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+            className='_searchModal'
+        >
+            <Modal.Header closeButton>
+            </Modal.Header>
+            <Modal.Body style={{ border: 'none', padding: '10%' }} className='d-flex flex-row'>
+                <Form.Control
+                    type="text"
+                    placeholder="Search here"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                {searchQuery !== '' && searchQuery !== null ?
+                    <Link onClick={props.onHide} href={'/products/search/[search]'} as={`/products/search/${searchQuery}`} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
+                        <div onClick={props.onHide} style={{ flex: 1 }} className='coloreBoxIcon d-flex justify-content-center align-items-center'>
+                            <RiSearch2Line style={{ fontSize: '25px', color: consts.COLORS.WHITE }} />
+                        </div>
+                    </Link>
+                    :
+                    <Link href='' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
+                        <div style={{ flex: 1 }} className='coloreBoxIcon d-flex justify-content-center align-items-center'>
+                            <RiSearch2Line style={{ fontSize: '25px', color: consts.COLORS.WHITE }} />
+                        </div>
+                    </Link>
+                }
+            </Modal.Body>
+            <style type='text/css'>{`
+                ._searchModal .coloreBoxIcon {
+                    background: ${consts.COLORS.MAIN};
+                    min-width: 45px;
+                    cursor: pointer;
+                }
+                ._searchModal .coloreBoxIcon:hover {
+                    background: ${consts.COLORS.SEC};
+                } 
+            `}</style>
+        </Modal >
+    );
+}
+
 export default function Layout(props) {
     const { user } = props;
-
-    // Acccount
-    const logoutUser = async () => {
-        const loggedOut = await removeTokenFromStorage();
-        if (loggedOut) {
-            Router.replace('/');
-        }
-    }
-    // End Of Acccount
 
     // 2nd Nav
     const [pagesHover, setpagesHover] = useState(false);
@@ -60,9 +96,17 @@ export default function Layout(props) {
             window.removeEventListener('scroll', () => handleScroll);
         };
     }, []);
+    // End of sticky
 
+    // Search
+    const [showSearchModal, setShowSearchModal] = useState(false);
+    // End of search
     return (
         <div className='_layout'>
+            <SearchModal
+                show={showSearchModal}
+                onHide={() => setShowSearchModal(false)}
+            />
             <div className='xl_md'>
                 <Toolbar user={user} />
             </div>
@@ -79,15 +123,15 @@ export default function Layout(props) {
                                 show={isCategoryOpen}
                             >
                                 <Dropdown.Toggle as={Nav.Link} className='d-flex flex-row align-items-center'
-                                    style={{ fontWeight: 'bold', background: hoverCategory ? theme.COLORS.MAIN : theme.COLORS.WHITE, padding: '20px 30px' }}
+                                    style={{ fontWeight: 'bold', background: hoverCategory ? consts.COLORS.MAIN : consts.COLORS.WHITE, color: hoverCategory ? consts.COLORS.WHITE : consts.COLORS.SEC, padding: '20px 30px', fontSize: '14px' }}
                                 >
                                     {'CATEGORIES'}
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu className='dropdown-menu dropdown_menue' style={{ border: 'none', paddingTop: '27px', background: 'none' }}>
-                                    <Row noGutters onMouseLeave={() => categoryMouseLeave()} style={{ boxShadow: `0px 0px 5px #e6e6e6`, paddingTop: '20px', background: theme.COLORS.WHITE }}>
+                                    <Row noGutters onMouseLeave={() => categoryMouseLeave()} style={{ boxShadow: `0px 0px 5px ${consts.COLORS.MAIN}`, paddingTop: '20px', background: consts.COLORS.WHITE }}>
                                         <Col style={{ overflowY: 'auto', zIndex: 1, minHeight: '500px', maxHeight: '500px' }}>
                                             {props.categories_list && props.categories_list.map((element, index) =>
-                                                <Link key={index} href='/products/category/[category]' as={`/products/category/${element.value}`} >
+                                                <Link key={index} href='/products/[category]' as={`/products/${element._id}`}>
                                                     {props.active_category == element.value ?
                                                         <a style={{ color: 'blue' }} className="category_list_item" onMouseOver={() => categoryMouseEnter(index)} onClick={() => { setIsCategoryOpen(false), setHoverCategory(false) }}>
                                                             {element.value}
@@ -100,11 +144,10 @@ export default function Layout(props) {
                                                 </Link>
                                             )}
                                         </Col>
-                                        {/* {category_id ? */}
                                         <Col style={{ minHeight: '500px', maxHeight: '50px', overflowY: 'auto' }}>
                                             {props.sub_categories_list && props.sub_categories_list.map((element, index) =>
                                                 element.category_id == category_id._id ?
-                                                    <Link href='/products/category/[category]/[sub_category]' as={`/products/category/${category_id.value}/${element.value}`} key={index} >
+                                                    <Link href='/products/[category]/[sub_category]' as={`/products/${category_id._id}/${element._id}`} key={index} >
                                                         {props.active_sub_category == element.value ?
                                                             <a style={{ color: 'blue' }} className="category_list_item" onClick={() => { setIsCategoryOpen(false), setHoverCategory(false) }}>
                                                                 {element.value}
@@ -133,12 +176,12 @@ export default function Layout(props) {
                                 <Dropdown.Toggle as={Nav.Link}
                                     onMouseEnter={() => sethomeHover(true)}
                                     onMouseLeave={() => sethomeHover(false)}
-                                    style={{ fontWeight: 'bold', background: homeHover ? theme.COLORS.MAIN : theme.COLORS.WHITE, padding: '20px 30px' }}
+                                    style={{ fontWeight: 'bold', background: homeHover ? consts.COLORS.MAIN : consts.COLORS.WHITE, color: homeHover ? consts.COLORS.WHITE : consts.COLORS.SEC, padding: '20px 30px', fontSize: '14px' }}
                                 >
                                     {'HOME'}
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu className='dropdown-menu' style={{ border: 'none', paddingTop: '27px', background: 'none' }} >
-                                    <Card style={{ boxShadow: `0px 0px 5px #e6e6e6` }}>
+                                    <Card style={{ boxShadow: `0px 0px 5px ${consts.COLORS.MAIN}` }}>
                                         <div className='link_div'>
                                             <Nav.Link href="/" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '14px' }}>HOME</Nav.Link>
                                         </div>
@@ -153,12 +196,12 @@ export default function Layout(props) {
                                 <Dropdown.Toggle as={Nav.Link}
                                     onMouseEnter={() => setpagesHover(true)}
                                     onMouseLeave={() => setpagesHover(false)}
-                                    style={{ fontWeight: 'bold', background: pagesHover ? theme.COLORS.MAIN : theme.COLORS.WHITE, padding: '20px 30px' }}
+                                    style={{ fontWeight: 'bold', background: pagesHover ? consts.COLORS.MAIN : consts.COLORS.WHITE, color: pagesHover ? consts.COLORS.WHITE : consts.COLORS.SEC, padding: '20px 30px', fontSize: '14px' }}
                                 >
                                     {'PAGES'}
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu className='dropdown-menu' style={{ border: 'none', paddingTop: '27px', background: 'none' }} >
-                                    <Card style={{ boxShadow: `0px 0px 5px #e6e6e6` }}>
+                                    <Card style={{ boxShadow: `0px 0px 5px ${consts.COLORS.MAIN}` }}>
                                         {user.role == 'admin' &&
                                             <div className='link_div'>
                                                 <Nav.Link href="/admin" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '14px' }}>DASHBOARD</Nav.Link>
@@ -181,12 +224,12 @@ export default function Layout(props) {
                                 <Dropdown.Toggle as={Nav.Link}
                                     onMouseEnter={() => setservicesHover(true)}
                                     onMouseLeave={() => setservicesHover(false)}
-                                    style={{ fontWeight: 'bold', background: servicesHover ? theme.COLORS.MAIN : theme.COLORS.WHITE, padding: '20px 30px' }}
+                                    style={{ fontWeight: 'bold', background: servicesHover ? consts.COLORS.MAIN : consts.COLORS.WHITE, color: servicesHover ? consts.COLORS.WHITE : consts.COLORS.SEC, padding: '20px 30px', fontSize: '14px' }}
                                 >
                                     {'SERVICES'}
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu className='dropdown-menu' style={{ border: 'none', paddingTop: '27px', background: 'none' }} >
-                                    <Card style={{ boxShadow: `0px 0px 5px #e6e6e6` }}>
+                                    <Card style={{ boxShadow: `0px 0px 5px ${consts.COLORS.MAIN}` }}>
                                         <div className='link_div'>
                                             <Nav.Link href="/" style={{ fontWeight: 'bolder', padding: '10px 30px' }}>HOME</Nav.Link>
                                         </div>
@@ -194,15 +237,17 @@ export default function Layout(props) {
                                 </Dropdown.Menu>
                             </Dropdown>
                         </Nav>
+                        {/* Boxes */}
                         <Nav className="justify-content-center flex-row m-0 p-0 sm_xs_display_none">
                             <div className='coloreBoxIcon'>
-                                <Nav.Link href="/search" onClick={() => setDotsView(!dotsView)} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '60px', height: '60px' }}>
+                                <Nav.Link href='#' onClick={() => setShowSearchModal(true)} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '60px', height: '60px' }}>
                                     <RiSearch2Line style={styles.coloreBoxIcon} />
                                 </Nav.Link>
                             </div>
                             <div className='coloreBoxIcon'>
-                                <Nav.Link href="/cart" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '60px', height: '60px' }}>
+                                <Nav.Link href="/cart" style={{ display: 'flex', position: 'relative', justifyContent: 'center', alignItems: 'center', width: '60px', height: '60px' }}>
                                     <ImCart style={styles.coloreBoxIcon} />
+                                    <Badge variant="light" style={{ position: 'absolute', top: '5px', right: '5px' }}>{user.cart && user.cart.length || '0'}</Badge>
                                 </Nav.Link>
                             </div>
                             <div className='coloreBoxIcon'>
@@ -211,6 +256,7 @@ export default function Layout(props) {
                                 </Nav.Link>
                             </div>
                         </Nav>
+                        {/* End of Boxes */}
                     </Navbar.Collapse>
                 </Navbar>
             </div>
@@ -243,34 +289,34 @@ export default function Layout(props) {
                 ._layout .category_list_item:hover{
                     z-index: 100;
                     color: #005ce6;
-                    background: ${theme.COLORS.MAIN};
+                    background: ${consts.COLORS.MAIN};
                 }
 
                 ._layout .coloreBoxIcon {
                     width: 60px;
                     height: 60px;
                     margin-left: 5%;
-                    background: ${theme.COLORS.MAIN};
+                    background: ${consts.COLORS.MAIN};
                 }
                 ._layout .coloreBoxIcon:hover {
-                    background: ${theme.COLORS.SEC};
+                    background: ${consts.COLORS.SEC};
                 }
                 ._layout .link_div {
-                    color: ${theme.COLORS.SEC};
+                    color: ${consts.COLORS.SEC};
                 }
                 ._layout .link_div:hover {
-                    background: ${theme.COLORS.MAIN};
-                    color: ${theme.COLORS.WHITE};
+                    background: ${consts.COLORS.MAIN};
+                    color: ${consts.COLORS.WHITE};
                 }
 
                 ._layout .sticky-wrapper {
                     position: relative;
                 }
                 ._layout .sticky .sticky-inner {
-                    background: ${theme.COLORS.WHITE};
+                    background: ${consts.COLORS.WHITE};
                     padding: 1% 10%;
                     border-bottom: 1px solid white;
-                    box-shadow: 0px 0px 10px 0.5px #e6e6e6;
+                    box-shadow: 0px 0px 10px 0.5px ${consts.COLORS.SHADOW};
                     position: fixed;
                     align-items: center;
                     top: 0;
@@ -284,8 +330,8 @@ export default function Layout(props) {
                     padding: 1.7% 10%;
                     margin: 0;
                     width: 100%;
-                    background: ${theme.COLORS.WHITE};
-                    border-bottom: 0.1px solid #f2f2f2;
+                    background: ${consts.COLORS.WHITE};
+                    border-bottom: 0.1px solid ${consts.COLORS.SHADOW};
                 }
                 @media (max-width: 1199px) {
                     ._layout .sticky-inner{
@@ -353,23 +399,23 @@ export default function Layout(props) {
 
 const styles = {
     coloreBoxIcon: {
-        color: theme.COLORS.WHITE,
+        color: consts.COLORS.WHITE,
         fontSize: '30px',
         alignSelf: 'center'
     },
     dotsIcon: {
-        color: theme.COLORS.MAIN,
+        color: consts.COLORS.MAIN,
         fontSize: '30px',
         alignSelf: 'center',
         marginRight: '15px',
     },
     dotsSocialIcon: {
-        color: theme.COLORS.SEC,
+        color: consts.COLORS.SEC,
         fontSize: '50px',
         margin: '15px',
     },
     dotsSocialIconFB: {
-        color: theme.COLORS.SEC,
+        color: consts.COLORS.SEC,
         fontSize: '47px',
         margin: '15px',
     },

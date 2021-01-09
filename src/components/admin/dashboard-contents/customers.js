@@ -4,7 +4,7 @@ import { Row, Col, Card, Nav, Table, Form, Button, InputGroup } from 'react-boot
 import { faUsers, faUserPlus, faPersonBooth, faBan, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faThumbsUp, faCheckCircle } from '@fortawesome/free-regular-svg-icons';
 
-import theme from '../../../constants/theme';
+import consts from '../../../constants';
 import TitleRow from '../../title-row';
 import ConfirmModal from '../../confirm-modal';
 import AlertModal from '../../alert-modal';
@@ -120,10 +120,8 @@ class Customers extends React.Component {
                 <AlertModal
                     onHide={() => this.setState({ viewShowAlertModal: false })}
                     show={this.state.viewShowAlertModal}
-                    header={'Success'}
                     message={this.state.viewAlertModalMsg}
-                    iconname={faThumbsUp}
-                    color={'green'}
+                    alerttype={'success'}
                 />
                 {!this.state.isViewUser ?
                     <div>
@@ -329,14 +327,14 @@ class Customers extends React.Component {
                         }
                         .customers .form_label{
                             color: gray;
-                            font-size: ${theme.SIZES.LABEL};
+                            font-size: ${consts.SIZES.LABEL};
                         }
                         .customers .card_header {
-                            font-size: ${theme.SIZES.HEADER};
+                            font-size: ${consts.SIZES.HEADER};
                             border: none;
                         }
                         .customers .card_text {
-                            color: ${theme.admin_primry_color};
+                            color: ${consts.admin_primry_color};
                             font-size: 17px;
                         }
                         .customers .form_control:disabled {
@@ -487,10 +485,8 @@ function CustomersTable(props) {
             <AlertModal
                 onHide={(e) => setShowAlertModal(false)}
                 show={showAlertModal}
-                header={'Success'}
+                alerttype={'success'}
                 message={alertModalMsg}
-                iconname={faThumbsUp}
-                color={'green'}
             />
 
             <CardSearchAccordion
@@ -713,7 +709,7 @@ function CustomerTableBody(props) {
 
 const styles = {
     fontawesome: {
-        color: `${theme.admin_primry_color}`,
+        color: `${consts.admin_primry_color}`,
         width: '30px',
         height: '30px',
         maxHeight: '30px',
@@ -721,7 +717,7 @@ const styles = {
         float: 'right'
     },
     accordin_fontawesome: {
-        color: `${theme.admin_primry_color}`,
+        color: `${consts.admin_primry_color}`,
         marginRight: '10%',
         width: '15px',
         height: '15px',

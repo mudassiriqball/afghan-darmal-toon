@@ -36,7 +36,7 @@ export default {
     SHADOW: '#e6e6e6',
     GRAY: 'gray',
     LIGHT_GRAY: 'lightgray',
-
+    DANGER: 'red',
     // Admin
     ADMIN_MAIN: '#172B4D',
 

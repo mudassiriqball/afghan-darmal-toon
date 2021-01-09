@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar, Nav } from 'react-bootstrap'
-import theme from '../../constants/theme';
+import consts from '../../constants';
 import baseUrl from '../../utils/urls/baseUrl';
 
 import { ImCart } from 'react-icons/im';
@@ -9,6 +9,7 @@ import { RiAccountPinCircleFill } from 'react-icons/ri';
 import { AiFillHome } from 'react-icons/ai';
 
 const StickyBottomNavbar = (props) => {
+    const { user } = props;
     const [isSticky, setSticky] = useState(true);
     const [curentHref, setCurentHref] = useState('')
     let curr = 0
@@ -33,19 +34,20 @@ const StickyBottomNavbar = (props) => {
     };
 
     useEffect(() => {
-        if (window.location.href == baseUrl.PATH + '/' || window.location.href == baseUrl.PATH + '/index') {
+        console.log('window.location.href:', window.location.href)
+        if (window.location.href === baseUrl + '/' || window.location.href === baseUrl || window.location.href === baseUrl + '/index') {
             setCurentHref('index')
-        } else if (window.location.href == baseUrl.PATH + '/categories') {
+        } else if (window.location.href === baseUrl + '/categories') {
             setCurentHref('categories')
-        } else if (window.location.href == baseUrl.PATH + '/cart') {
+        } else if (window.location.href === baseUrl + '/cart') {
             setCurentHref('cart')
-        } else if (window.location.href == baseUrl.PATH + '/profile') {
+        } else if (window.location.href === baseUrl + '/profile') {
             setCurentHref('profile')
-        } else if (window.location.href == baseUrl.PATH + '/login') {
+        } else if (window.location.href === baseUrl + '/login') {
             setCurentHref('login')
         }
         return () => {
-            setCurentHref('')
+            setCurentHref('');
         }
     }, [])
 
@@ -53,39 +55,25 @@ const StickyBottomNavbar = (props) => {
         <div className='stick_bottom_navbar'>
             <div className={`sticky-wrapper${isSticky ? ' sticky' : ''}`}>
                 <Navbar bg="white" className='sticky-inner'>
-                    <Nav className="d-inline-flex align-items-center w-100" style={{ borderTop: `1px solid ${theme.COLORS.SHADOW}` }}>
+                    <Nav className="d-inline-flex align-items-center w-100" style={{ borderTop: `1px solid ${consts.COLORS.SHADOW}` }}>
                         <div className='mr-auto'></div>
-                        <Nav.Link href="/" className='nav_link'
-                            style={{
-                                color: curentHref == 'index' ? `${theme.COLORS.MAIN}` : '#a6a6a6'
-                            }}
-                        >
+                        <Nav.Link href="/" className='nav_link' style={{ color: curentHref == 'index' ? consts.COLORS.SEC : consts.COLORS.GRAY }} >
                             <AiFillHome style={styles.fontawesome} />
                             {'Home'}
                         </Nav.Link>
                         <div className='mr-auto'></div>
-                        <Nav.Link href="/categories" className='nav_link'
-                            style={{
-                                color: curentHref == 'categories' ? `${theme.COLORS.MAIN}` : '#a6a6a6'
-                            }}
-                        >
+                        <Nav.Link href="/categories" className='nav_link' style={{ color: curentHref === 'categories' ? consts.COLORS.SEC : consts.COLORS.GRAY }}>
                             <FaListAlt style={styles.Categories_fontawesome} />
                             {'Categories'}
                         </Nav.Link>
                         <div className='mr-auto'></div>
-                        <Nav.Link href="/cart" className='nav_link'
-                            style={{
-                                color: curentHref == 'cart' ? `${theme.COLORS.MAIN}` : '#a6a6a6'
-                            }}
-                        >
+                        <Nav.Link href="/cart" className='nav_link' style={{ color: curentHref === 'cart' ? consts.COLORS.SEC : consts.COLORS.GRAY }} >
                             <ImCart style={styles.fontawesome} />
                             {'Cart'}
                         </Nav.Link>
                         <div className='mr-auto'></div>
-                        <Nav.Link href={props.isLoggedIn ? '/profile' : '/login'} className='nav_link'
-                            style={{
-                                color: curentHref == 'profile' || curentHref == 'login' ? `${theme.COLORS.MAIN}` : '#a6a6a6'
-                            }}
+                        <Nav.Link href={user !== '' && user.fullName !== '' ? '/profile' : '/login'} className='nav_link'
+                            style={{ color: curentHref === 'profile' || curentHref === 'login' ? consts.COLORS.SEC : consts.COLORS.GRAY }}
                         >
                             <RiAccountPinCircleFill style={styles.fontawesome} />
                             {'Account'}

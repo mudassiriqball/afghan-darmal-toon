@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Card, Form, Col, Row, InputGroup, Button, Spinner } from 'react-bootstrap'
-import theme from '../../constants/theme'
+import consts from '../../constants'
 import urls from '../../utils/urls'
 import CustomButton from '../CustomButton'
 
@@ -61,7 +61,7 @@ export default function MyProfile(props) {
                                 <Form.Control
                                     className='form_control'
                                     value={mobile || ''}
-                                    style={{ color: theme.COLORS.MUTED }}
+                                    style={{ color: consts.COLORS.MUTED }}
                                     disabled={true}
                                 />
                             </InputGroup>
@@ -73,7 +73,7 @@ export default function MyProfile(props) {
                                     className='form_control'
                                     value={fullName || ''}
                                     onChange={(e) => setFull_name(e.target.value)}
-                                    style={{ color: isEditProfile ? theme.COLORS.TEXT : theme.COLORS.MUTED }}
+                                    style={{ color: isEditProfile ? consts.COLORS.TEXT : consts.COLORS.MUTED }}
                                     disabled={!isEditProfile}
                                 />
                             </InputGroup>
@@ -89,7 +89,7 @@ export default function MyProfile(props) {
                                     type='email'
                                     value={email || ''}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    style={{ color: isEditProfile ? theme.COLORS.TEXT : theme.COLORS.MUTED }}
+                                    style={{ color: isEditProfile ? consts.COLORS.TEXT : consts.COLORS.MUTED }}
                                     disabled={!isEditProfile}
                                 />
                             </InputGroup>
@@ -130,7 +130,7 @@ export default function MyProfile(props) {
                     align-items: center;
                     font-size: 15px;
                     font-weight: bold;
-                    color: ${theme.COLORS.TEXT};
+                    color: ${consts.COLORS.TEXT};
                     border: none;
                     padding-bottom: 0%;
                     background: none;
@@ -142,7 +142,7 @@ export default function MyProfile(props) {
                 }
                 .my_profile .form_label {
                     font-size: 13px;
-                    color: ${theme.COLORS.TEXT};
+                    color: ${consts.COLORS.TEXT};
                 }
                 .my_profile .form_control:disabled {
                     background: none;

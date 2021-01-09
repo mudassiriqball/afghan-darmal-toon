@@ -19,7 +19,7 @@ import PaginationRow from '../../pagination-row'
 import ReactToPrint from 'react-to-print'
 
 import urls from '../../../utils/urls/index'
-import theme from '../../../constants/theme'
+import consts from '../../../constants'
 
 export default class Orders extends Component {
     constructor(props) {
@@ -116,10 +116,8 @@ export default class Orders extends Component {
                 <AlertModal
                     onHide={(e) => this.setState({ showAlertModal: false })}
                     show={this.state.showAlertModal}
-                    header={'Success'}
+                    alerttype={'success'}
                     message={this.state.alertModalMsg}
-                    iconname={faThumbsUp}
-                    color={'green'}
                 />
                 {!this.state.isViewOrder ?
                     <>
@@ -396,10 +394,8 @@ function Order(props) {
             <AlertModal
                 onHide={(e) => setShowAlertModal(false)}
                 show={showAlertModal}
-                header={'Success'}
+                alerttype={'success'}
                 message={alertModalMsg}
-                iconname={faThumbsUp}
-                color={'green'}
             />
 
             <CardSearchAccordion

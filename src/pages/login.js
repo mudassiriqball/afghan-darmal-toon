@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Card, Dropdown, Form, Nav, Navbar } from 'react-bootstrap'
-import theme from '../constants/theme'
+import consts from '../constants'
 import PhoneInput from 'react-phone-input-2'
 import renderError from '../components/renderError'
 import globalStyle from '../utils/styles/globalStyle';
@@ -83,13 +83,13 @@ export default function Login(props) {
     return (
         <div className='_login'>
             <SimpleToolbar title={'Login'} />
-            <div style={{ marginTop: '10px', marginBottom: '10px', textAlign: 'center', color: theme.COLORS.MUTED }}>
+            <div style={{ marginTop: '10px', marginBottom: '10px', textAlign: 'center', color: consts.COLORS.MUTED }}>
                 {'Don\'t have account ? '}
                 <span className='signupSpan'><Link href='/signup'>{'Signup'}</Link></span>
             </div>
             <Card style={{ border: 'none' }}>
                 <Card.Body>
-                    <Card.Title style={{ color: theme.COLORS.MAIN, textAlign: 'center', marginBottom: '20px' }}>Signin</Card.Title>
+                    <Card.Title style={{ color: consts.COLORS.MAIN, textAlign: 'center', marginBottom: '20px' }}>Signin</Card.Title>
                     <Form>
                         <Form.Group controlId="formBasicEmail">
                             <PhoneInput
@@ -127,7 +127,7 @@ export default function Login(props) {
                     <a href="#" className='color w-100' style={{ fontSize: 'small', marginTop: '50px' }}>Forgot Password ?</a>
                 </Card.Body>
             </Card>
-            <StickyBottomNavbar isLoggedIn={false} />
+            <StickyBottomNavbar user={''} />
             <style jsx>{`
                 ._login {
                     width: 100%;
@@ -136,7 +136,7 @@ export default function Login(props) {
                     cursor: pointer;
                 }
                 ._login .link_div {
-                    color: ${theme.COLORS.SEC};
+                    color: ${consts.COLORS.SEC};
                 }
             `}</style>
             <style jsx global>{`

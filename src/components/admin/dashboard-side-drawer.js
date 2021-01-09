@@ -22,7 +22,7 @@ import AllCategories from './dashboard-contents/category-contents/all-categories
 
 import Inventory from './dashboard-contents/inventory';
 import Orders from './dashboard-contents/orders'
-import theme from '../../constants/theme';
+import consts from '../../constants';
 
 const DashboardSideDrawer = props => {
     let drawerClasses = "tabs_side_drawer";
@@ -185,7 +185,7 @@ const DashboardSideDrawer = props => {
                     }
 
                     .nav_link {
-                        color: ${theme.COLORS.SECONDARY};
+                        color: ${consts.COLORS.SECONDARY};
                         // border-top: 0.5px solid #434556;
                         // border-bottom: 0.5px solid #434556;
                     }
@@ -194,7 +194,7 @@ const DashboardSideDrawer = props => {
                     }
                     .tabs_side_drawer {
                         height: 100%;
-                        background: ${theme.COLORS.SEC};
+                        background: ${consts.COLORS.SEC};
                         box-shadow: 1px 0px 7px rgba(0, 0, 0, 0.5);
                         position: fixed;
                         top: 0;
@@ -211,7 +211,7 @@ const DashboardSideDrawer = props => {
                         transform: translateX(0);
                     }
                     .product_submenu {
-                        background: ${theme.COLORS.SEC};
+                        background: ${consts.COLORS.SEC};
                         // border-top: 0.5px solid #434556;
                         // border-bottom: 0.5px solid #434556;
                         margin: 0% 0% 0% 6%;
@@ -223,7 +223,7 @@ const DashboardSideDrawer = props => {
                     }
                     label {
                         margin-top: 4%;
-                        color: ${theme.COLORS.SECONDARY};
+                        color: ${consts.COLORS.SECONDARY};
                     }
                     
                     @media (min-width: 992px) {
@@ -255,7 +255,7 @@ const styles = {
         maxHeight: '100px',
     },
     muhalik: {
-        color: `${theme.COLORS.SEC}`,
+        color: `${consts.COLORS.SEC}`,
         fontSize: '14px',
         margin: '0%',
         padding: '1%',
@@ -278,7 +278,7 @@ const styles = {
         height: '55px'
     },
     fontawesome: {
-        color: `${theme.COLORS.SECONDARY}`,
+        color: `${consts.COLORS.SECONDARY}`,
         marginRight: '8%',
         width: '17px',
         height: '17px',
@@ -286,7 +286,7 @@ const styles = {
         maxWidth: '17px',
     },
     forword_fontawesome: {
-        color: `${theme.COLORS.SECONDARY}`,
+        color: `${consts.COLORS.SECONDARY}`,
         float: 'right',
         width: '8px',
         height: '8px',

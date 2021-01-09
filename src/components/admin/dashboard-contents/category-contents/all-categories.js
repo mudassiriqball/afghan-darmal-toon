@@ -4,7 +4,7 @@ import { faThumbsUp, faThumbsDown } from '@fortawesome/free-regular-svg-icons'
 import React, { Component } from 'react';
 
 import urls from '../../../../utils/urls'
-import theme from '../../../../constants/theme'
+import consts from '../../../../constants'
 
 import axios from 'axios';
 import AlertModal from '../../../alert-modal';
@@ -293,10 +293,8 @@ class AllCategories extends React.Component {
                 <AlertModal
                     onHide={(e) => this.setState({ showModal: false })}
                     show={this.state.showModal}
-                    header={'Success'}
+                    alerttype={'success'}
                     message={this.state.showModalMessage}
-                    iconname={faThumbsUp}
-                    color={"#00b300"}
                 />
                 <ConfirmModal
                     onHide={() => this.setState({ showConfirmDeleteModal: false })}
@@ -447,7 +445,7 @@ class AllCategories extends React.Component {
 
 const styles = {
     label: {
-        fontSize: `${theme.SIZES.LABEL}`
+        fontSize: `${consts.SIZES.LABEL}`
     },
 }
 export default AllCategories

@@ -1,14 +1,10 @@
 import React from 'react'
-
 import { Row, Col } from 'react-bootstrap'
-// american-sign-language-interpreting
 import { faTachometerAlt } from '@fortawesome/free-solid-svg-icons';
 
 import CountColoredCard from '../../count-colored-card'
-
-import theme from '../../../constants/theme'
+import consts from '../../../constants'
 import TitleRow from '../../title-row';
-
 class AdminDashboard extends React.Component {
     render() {
         return (
@@ -90,7 +86,7 @@ const styles = {
         fontSize: '30px',
     },
     fontawesome: {
-        color: `${theme.COLORS.SEC}`,
+        color: `${consts.COLORS.SEC}`,
         width: '50px',
         height: '50px',
         maxHeight: '50px',

@@ -13,8 +13,9 @@ import ManageOrders from '../components/profile/manage-orders'
 import Orders from '../components/profile/orders'
 import MyWishlist from '../components/profile/my-wishlist';
 import urls from '../utils/urls';
-import theme from '../constants/theme';
+import consts from '../constants';
 import Toolbar from '../components/customer/toolbar';
+import StickyBottomNavbar from '../components/customer/sticky-bottom-navbar';
 
 export async function getServerSideProps(context) {
     let categories_list = []
@@ -85,8 +86,9 @@ export default function Profile(props) {
                 // }).catch((error) => {
                 //     console.log('user order count error in profile',error)
                 // })
-                const _token = await getTokenFromStorage()
-                setToken(_token)
+                const _token = await getTokenFromStorage();
+                if (_token !== null)
+                    setToken(_token)
             } else {
                 Router.replace('/')
             }
@@ -100,9 +102,7 @@ export default function Profile(props) {
 
     async function getUser(id) {
         await axios.get(urls.GET_REQUEST.USER_BY_ID + id).then((res) => {
-            setUser(res.data.data[0])
-            if ('cart' in res.data.data[0])
-                setCart_count(res.data.data[0].cart.length);
+            setUser(res.data.data[0]);
         }).catch((err) => {
             console.log('Get user error in profile', err);
         })
@@ -136,10 +136,8 @@ export default function Profile(props) {
             <AlertModal
                 onHide={(e) => setShowAlertModal(false)}
                 show={showAlertModal}
-                header={'Success'}
+                alerttype={'success'}
                 message={alertMsg}
-                iconname={faThumbsUp}
-                color={'green'}
             />
             {/* <Layout
                 role={user.role}
@@ -303,11 +301,11 @@ export default function Profile(props) {
                     </Col>
                 </Row>
             </div>
-            {/* </Layout> */}
+            <StickyBottomNavbar user={user} />
             <style type="text/css">{`
                 .profile {
                     min-height: 100vh;
-                    background: ${theme.COLORS.SECONDARY};
+                    background: ${consts.COLORS.SECONDARY};
                     position: absolute;
                     top: 0;
                     left: 0;
@@ -336,7 +334,7 @@ export default function Profile(props) {
                     cursor: pointer;
                 }
                 .profile .list-group-item:hover {
-                    background: ${theme.COLORS.MAIN};
+                    background: ${consts.COLORS.MAIN};
                     color: blue;
                 }
                 .profile .row {

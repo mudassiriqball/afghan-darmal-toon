@@ -1,11 +1,11 @@
 import React from 'react'
 
-import theme from '../constants/theme';
+import consts from '../constants';
 
 export default function renderError(error) {
     return (
         <div style={{ width: '100%' }}>
-            <label style={{ color: theme.COLORS.ERROR, fontSize: theme.SIZES.ERROR }}>{error}</label>
+            <label style={{ color: consts.COLORS.ERROR, fontSize: consts.SIZES.ERROR }}>{error}</label>
         </div>
     )
 }

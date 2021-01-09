@@ -1,4 +1,4 @@
-import theme from "../../constants/theme";
+import consts from "../../constants";
 
 export default {
     leftIcon: {
@@ -7,6 +7,6 @@ export default {
     },
     mediumMainIcon: {
         fontSize: '20px',
-        color: theme.COLORS.MAIN,
+        color: consts.COLORS.MAIN,
     },
 }

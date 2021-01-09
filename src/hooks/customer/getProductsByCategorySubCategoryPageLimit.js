@@ -6,8 +6,7 @@ export default function getProductsByCategorySubCategoryPageLimit(category, subC
     const [PRODUCTS_PAGE_LIMIT_LOADING, setLoading] = useState(false);
     const [PRODUCTS_PAGE_LIMIT_ERROR, setError] = useState('');
     const [PRODUCTS_PAGE_LIMIT_PRODUCTS, setProducts] = useState([]);
-    const [PRODUCTS_PAGE_LIMIT_PAGES, setPages] = useState('');
-    const [PRODUCTS_PAGE_LIMIT_TOTAL, setTotal] = useState(0);
+    const [PRODUCTS_PAGE_LIMIT_HAS_MORE, setHasMore] = useState(true);
 
     useEffect(() => {
         setProducts([])
@@ -38,8 +37,7 @@ export default function getProductsByCategorySubCategoryPageLimit(category, subC
                         setProducts(prevPro => {
                             return [...new Set([...prevPro, ...res.data.data.docs])]
                         })
-                        setPages(res.data.data.pages)
-                        setTotal(res.data.data.total)
+                        setHasMore(res.data.data && res.data.data.docs && res.data.data.docs.length > 0);
                     }
                 }).catch(err => {
                     console.log('Get products by page limit error:', err);
@@ -62,7 +60,6 @@ export default function getProductsByCategorySubCategoryPageLimit(category, subC
         PRODUCTS_PAGE_LIMIT_LOADING,
         PRODUCTS_PAGE_LIMIT_ERROR,
         PRODUCTS_PAGE_LIMIT_PRODUCTS,
-        PRODUCTS_PAGE_LIMIT_PAGES,
-        PRODUCTS_PAGE_LIMIT_TOTAL
+        PRODUCTS_PAGE_LIMIT_HAS_MORE
     }
 }

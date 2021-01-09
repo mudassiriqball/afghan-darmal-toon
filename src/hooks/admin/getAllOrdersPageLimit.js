@@ -21,30 +21,30 @@ export default function getAllOrdersPageLimit(token, refresh, status, pageNumber
             // setLoading(true)
             // setError(false)
             let cancle
-            // axios({
-            //     method: 'GET',
-            //     url: urls.GET_REQUEST.ALL_ORDERS_PAGE_LIMIT_BY_STATUS + status,
-            //     headers: {
-            //         'authorization': token
-            //     },
-            //     params: { page: pageNumber, limit: limit },
-            //     cancelToken: new axios.CancelToken(c => cancle = c)
-            // }).then(res => {
-            //     if (unmounted) {
-            //         setLoading(false)
-            //         setOrders(prevOrder => {
-            //             return [...new Set([...prevOrder, ...res.data.data.docs])]
-            //         })
-            //         setPages(res.data.data.pages)
-            //         setTotal(res.data.data.total)
-            //     }
-            // }).catch(err => {
-            //     if (unmounted) {
-            //         setLoading(false)
-            //         if (axios.isCancel(err)) return
-            //         setError(true)
-            //     }
-            // })
+            axios({
+                method: 'GET',
+                url: urls.GET_REQUEST.ALL_ORDERS_PAGE_LIMIT_BY_STATUS + status,
+                headers: {
+                    'authorization': token
+                },
+                params: { page: pageNumber, limit: limit },
+                cancelToken: new axios.CancelToken(c => cancle = c)
+            }).then(res => {
+                if (unmounted) {
+                    setLoading(false)
+                    setOrders(prevOrder => {
+                        return [...new Set([...prevOrder, ...res.data.data.docs])]
+                    })
+                    setPages(res.data.data.pages)
+                    setTotal(res.data.data.total)
+                }
+            }).catch(err => {
+                if (unmounted) {
+                    setLoading(false)
+                    if (axios.isCancel(err)) return
+                    setError(true)
+                }
+            })
         }
         getData()
         return () => {

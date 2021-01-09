@@ -3,7 +3,7 @@ import Router from 'next/router'
 import axios from 'axios'
 import Dashboard from '../components/admin/dashboard';
 import DashboardSideDrawer from '../components/admin/dashboard-side-drawer';
-import theme from '../constants/theme';
+import consts from '../constants';
 import urls from '../utils/urls/index'
 import { checkTokenExpAuth, removeTokenFromStorage, getTokenFromStorage } from '../utils/services/auth';
 
@@ -135,7 +135,8 @@ class Admin extends Component {
             this.getUser(_decodedToken._id);
             // Token
             const _token = await getTokenFromStorage();
-            this.setState({ token: _token });
+            if (_token !== null)
+                this.setState({ token: _token });
         } else {
             Router.push('/')
         }
@@ -325,7 +326,7 @@ class Admin extends Component {
 
 const styles = {
     body: {
-        background: `${theme.COLORS.SECONDARY}`,
+        background: `${consts.COLORS.SECONDARY}`,
         position: 'absolute',
         top: '0',
         left: '0',

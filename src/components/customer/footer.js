@@ -1,13 +1,13 @@
 import React from 'react'
 import { Card, Col, Row } from 'react-bootstrap';
-import theme from '../../constants/theme';
+import consts from '../../constants';
 import { AiFillTwitterCircle, AiFillInstagram } from 'react-icons/ai';
 import { FaFacebook } from 'react-icons/fa';
 
 export default function Footer() {
     return (
         <div className='footer'>
-            <Card className='_card' style={{ background: theme.COLORS.SEC, border: 'none', }}>
+            <Card className='_card' style={{ background: consts.COLORS.SEC, border: 'none', }}>
                 <Card.Body className='text-white'>
                     <Row>
                         <Col lg={4} md={4} sm={6} xs={12} style={{ padding: '2%' }}>
@@ -15,7 +15,7 @@ export default function Footer() {
                             <p className='paragraph'>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
                         </Col>
                         <Col lg={4} md={4} sm={6} xs={12} style={{ padding: '2%' }}>
-                            <Card style={{ background: theme.COLORS.MAIN, border: 'none', height: '400px' }}>
+                            <Card style={{ background: consts.COLORS.MAIN, border: 'none', height: '400px' }}>
                                 <Card.Body className='text-white'>
                                     <h1 className='card_header'>GET IN TOUCH</h1>
                                     <p className='paragraph'>+987 876 765 87 67 6</p>
@@ -37,7 +37,7 @@ export default function Footer() {
                     </Row>
                 </Card.Body>
             </Card>
-            <Row noGutters style={{ background: theme.COLORS.SEC_HOVER, padding: '2% 0%' }}>
+            <Row noGutters style={{ background: consts.COLORS.SEC_HOVER, padding: '2% 0%' }}>
                 <Col lg={6} md={6} sm={6} xs={12} className='d-flex justify-content-center align-items-center' >
                     <h5 style={{ color: 'white', textAlign: 'center', pading: '0px' }}>Copyright By@Afghan Darmaltoon - 2020</h5>
                 </Col>
@@ -55,7 +55,7 @@ export default function Footer() {
             </Row>
             <style jsx>{`
                 .footer {
-                    background: ${theme.COLORS.SEC};
+                    background: ${consts.COLORS.SEC};
                     left: 0;
                     bottom: 0;
                     right: 0;
@@ -67,15 +67,15 @@ export default function Footer() {
                     // height: 100%;
                 }
                 .footer .dotViewIcon:hover {
-                    background: ${theme.COLORS.MAIN};
+                    background: ${consts.COLORS.MAIN};
                     border-radius: 20px;
                 }
                 .footer ._card {
-                    background: ${theme.COLORS.SEC};
+                    background: ${consts.COLORS.SEC};
                     padding: 3% 15%;
                 }
                 .footer .card_header {
-                    color: ${theme.COLORS.SEC};
+                    color: ${consts.COLORS.SEC};
                     font-size: 30px;
                     font-weight: 1000;
                     text-align: center;
@@ -96,12 +96,12 @@ export default function Footer() {
 }
 const styles = {
     dotsSocialIcon: {
-        color: theme.COLORS.WHITE,
+        color: consts.COLORS.WHITE,
         fontSize: '50px',
         margin: '5px',
     },
     dotsSocialIconFB: {
-        color: theme.COLORS.WHITE,
+        color: consts.COLORS.WHITE,
         fontSize: '47px',
         margin: '5px',
     }

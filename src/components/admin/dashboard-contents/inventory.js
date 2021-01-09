@@ -6,12 +6,12 @@ import { faPlus, faTimes, faChevronLeft, faChevronRight, faSlidersH, faTrash } f
 import { faThumbsUp } from '@fortawesome/free-regular-svg-icons'
 import CardAccordion from '../../card-accordion';
 import urls from '../../../utils/urls/index'
-import theme from '../../../constants/theme'
+import consts from '../../../constants'
 import TitleRow from '../../title-row';
 // import AddNew from '../../../vendor/dashboard/dashboard-contents/product-contents/add-new'
 
-import getInvertryPageLimit from '../../../hooks/admin/getInvertryPageLimit';
-import getInvertrySearch from '../../../hooks/admin/getInvertrySearch';
+import getInventoryPageLimit from '../../../hooks/admin/getInventoryPageLimit';
+import getSearchProducts from '../../../hooks/customer/getSearchProducts';
 
 import useDimensions from "react-use-dimensions";
 import ConfirmModal from '../../confirm-modal'
@@ -41,11 +41,10 @@ export default function Inventory(props) {
     const [start_date, setStart_date] = useState(new Date("2020/01/01"))
     const [end_date, setEnd_date] = useState(new Date())
 
-    const { INVENTRY_PAGE_LIMIT_LOADING, INVENTRY_PAGE_LIMIT_PRODUCTS, INVENTRY_PAGE_LIMIT_PAGES, INVENTRY_PAGE_LIMIT_TOTALS } =
-        getInvertryPageLimit(refresh_count, limitPageNumber, '20')
+    const { INVENTORY_PRODUCTS_LOADING, INVENTORY_PRODUCTS, INVENTRY_PAGES } =
+        getInventoryPageLimit(refresh_count, limitPageNumber, '20')
+    const { SEARCH_PRODUCTS_LOADING, SEARCH_PRODUCTS_ERROR, SEARCH_PRODUCTS } = getSearchProducts(query);
 
-    const { INVENTRY_SEARCH_LOADING, INVENTRY_SEARCH_PRODUCTS, INVENTRY_SEARCH_PAGES, INVENTRY_SEARCH_TOTAL } =
-        getInvertrySearch(refresh_count, fieldName, query, queryPageNumber, '20', start_date, end_date)
 
     async function handleSearch(searchType, searchValue, start, end) {
         if (searchValue != '') {
@@ -177,13 +176,13 @@ export default function Inventory(props) {
                         setIsSearch={() => setIsSearch(false)}
                     >
                         {!isSearch ?
-                            INVENTRY_PAGE_LIMIT_LOADING ?
+                            INVENTORY_PRODUCTS_LOADING ?
                                 <Loading />
                                 :
-                                INVENTRY_PAGE_LIMIT_TOTALS > 0 ?
+                                INVENTORY_PRODUCTS > 0 ?
                                     <>
                                         <ProductTable
-                                            list={INVENTRY_PAGE_LIMIT_PRODUCTS}
+                                            list={INVENTORY_PRODUCTS}
                                             pageNumber={page}
                                             setViewProduct={(element) => { setData(element), setViewProduct('view') }}
                                             handleEditProduct={(element) => handleEditProduct(element)}
@@ -199,13 +198,13 @@ export default function Inventory(props) {
                                     :
                                     <Row className='_div'>No Data Found</Row>
                             :
-                            INVENTRY_SEARCH_LOADING ?
+                            SEARCH_PRODUCTS_LOADING ?
                                 <Loading />
                                 :
-                                INVENTRY_SEARCH_TOTAL > 0 ?
+                                SEARCH_PRODUCTS > 0 ?
                                     <>
                                         <ProductTable
-                                            list={INVENTRY_SEARCH_PRODUCTS}
+                                            list={SEARCH_PRODUCTS}
                                             pageNumber={queryPage}
                                             setViewProduct={(element) => { setData(element), setViewProduct('view') }}
                                             handleEditProduct={(index) => handleEditProduct(element)}
@@ -213,7 +212,7 @@ export default function Inventory(props) {
                                         />
                                         <hr />
                                         <PaginationRow
-                                            totalPages={INVENTRY_SEARCH_PAGES}
+                                            totalPages={1}
                                             activePageNumber={queryPage}
                                             setActivePageNumber={(ppage) => handleSetQueryPage(ppage)}
                                         />
@@ -231,10 +230,8 @@ export default function Inventory(props) {
             <AlertModal
                 onHide={() => setShowModal(false)}
                 show={showModal}
-                header={'Success'}
+                alerttype={'success'}
                 message={'Product Deleted Successfully'}
-                iconname={faThumbsUp}
-                color={"#00b300"}
             />
             <ConfirmModal
                 onHide={() => setShowConfirmDeleteModal(false)}
@@ -824,15 +821,15 @@ function ImagePreview(props) {
 
 const styles = {
     label: {
-        fontSize: `${theme.SIZES.LABEL}`
+        fontSize: `${consts.SIZES.LABEL}`
     },
     nav_link: {
         paddingLeft: '10px',
         paddingRight: '5px',
     },
     label: {
-        fontSize: `${theme.SIZES.LABEL}`,
-        color: `${theme.COLORS.SEC}`,
+        fontSize: `${consts.SIZES.LABEL}`,
+        color: `${consts.COLORS.SEC}`,
         marginRight: '2%'
     },
     row: {
@@ -848,7 +845,7 @@ const styles = {
         maxWidth: '30px',
     },
     fontawesome: {
-        color: `${theme.COLORS.SEC}`,
+        color: `${consts.COLORS.SEC}`,
         marginRight: '10%',
         width: '17px',
         height: '17px',
@@ -856,13 +853,13 @@ const styles = {
         maxWidth: '17px',
     },
     general_info_label: {
-        fontSize: `${theme.SIZES.LABEL}`,
+        fontSize: `${consts.SIZES.LABEL}`,
         width: '100%',
         borderBottom: '1px solid gray'
     },
     field_label: {
-        border: `1px solid ${theme.COLORS.SECONDARY}`,
-        color: `${theme.COLORS.SEC}`,
+        border: `1px solid ${consts.COLORS.SECONDARY}`,
+        color: `${consts.COLORS.SEC}`,
         margin: '0%',
         width: '100%',
         padding: '2px 5px'
@@ -873,8 +870,8 @@ const styles = {
     },
     card_header: {
         alignItems: 'center',
-        fontSize: `${theme.SIZES.HEADER}`,
-        background: `${theme.COLORS.MUTED}`,
+        fontSize: `${consts.SIZES.HEADER}`,
+        background: `${consts.COLORS.MUTED}`,
     },
     slider_fontawesome: {
         color: 'white',

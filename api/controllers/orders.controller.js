@@ -1,146 +1,223 @@
-const sliderController = {};
-const Order = require("../models/orders.model");
+const OrdersController = {};
+// Stripe
+const stripe = require("stripe")("sk_test_51I4uMrHe2QzPDxzG9uiYxeMSyOSo2Q0PK9c1r30ZVt4IVNo5yGmv0873Go5XeLNGmyZMWoyTAd3fuzm3aRhtmWRc00UHyon6a1");
+// const uuid = require("uuid/v4");
+const { v4: uuidv4 } = require('uuid');
+const Orders = require("../models/orders.model");
+const Product = require('../models/product.model');
+const mongoose = require("mongoose");
 
 
-// Post Methods
-sliderController.add_slider = async (req, res) => {
-
-  const body = req.body;
-  var datetime = new Date();
-  try {
-    body.entry_date = datetime;
-    const slider = new Slider(body);
-    const result = await slider.save();
-    res.status(200).send({
-      code: 200,
-      message: "Slider Added Successfully",
-    });
-  } catch (error) {
-    return res.status(500).send(error);
-  }
+OrdersController.get_order_by_id = async (req, res) => {
+    let order;
+    try {
+        order = await Orders.find({});
+        res.status(200).send({
+            code: 200,
+            message: "Successful",
+            data: order,
+        });
+    } catch (error) {
+        console.log("error", error);
+        return res.status(500).send(error);
+    }
 };
 
-// Post Methods
-sliderController.get_order_by_id = async (req, res) => {
-  let order;
-  try {
-    order = await Order.find({});
-    res.status(200).send({
-      code: 200,
-      message: "Successful",
-      data: order,
-    });
-  } catch (error) {
-    console.log("error", error);
-    return res.status(500).send(error);
-  }
-};
-
-
-sliderController.get_order_query_search = async (req, res) => {
+OrdersController.get_order_query_search = async (req, res) => {
     let order;
     const field = req.query.field;
     const search = {};
     search[field] = req.query.q;
     search["status"] = req.params._status;
     try {
-      order = await Order.paginate(search,{
-        limit: parseInt(req.query.limit),
-        page: parseInt(req.query.page),
-      });
-      res.status(200).send({
-        code: 200,
-        message: "Successful",
-        data: order,
-      });
+        order = await Orders.paginate(search, {
+            limit: parseInt(req.query.limit),
+            page: parseInt(req.query.page),
+        });
+        res.status(200).send({
+            code: 200,
+            message: "Successful",
+            data: order,
+        });
     } catch (error) {
-      console.log("error", error);
-      return res.status(500).send(error);
+        console.log("error", error);
+        return res.status(500).send(error);
     }
-  };
+};
 
-
-sliderController.get_count_order = async (req, res) => {
+OrdersController.get_count_order = async (req, res) => {
     let order;
     try {
-      order = await Order.find({});
-      res.status(200).send({
-        code: 200,
-        message: "Successful",
-        data: order,
-      });
+        order = await Orders.find({});
+        res.status(200).send({
+            code: 200,
+            message: "Successful",
+            data: order,
+        });
     } catch (error) {
-      console.log("error", error);
-      return res.status(500).send(error);
+        console.log("error", error);
+        return res.status(500).send(error);
     }
-  };
-
+};
 
 // Put Methods
-sliderController.update_slider = async (req, res) => {
-  const _id = req.params._id;
-
-  const slider = await Slider.findOne({ _id: _id });
-  const token = slider.url;
-  const filenameToRemove = token.split("/").slice(-1)[0];
-
-  const body = req.body;
-
-  if (!_id) {
-    Fu;
-    res.status(500).send({
-      message: "ID missing",
-    });
-  } else {
-    try {
-      s3.deleteObject(
-        {
-          Bucket: "slider-images",
-          Key: filenameToRemove,
-        },
-        function (err, data) {}
-      );
-
-      var url = req.files[0].location;
-      Slider.findOneAndUpdate(
-        { _id: _id },
-        {
-          $set: { url: url },
-        },
-        {
-          returnNewDocument: true,
-        },
-        function (error, result) {
-          res.status(200).send({
-            code: 200,
-            message: "Slider Updated Successfully",
-          });
-        }
-      );
-    } catch (error) {
-      console.log("error", error);
-      return res.status(500).send(error);
-    }
-  }
-};
 
 // Delete Methods
-sliderController.delete_slider = async (req, res) => {
-  const _id = req.params._id;
 
-  if (!_id) {
-    Fu;
-    res.status(500).send({
-      message: "ID missing",
-    });
-  } else {
-    Slider.findByIdAndDelete(_id, function (err) {
-      res.status(200).send({
-        code: 200,
-        message: "deleted Successful",
-      });
-    });
-  }
-};
 
-module.exports = sliderController;
+OrdersController.place_order = async (req, res) => {
+    let data = [];
+    var found = false;
+    var saveorder = false;
+    var paymentResult = null;
+    try {
+        const body = req.body;
+        if (!body.products) {
+            res.status(500).send({
+                code: 500,
+                message: "No Products Found",
+            });
+        }
+        for (let index = 0; index < body.products.length; index++) {
+            const search = await Product.find(
+                { _id: body.products[index].p_id },
+                { stock: 1 }
+            );
+            if (search[0].stock < body.products[index].quantity) {
+                found = true;
+                let array1 = {
+                    index: index,
+                    p_id: body.products[index].p_id,
+                    quantity: body.products[index].quantity,
+                    stock: search[0].stock,
+                };
+                data.push(array1);
+            }
+        }
+        if (found === true) {
+            res.status(201).send({
+                code: 201,
+                message: "You Have To Change Quantity Of Some Products",
+                data: data,
+            });
+        } else if (found === false) {
+            // Payment
+            if (body.paymentType === 'online') {
+                const idempontencyKey = uuidv4();
+                try {
+                    stripe.customers.create({
+                        email: body.token.email,
+                        source: body.token.id
+                    }).then(customer => {
+                        stripe.charges.create({
+                            amount: body.price,
+                            currency: body.currency,
+                            customer: customer.id,
+                            receipt_email: body.token.email,
+                            description: `Purchase of ${req.params._id}`,
+                        }, { idempontencyKey });
+                    }).then(result => {
+                        // res.status(200).send(result);
+                        console.log('\n\n\npayment successfull:', result);
+                        paymentResult = result;
+                    }).catch(error => {
+                        console.log('\n\n\nerror in make ransaction:', error)
+                        // return res.status(500).send(error);
+                        return res.status(500).send({
+                            code: 500,
+                            message: "Error in payment:" + error,
+                        });
+                    })
+                } catch (err) {
+                    console.log('\n\n\n Error in make method:', err);
+                }
+            }
+            for (let index = 0; index < body.products.length; index++) {
+                const new_stock = await Product.findOneAndUpdate(
+                    {
+                        _id: body.products[index].p_id,
+                    },
+                    {
+                        $inc: { stock: -body.products[index].quantity },
+                    }
+                );
+                const check = await Product.find(
+                    { _id: body.products[index].p_id },
+                    { stock: 1 }
+                );
+                if (check[0].stock === 0) {
+                    // TODO Set isDeleted: true instead of deleteing product
+                    // Product.findByIdAndDelete(check[0]._id, function (err) {
+                    // });
+                }
+                saveorder = true;
+            }
+        }
+        if (saveorder === true) {
+            var datetime = new Date();
+            body.entry_date = datetime;
+            body.status = "pending";
+            body.c_id = req.params._id;
+            body.sub_total = body.sub_total;
+            const orders = new Orders(body);
+            const result = await orders.save();
+            res.status(200).send({
+                code: 200,
+                message: "orders Added Successfully",
+                result: paymentResult
+            });
+        }
+    } catch (error) {
+        console.log('Place order Error:', error)
+        res.status(500).send({
+            code: 500,
+            message: "Error",
+            error: error
+        });
+    }
+}
+
+OrdersController.get_admin_orders_page_limit_by_status = async (req, res) => {
+    let orders;
+    try {
+        orders = await Orders.paginate(
+            { status: req.params._status },
+            {
+                limit: parseInt(req.query.limit),
+                page: parseInt(req.query.page),
+            }
+        );
+        res.status(200).send({
+            code: 200,
+            message: "Successful",
+            data: orders,
+        });
+    } catch (error) {
+        return res.status(500).send({
+            code: 500,
+            message: "Error",
+            error: error,
+        });
+    }
+}
+
+OrdersController.get_customer_orders_page_limit_by_id = async (req, res) => {
+    try {
+        const order = await Orders.paginate(
+            { c_id: req.params._id, status: req.query.status },
+            {
+                limit: parseInt(req.query.limit),
+                page: parseInt(req.query.page),
+            }
+        );
+        res.status(200).send({
+            code: 200,
+            message: "Successful",
+            data: order,
+        });
+    } catch (error) {
+        return res.status(500).send(error);
+    }
+}
+
+module.exports = OrdersController;

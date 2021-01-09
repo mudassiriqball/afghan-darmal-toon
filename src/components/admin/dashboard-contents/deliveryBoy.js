@@ -4,7 +4,7 @@ import { Row, Col, Card, Nav, Table, Form, Button, InputGroup } from 'react-boot
 import { faUsers, faUserPlus, faPersonBooth, faBan } from '@fortawesome/free-solid-svg-icons';
 import { faThumbsUp, faCheckCircle } from '@fortawesome/free-regular-svg-icons';
 
-import theme from '../../../constants/theme'
+import consts from '../../../constants'
 import TitleRow from '../../title-row';
 import ConfirmModal from '../../confirm-modal'
 import AlertModal from '../../alert-modal'
@@ -98,10 +98,8 @@ class deliveryBoy extends React.Component {
                 <AlertModal
                     onHide={() => this.setState({ viewShowAlertModal: false })}
                     show={this.state.viewShowAlertModal}
-                    header={'Success'}
+                    alerttype={'success'}
                     message={this.state.viewAlertModalMsg}
-                    iconname={faThumbsUp}
-                    color={'green'}
                 />
                 {!this.state.isViewUser ?
                     <div >
@@ -241,14 +239,14 @@ class deliveryBoy extends React.Component {
                     }
                     .customers .form_label{
                         color: gray;
-                        font-size: ${theme.SIZES.LABEL};
+                        font-size: ${consts.SIZES.LABEL};
                     }
                     .customers .card_header {
-                        font-size: ${theme.SIZES.HEADER};
+                        font-size: ${consts.SIZES.HEADER};
                         border: none;
                     }
                     .customers .card_text {
-                        color: ${theme.COLORS.SEC};
+                        color: ${consts.COLORS.SEC};
                         font-size: 17px;
                     }
                     .vendors .form_control:disabled {
@@ -375,10 +373,8 @@ function DeliveryBoyTable(props) {
                 <AlertModal
                     onHide={(e) => setShowAlertModal(false)}
                     show={showAlertModal}
-                    header={'Success'}
+                    alerttype={'success'}
                     message={alertModalMsg}
-                    iconname={faThumbsUp}
-                    color={'green'}
                 />
                 {!isSearch ?
                     USERS_PAGE_LOADING ?
@@ -504,7 +500,7 @@ function DeliveryBoyTableBody(props) {
 
 const styles = {
     fontawesome: {
-        color: `${theme.COLORS.SEC} `,
+        color: `${consts.COLORS.SEC} `,
         width: '30px',
         height: '30px',
         maxHeight: '30px',
@@ -512,7 +508,7 @@ const styles = {
         float: 'right'
     },
     accordin_fontawesome: {
-        color: `${theme.COLORS.SEC} `,
+        color: `${consts.COLORS.SEC} `,
         marginRight: '10%',
         width: '15px',
         height: '15px',
