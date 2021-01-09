@@ -1,63 +1,69 @@
 const OrdersController = {};
-// const Payment = require("../models/payment.model");
 // Stripe
 const stripe = require("stripe")("sk_test_51I4uMrHe2QzPDxzG9uiYxeMSyOSo2Q0PK9c1r30ZVt4IVNo5yGmv0873Go5XeLNGmyZMWoyTAd3fuzm3aRhtmWRc00UHyon6a1");
 // const uuid = require("uuid/v4");
 const { v4: uuidv4 } = require('uuid');
-const Orders = require('../models/order.model');
+const Orders = require("../models/orders.model");
 const Product = require('../models/product.model');
-var QRCode = require('qrcode');
-var JsBarcode = require('jsbarcode');
 const mongoose = require("mongoose");
 
-// Post Methods
-// OrdersController.make_transaction = async (req, res) => {
-//     const body = req.body;
-//     var datetime = new Date();
-//     console.log('Body:', body);
-//     debugger
-//     const idempontencyKey = uuidv4();
-//     return stripe.customers.create({
-//         email: body.token.email,
-//         source: body.token.id
-//     }).then(customer => {
-//         stripe.charges.create({
-//             amount: body.price * 100,
-//             currency: body.currency,
-//             customer: customer.id,
-//             receipt_email: body.token.email,
-//             description: `Purchase of ${res.params._id}`,
-//             shipping: {
-//                 name: body.token.card.name,
-//                 address: {
-//                     country: body.token.card.address_country
-//                 }
-//             }
-//         }, { idempontencyKey });
-//     }).then(result => {
-//         res.status(200).send(result);
-//     }).catch(error => {
-//         console.log('error in make ransaction:', error)
-//         return res.status(500).send(error);
-//     })
-// };
 
-// QRCode.toDataURL(req.params._id)
-//     .then(url => {
-//         console.log('QR Code:', url)
-//         res.status(200).send({
-//             code: 200,
-//             message: "QR Generated SUccessfully",
-//             data: url,
-//         });
-//     })
-//     .catch(err => {
-//         console.error("Generate QR Code Error:", err)
-//         res.status(500).send({
-//             code: 500,
-//             message: "No Products Found",
-//         });
-//     })
+OrdersController.get_order_by_id = async (req, res) => {
+    let order;
+    try {
+        order = await Orders.find({});
+        res.status(200).send({
+            code: 200,
+            message: "Successful",
+            data: order,
+        });
+    } catch (error) {
+        console.log("error", error);
+        return res.status(500).send(error);
+    }
+};
+
+OrdersController.get_order_query_search = async (req, res) => {
+    let order;
+    const field = req.query.field;
+    const search = {};
+    search[field] = req.query.q;
+    search["status"] = req.params._status;
+    try {
+        order = await Orders.paginate(search, {
+            limit: parseInt(req.query.limit),
+            page: parseInt(req.query.page),
+        });
+        res.status(200).send({
+            code: 200,
+            message: "Successful",
+            data: order,
+        });
+    } catch (error) {
+        console.log("error", error);
+        return res.status(500).send(error);
+    }
+};
+
+OrdersController.get_count_order = async (req, res) => {
+    let order;
+    try {
+        order = await Orders.find({});
+        res.status(200).send({
+            code: 200,
+            message: "Successful",
+            data: order,
+        });
+    } catch (error) {
+        console.log("error", error);
+        return res.status(500).send(error);
+    }
+};
+
+// Put Methods
+
+// Delete Methods
+
 
 OrdersController.place_order = async (req, res) => {
     let data = [];
