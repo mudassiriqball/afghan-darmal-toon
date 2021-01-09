@@ -78,6 +78,24 @@ const Product = new Schema({
   isdeleted: {
     type: Boolean,
   },
+
+  rating_review: {
+    rating: {
+      overall: { type: Number, default: 0 },
+      one_star: { type: Number, default: 0 },
+      two_star: { type: Number, default: 0 },
+      three_star: { type: Number, default: 0 },
+      four_star: { type: Number, default: 0 },
+      five_star: { type: Number, default: 0 },
+    },
+    reviews: [
+      {
+        c_name: { type: String },
+        review: { type: String },
+        entry_date: { type: Date },
+      },
+    ],
+  },
 });
 
 Product.plugin(mongoosePaginate);

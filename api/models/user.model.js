@@ -134,7 +134,8 @@ const User = new Schema({
         {
             p_id:{type: Schema.Types.ObjectId},
             vendor_id:{type: Schema.Types.ObjectId},
-            quantity:{type:Number}
+            quantity:{type:Number},
+            entry_date:{type:Date},
         }
     ]
 });

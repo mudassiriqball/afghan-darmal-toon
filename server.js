@@ -131,6 +131,9 @@ app
     const ProductRoutes = require("./api/routes/products.routes");
     const CategoryRoutes = require("./api/routes/categories.routes");
     const SlidersRoutes = require("./api/routes/sliders.routes");
+    const OrdersRoutes = require("./api/routes/orders.routes");
+
+    
 
 
 
@@ -139,6 +142,7 @@ app
     app.use("/api/products", ProductRoutes);
     app.use("/api/categories", CategoryRoutes);
     app.use("/api/sliders", SlidersRoutes);
+    app.use("/api/orders", OrdersRoutes);
 
 
 
