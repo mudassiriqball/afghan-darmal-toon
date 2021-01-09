@@ -1,4 +1,4 @@
-import { Modal, Button, Form, Spinner } from 'react-bootstrap'
+import { Modal, Button, Form, Spinner, Row, Col } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import Loading from './loading';
@@ -12,39 +12,41 @@ function ConfirmModal(props) {
             centered
         >
             <div style={{
-                border: `1px solid ${props.color}`,
-                borderRadius: '10px',
-                pading: '20px',
+                padding: '20px',
+                overflow: 'hidden'
             }}>
                 {/* '#ff3333' */}
-                <Modal.Header closeButton style={{ color: `${props.color}`, borderBottom: `1px solid ${props.color}` }}>
-                    <FontAwesomeIcon icon={props.iconname} style={{
-                        color: `${props.color}`,
-                        marginRight: '10px',
-                        width: '35px',
-                        height: '35px',
-                        maxHeight: '35px',
-                        maxWidth: '35px',
-                    }} ></FontAwesomeIcon>
+                <Modal.Header closeButton >
                     <Modal.Title id="alert-modal">
                         {props.title}
                     </Modal.Title>
                 </Modal.Header>
-                <Modal.Body >
+                <Modal.Body style={{ width: '100%', justifyContent: 'center', alignItems: 'center' }}>
                     {props.loading ?
                         <Loading />
                         :
-                        <>
-                            <Form.Label style={{ fontSize: '14px', padding: '0%', margin: '0%' }}>
-                                <span style={{ fontWeight: 'bold' }}> Name: </span>
-                                {props.name}
-                            </Form.Label>
-                            <br />
-                            <Form.Label style={{ fontSize: '14px', padding: '0%', margin: '0%' }}>
-                                <span style={{ fontWeight: 'bold' }}> ID: </span>
-                                {props._id}
-                            </Form.Label>
-                        </>
+                        <Row>
+                            <Col lg={4} md={4} sm={12} xs={12} className='d-flex justify-content-center'>
+                                <FontAwesomeIcon icon={props.iconname} style={{
+                                    color: `${props.color}`,
+                                    width: '80px',
+                                    height: '80px',
+                                    maxHeight: '80px',
+                                    maxWidth: '80px',
+                                }} ></FontAwesomeIcon>
+                            </Col>
+                            <Col lg={8} md={8} sm={12} xs={12} className='d-flex flex-column justify-content-center'>
+                                <Form.Label style={{ fontSize: '14px', padding: '0%', margin: '0%' }}>
+                                    <span style={{ fontWeight: 'bold' }}> Name: </span>
+                                    {props.name}
+                                </Form.Label>
+                                <br />
+                                <Form.Label style={{ fontSize: '14px', padding: '0%', margin: '0%' }}>
+                                    <span style={{ fontWeight: 'bold' }}> ID: </span>
+                                    {props._id}
+                                </Form.Label>
+                            </Col>
+                        </Row>
                     }
                 </Modal.Body>
                 <Modal.Footer>

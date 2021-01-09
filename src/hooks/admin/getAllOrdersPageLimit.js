@@ -18,8 +18,8 @@ export default function getAllOrdersPageLimit(token, refresh, status, pageNumber
         const CancelToken = axios.CancelToken;
         const source = CancelToken.source();
         const getData = () => {
-            // setLoading(true)
-            // setError(false)
+            setLoading(true)
+            setError(false)
             let cancle
             axios({
                 method: 'GET',

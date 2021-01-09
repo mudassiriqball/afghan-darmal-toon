@@ -4,7 +4,8 @@ import { Row, Col, Card, Nav, Table, Form, Button, InputGroup, Image } from 'rea
 import { faBan, faCheckDouble, faHistory, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { faEdit, faThumbsUp, faCheckCircle } from '@fortawesome/free-regular-svg-icons';
 import moment from 'moment'
-
+// import QRCode from 'qrcode'
+import QRCode from "react-qr-code";
 import CountColoredCard from '../../count-colored-card'
 import TitleRow from '../../title-row'
 import CardSearchAccordion from '../../card-search-accordion';
@@ -28,7 +29,7 @@ export default class Orders extends Component {
             refresh_count: 0,
             isViewOrder: false,
 
-            single_order: {},
+            singleOrderData: {},
             token: this.props.token,
             user_id: this.props.user_id,
 
@@ -40,6 +41,10 @@ export default class Orders extends Component {
 
             showAlertModal: false,
             alertModalMsg: '',
+            alertType: '',
+
+            method: '',
+
         }
     }
 
@@ -73,29 +78,32 @@ export default class Orders extends Component {
             }
         }
 
-        await axios.put(urls.PUT_REQUEST.UPDATE_Order_STATUS + this.state.single_order._id, data, {
+        await axios.put(urls.PUT_REQUEST.UPDATE_Order_STATUS + this.state.singleOrderData._id, data, {
             headers: { 'authorization': currentComponent.props.token }
         }).then(function (response) {
             currentComponent.setState({
                 confirmModalLoading: false,
                 showConfirmModal: false,
                 alertModalMsg: `Order Status Updated  successfully`,
+                alertType: 'success',
                 showAlertModal: true,
                 refresh_count: currentComponent.refresh_count + 1,
                 // isViewOrder: false,
             })
             let obj = {}
-            obj = currentComponent.state.single_order
+            obj = currentComponent.state.singleOrderData
             obj.status = data.status
-            currentComponent.setState({ single_order: obj })
+            currentComponent.setState({ singleOrderData: obj })
             currentComponent.props.ordersReloadCountHandler()
         }).catch(function (error) {
             currentComponent.setState({
                 confirmModalLoading: false,
                 showConfirmModal: false,
+                alertModalMsg: `Failed to update order status, Please try again later.`,
+                alertType: 'error',
+                showAlertModal: true,
             })
-            alert(`Set order to ${method} failed: `);
-            console.log(`Set order to ${method} failed: `, error)
+            console.log(`Set order to ${this.state.method} failed: `, error)
         });
     }
 
@@ -108,15 +116,15 @@ export default class Orders extends Component {
                     title={this.state.confirmModalMsg}
                     iconname={this.state.iconname}
                     color={this.state.confirmModalColor}
-                    _id={this.state.single_order._id}
-                    name={this.state.single_order.c_name}
+                    _id={this.state.singleOrderData._id}
+                    name={this.state.singleOrderData.c_name}
                     confirm={this.handleConfirmed.bind(this)}
                     loading={this.state.confirmModalLoading}
                 />
                 <AlertModal
                     onHide={(e) => this.setState({ showAlertModal: false })}
                     show={this.state.showAlertModal}
-                    alerttype={'success'}
+                    alerttype={this.state.alertType}
                     message={this.state.alertModalMsg}
                 />
                 {!this.state.isViewOrder ?
@@ -161,7 +169,7 @@ export default class Orders extends Component {
                                 header={'Pending Orders'}
                                 setView={(element) => this.setState({
                                     isViewOrder: true,
-                                    single_order: element,
+                                    singleOrderData: element,
                                 })}
                                 token={this.state.token}
                                 status={'pending'}
@@ -173,7 +181,7 @@ export default class Orders extends Component {
                                 header={'Delivered Orders'}
                                 setView={(element) => this.setState({
                                     isViewOrder: true,
-                                    single_order: element,
+                                    singleOrderData: element,
                                 })}
                                 token={this.state.token}
                                 status={'delivered'}
@@ -185,7 +193,7 @@ export default class Orders extends Component {
                                 header={'Cancelled Orders'}
                                 setView={(element) => this.setState({
                                     isViewOrder: true,
-                                    single_order: element,
+                                    singleOrderData: element,
                                 })}
                                 token={this.state.token}
                                 status={'cancelled'}
@@ -197,7 +205,7 @@ export default class Orders extends Component {
                                 header={'Returned Orders'}
                                 setView={(element) => this.setState({
                                     isViewOrder: true,
-                                    single_order: element,
+                                    singleOrderData: element,
                                 })}
                                 token={this.state.token}
                                 status={'returned'}
@@ -211,7 +219,8 @@ export default class Orders extends Component {
                     :
                     <ViewOrder
                         back={() => this.setState({ isViewOrder: false })}
-                        single_order={this.state.single_order}
+                        singleOrderData={this.state.singleOrderData}
+                        _id={this.state.singleOrderData._id}
                         setPending={() => {
                             this.setState({
                                 method: 'pending',
@@ -251,6 +260,9 @@ export default class Orders extends Component {
                     />
                 }
                 <style type="text/css">{`
+                    .admin_orders {
+                        max-width: 100%;
+                    }
                     .admin_orders .Card {
                         margin: 1%;
                     }
@@ -285,7 +297,7 @@ function Order(props) {
     const [fieldName, setFieldName] = useState('')
     const [query, setQuery] = useState('')
 
-    const [single_order, setSingle_order] = useState({})
+    const [singleOrderData, setSingle_order] = useState({})
     // Confirm Modal
     const [method, setMethod] = useState('')
     const [showConfirmModal, setShowConfirmModal] = useState(false)
@@ -355,7 +367,7 @@ function Order(props) {
                 status: 'returned'
             }
         }
-        await axios.put(urls.PUT_REQUEST.UPDATE_Order_STATUS + single_order._id, data, {
+        await axios.put(urls.PUT_REQUEST.UPDATE_Order_STATUS + singleOrderData._id, data, {
             headers: { 'authorization': props.token }
         }).then(function (response) {
             setConfirmModalLoading(false)
@@ -376,8 +388,6 @@ function Order(props) {
         });
     }
 
-
-
     return (
         <div className='admin_table'>
             <ConfirmModal
@@ -386,8 +396,8 @@ function Order(props) {
                 title={confirmModalMsg}
                 iconname={iconname}
                 color={confirmModalColor}
-                _id={single_order._id}
-                name={single_order.c_name}
+                _id={singleOrderData._id}
+                name={singleOrderData.c_name}
                 confirm={handleConfirmed}
                 loading={confirmModalLoading}
             />
@@ -397,7 +407,6 @@ function Order(props) {
                 alerttype={'success'}
                 message={alertModalMsg}
             />
-
             <CardSearchAccordion
                 title={props.header}
                 option={'order'}
@@ -415,7 +424,6 @@ function Order(props) {
                                     list={ALL_ORDERS_PAGE_LIMIT_ORDERS}
                                     status={props.status}
                                     setView={props.setView}
-
                                     setPending={(element) => {
                                         setMethod('pending')
                                         setSingle_order(element)
@@ -543,7 +551,7 @@ function OrderTable(props) {
 
     return (
         <div className='admin_order_table'>
-            <Table responsive bordered hover size="sm">
+            <Table responsive striped bordered hover variant='dark' >
                 <thead>
                     <tr>
                         <th>#</th>
@@ -554,12 +562,12 @@ function OrderTable(props) {
                         <th>City</th>
                         <th>Products</th>
                         <th>Sub Total</th>
-                        <th>Shipping Charges</th>
+                        <th>Shipping</th>
                         <th>Total</th>
                         <th>Date</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody style={{ overflow: 'scroll' }}>
                     {props.list && props.list.map((element, index) =>
                         index >= lower_limit && index < upper_limit && <tr key={index}>
                             <td align="center" >{index + 1}</td>
@@ -567,13 +575,13 @@ function OrderTable(props) {
                                 {element._id}
                                 <div className="td">
                                     <Nav.Link className='pt-0' onClick={() => props.setView(element)} > View </Nav.Link>
-                                    {props.status == 'pending' && <>
+                                    {/* {props.status == 'pending' && <>
                                         <Nav.Link className='pt-0 success' onClick={() => props.setDelivered(element)} > Delivered </Nav.Link>
                                         <Nav.Link className='pt-0 delete' onClick={() => props.setCancel(element)} > Cancel </Nav.Link>
                                         <Nav.Link className='pt-0 delete' onClick={() => props.setReturned(element)} > Returned </Nav.Link>
                                     </>
-                                    }
-                                    {props.status == 'delivered' && <>
+                                    } */}
+                                    {/* {props.status == 'delivered' && <>
                                         <Nav.Link className='pt-0 warning' onClick={() => props.setPending(element)} > Pending </Nav.Link>
                                         <Nav.Link className='pt-0 delete' onClick={() => props.setCancel(element)} > Cancel </Nav.Link>
                                         <Nav.Link className='pt-0 delete' onClick={() => props.setReturned(element)} > Returned </Nav.Link>
@@ -590,7 +598,7 @@ function OrderTable(props) {
                                         <Nav.Link className='pt-0 success' onClick={() => props.setDelivered(element)} > Delivered </Nav.Link>
                                         <Nav.Link className='pt-0 delete' onClick={() => props.setCancel(element)} > Cancelled </Nav.Link>
                                     </>
-                                    }
+                                    } */}
                                 </div>
                             </td>
                             <td align="center" >{element.c_id}</td>
@@ -599,8 +607,8 @@ function OrderTable(props) {
                             <td align="center" >{element.city}</td>
                             <td align="center" >{element.products.length || ''}</td>
                             <td align="center" >{element.sub_total}</td>
-                            <td align="center" >{element.shipping_charges}</td>
-                            <td align="center" >{element.shipping_charges + element.sub_total}</td>
+                            <td align="center" >{element.shippingCharges || 0}</td>
+                            <td align="center" >{element.shippingCharges || '' + element.sub_total}</td>
                             <td align="center" >{element.entry_date.substring(0, 10) || '-'}</td>
                         </tr>
                     )}
@@ -652,30 +660,29 @@ function ViewOrder(props) {
     let componentRef = React.useRef();
     return (
         <div className='admin_view_order'>
-            <TitleRow icon={faEdit} title={`Admin Dashboard / Vendors / ${props.single_order.c_name}`} />
+            <TitleRow icon={faEdit} title={`Admin Dashboard / Vendors / ${props.singleOrderData.c_name}`} />
             <Form.Row style={{ margin: ' 0% 2%', display: 'flex', alignItems: 'center' }} >
                 <Button size='sm' variant='outline-primary' className="mr-auto mt-2" onClick={props.back}> Back </Button>
 
-
-                {props.single_order.status == 'pending' && <>
+                {props.singleOrderData.status == 'pending' && <>
                     <Button size='sm' variant='outline-success' className="mt-2 ml-1 mr-1" onClick={props.setDelivered}> Delivered </Button>
                     <Button size='sm' variant='outline-danger' className="mt-2 ml-1 mr-1" onClick={props.setCancel}> Cancel </Button>
                     <Button size='sm' variant='outline-primary' className="mt-2 ml-1 mr-1" onClick={props.setReturned}> Returned </Button>
                 </>
                 }
-                {props.single_order.status == 'delivered' && <>
+                {props.singleOrderData.status == 'delivered' && <>
                     <Button size='sm' variant='outline-warning' className="mt-2 ml-1 mr-1" onClick={props.setPending}> Pending </Button>
                     <Button size='sm' variant='outline-danger' className="mt-2 ml-1 mr-1" onClick={props.setCancel}> Cancel </Button>
                     <Button size='sm' variant='outline-primary' className="mt-2 ml-1 mr-1" onClick={props.setReturned}> Returned </Button>
                 </>
                 }
-                {props.single_order.status == 'cancelled' && <>
+                {props.singleOrderData.status == 'cancelled' && <>
                     <Button size='sm' variant='outline-warning' className="mt-2 ml-1 mr-1" onClick={props.setPending}> Pending </Button>
                     <Button size='sm' variant='outline-success' className="mt-2 ml-1 mr-1" onClick={props.setDelivered}> Delivered </Button>
                     <Button size='sm' variant='outline-primary' className="mt-2 ml-1 mr-1" onClick={props.setReturned}> Returned </Button>
                 </>
                 }
-                {props.single_order.status == 'returned' && <>
+                {props.singleOrderData.status == 'returned' && <>
                     <Button size='sm' variant='outline-warning' className="mt-2 ml-1 mr-1" onClick={props.setPending}> Pending </Button>
                     <Button size='sm' variant='outline-success' className="mt-2 ml-1 mr-1" onClick={props.setDelivered}> Delivered </Button>
                     <Button size='sm' variant='outline-danger' className="mt-2 ml-1 mr-1" onClick={props.setCancel}> Cancel </Button>
@@ -692,62 +699,68 @@ function ViewOrder(props) {
             </Form.Row>
             <Card className='view_user' ref={componentRef}>
                 <Card.Body>
+                    <div className='logo_col'>
+                        <Image src='/muhalik.jpg' className='logo' />
+                        <h2 className='p-0 ml-3'>afghandarmaltoon.com</h2>
+                    </div>
+                    <p className='p'><span>Order Info</span></p>
                     <Row>
-                        <div className='logo_col'>
-                            <Image src='/muhalik.jpg' className='logo' />
-                            <h2 className='p-0 ml-3'>Mahaalk.com</h2>
-                        </div>
-
-                        <p className='p'><span>Order Info</span></p>
-                        <Form.Group as={Col} lg={4} md={4} sm={6} xs={12} className='form_group'>
-                            <Form.Label className='form_label'>Placed On</Form.Label>
-                            <InputGroup>
-                                <Form.Control type="text" size="sm" value={props.single_order.entry_date.substring(0, 10)} disabled={true} />
-                            </InputGroup>
-                        </Form.Group>
-                        <Form.Group as={Col} lg={4} md={4} sm={6} xs={12} className='form_group'>
-                            <Form.Label className='form_label'>Order Id</Form.Label>
-                            <InputGroup>
-                                <Form.Control type="text" size="sm" value={props.single_order._id} disabled={true} />
-                            </InputGroup>
-                        </Form.Group>
-                        <Form.Group as={Col} lg={4} md={4} sm={6} xs={12} className='form_group'>
-                            <Form.Label className='form_label'>Status</Form.Label>
-                            <InputGroup>
-                                <Form.Control type="text" size="sm" value={props.single_order.status} disabled={true} />
-                            </InputGroup>
-                        </Form.Group>
-
-                        <div style={{ minHeight: '100px' }}></div>
+                        <Col lg={6} md={6} sm={12} xs={12}>
+                            <Form.Group as={Col} lg={12} md={12} sm={12} xs={12} className='w-100'>
+                                <QRCode value={props._id} />
+                            </Form.Group>
+                        </Col>
+                        <Col lg={6} md={6} sm={12} xs={12}>
+                            <Form.Group as={Row} className='w-100'>
+                                <Form.Label className='form_label'>Placed On</Form.Label>
+                                <InputGroup>
+                                    <Form.Control type="text" size="sm" value={props.singleOrderData.entry_date.substring(0, 10)} disabled={true} />
+                                </InputGroup>
+                            </Form.Group>
+                            <Form.Group as={Row} className='w-100'>
+                                <Form.Label className='form_label'>Order Id</Form.Label>
+                                <InputGroup>
+                                    <Form.Control type="text" size="sm" value={props.singleOrderData._id} disabled={true} />
+                                </InputGroup>
+                            </Form.Group>
+                            <Form.Group as={Row} className='w-100'>
+                                <Form.Label className='form_label'>Status</Form.Label>
+                                <InputGroup>
+                                    <Form.Control type="text" size="sm" value={props.singleOrderData.status} disabled={true} />
+                                </InputGroup>
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                    <Row>
                         <p className='p'><span>Custmer Info</span></p>
                         <Form.Group as={Col} lg={3} md={6} sm={6} xs={12} className='form_group'>
                             <Form.Label className='form_label'>Cutomer Id</Form.Label>
                             <InputGroup>
-                                <Form.Control type="text" size="sm" value={props.single_order.c_id} disabled={true} />
+                                <Form.Control type="text" size="sm" value={props.singleOrderData.c_id} disabled={true} />
                             </InputGroup>
                         </Form.Group>
                         <Form.Group as={Col} lg={3} md={6} sm={6} xs={12} className='form_group'>
                             <Form.Label className='form_label'>Mobile</Form.Label>
                             <InputGroup>
-                                <Form.Control type="text" size="sm" value={props.single_order.mobile || '-'} disabled={true} />
+                                <Form.Control type="text" size="sm" value={props.singleOrderData.mobile || '-'} disabled={true} />
                             </InputGroup>
                         </Form.Group>
                         <Form.Group as={Col} lg={3} md={6} sm={6} xs={12} className='form_group'>
                             <Form.Label className='form_label'>Name</Form.Label>
                             <InputGroup>
-                                <Form.Control type="text" size="sm" value={props.single_order.c_name || '-'} disabled={true} />
+                                <Form.Control type="text" size="sm" value={props.singleOrderData.c_name || '-'} disabled={true} />
                             </InputGroup>
                         </Form.Group>
                         <Form.Group as={Col} lg={3} md={6} sm={6} xs={12} className='form_group'>
                             <Form.Label className='form_label'>City</Form.Label>
                             <InputGroup>
-                                <Form.Control type="text" size="sm" value={props.single_order.city} disabled={true} />
+                                <Form.Control type="text" size="sm" value={props.singleOrderData.city} disabled={true} />
                             </InputGroup>
                         </Form.Group>
                         <Form.Group as={Col} lg={12} md={12} sm={12} xs={12} className='address_form_group'>
                             <Form.Label className='form_label'>Address</Form.Label>
                             <InputGroup>
-                                <Form.Control type="text" size="sm" value={props.single_order.address} disabled={true} />
+                                <Form.Control type="text" size="sm" value={props.singleOrderData.address} disabled={true} />
                             </InputGroup>
                         </Form.Group>
 
@@ -756,19 +769,19 @@ function ViewOrder(props) {
                         <Form.Group as={Col} lg={4} md={4} sm={4} xs={12} className='form_group'>
                             <Form.Label className='form_label'>Sub Total</Form.Label>
                             <InputGroup>
-                                <Form.Control type="text" size="sm" value={props.single_order.sub_total} disabled={true} />
+                                <Form.Control type="text" size="sm" value={props.singleOrderData.sub_total} disabled={true} />
                             </InputGroup>
                         </Form.Group>
                         <Form.Group as={Col} lg={4} md={4} sm={4} xs={12} className='form_group'>
                             <Form.Label className='form_label'>Shipping Charges</Form.Label>
                             <InputGroup>
-                                <Form.Control type="text" size="sm" value={props.single_order.shipping_charges} disabled={true} />
+                                <Form.Control type="text" size="sm" value={props.singleOrderData.shippingCharges} disabled={true} />
                             </InputGroup>
                         </Form.Group>
                         <Form.Group as={Col} lg={4} md={4} sm={4} xs={12} className='form_group'>
                             <Form.Label className='form_label'>Total</Form.Label>
                             <InputGroup>
-                                <Form.Control type="text" size="sm" value={props.single_order.shipping_charges + props.single_order.sub_total} disabled={true} />
+                                <Form.Control type="text" size="sm" value={props.singleOrderData.shippingCharges + props.singleOrderData.sub_total} disabled={true} />
                             </InputGroup>
                         </Form.Group>
 
@@ -781,21 +794,19 @@ function ViewOrder(props) {
                                         <tr>
                                             <th>#</th>
                                             <th>Product Id</th>
-                                            <th>Variation Id</th>
                                             <th>SKU</th>
                                             <th>Vendor Id</th>
                                             <th>Quantity</th>
                                             <th>Price</th>
                                         </tr>
                                     </thead>
-                                    {props.single_order.products && props.single_order.products.map((element, index) =>
+                                    {props.singleOrderData.products && props.singleOrderData.products.map((element, index) =>
                                         <tbody key={index}>
                                             <tr>
                                                 <td align="center" >{index + 1}</td>
                                                 <td align="center" >{element.p_id}</td>
                                                 <td align="center" >{element.variation_id || '-'}</td>
                                                 <td align="center" >{element.sku || '-'} </td>
-                                                <td align="center" >{element.vendor_id}</td>
                                                 <td align="center" >{element.quantity}</td>
                                                 <td align="center" >{element.price}</td>
                                             </tr>
