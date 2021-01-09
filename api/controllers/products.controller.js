@@ -23,7 +23,6 @@ productsController.add_rating_and_review = async (req, res) => {
     search = "five_star";
   }
 
-  if (!req.query.variation_id) {
     const products1 = await Products.update(
       { _id: req.query._id },
       {
@@ -55,57 +54,58 @@ productsController.add_rating_and_review = async (req, res) => {
       code: 200,
       message: "Thank You For Review And Rating",
     });
-  } else {
-    const products1 = await Products.update(
-      { _id: req.query._id },
-      {
-        $push: { [`product_variations.$[i].rating_review.reviews`]: body },
-        $inc: { [`product_variations.$[i].rating_review.rating.${search}`]: 1 },
-      },
-      { arrayFilters: [{ "i._id": req.query.variation_id }], multi: true }
-    );
-    const products2 = await Products.find(
-      { _id: req.query._id },
-      { product_variations: 1, _id: 0 }
-    );
-    var one = 0;
-    var two = 0;
-    var three = 0;
-    var four = 0;
-    var five = 0;
-    var up = 0;
-    var down = 0;
-    var overall = 0;
-    var index = req.query.variation_index;
+  } 
+//   else {
+//     const products1 = await Products.update(
+//       { _id: req.query._id },
+//       {
+//         $push: { [`product_variations.$[i].rating_review.reviews`]: body },
+//         $inc: { [`product_variations.$[i].rating_review.rating.${search}`]: 1 },
+//       },
+//       { arrayFilters: [{ "i._id": req.query.variation_id }], multi: true }
+//     );
+//     const products2 = await Products.find(
+//       { _id: req.query._id },
+//       { product_variations: 1, _id: 0 }
+//     );
+//     var one = 0;
+//     var two = 0;
+//     var three = 0;
+//     var four = 0;
+//     var five = 0;
+//     var up = 0;
+//     var down = 0;
+//     var overall = 0;
+//     var index = req.query.variation_index;
 
-    products2.forEach((element) => {
-      one = element.product_variations[index].rating_review.rating.one_star;
-      two = element.product_variations[index].rating_review.rating.two_star;
-      three = element.product_variations[index].rating_review.rating.three_star;
-      four = element.product_variations[index].rating_review.rating.four_star;
-      five = element.product_variations[index].rating_review.rating.five_star;
-    });
-    up = one * 1 + two * 2 + three * 3 + four * 4 + five * 5;
-    down = one + two + three + four + five;
-    overall = up / down;
+//     products2.forEach((element) => {
+//       one = element.product_variations[index].rating_review.rating.one_star;
+//       two = element.product_variations[index].rating_review.rating.two_star;
+//       three = element.product_variations[index].rating_review.rating.three_star;
+//       four = element.product_variations[index].rating_review.rating.four_star;
+//       five = element.product_variations[index].rating_review.rating.five_star;
+//     });
+//     up = one * 1 + two * 2 + three * 3 + four * 4 + five * 5;
+//     down = one + two + three + four + five;
+//     overall = up / down;
 
-    const products3 = await Products.update(
-      { _id: req.query._id },
-      {
-        $set: {
-          "product_variations.$[i].rating_review.rating.overall": overall.toFixed(
-            1
-          ),
-        },
-      },
-      { arrayFilters: [{ "i._id": req.query.variation_id }], multi: true }
-    );
-    res.status(200).send({
-      code: 200,
-      message: "Thank You For Review And Rating",
-    });
-  }
-};
+//     const products3 = await Products.update(
+//       { _id: req.query._id },
+//       {
+//         $set: {
+//           "product_variations.$[i].rating_review.rating.overall": overall.toFixed(
+//             1
+//           ),
+//         },
+//       },
+//       { arrayFilters: [{ "i._id": req.query.variation_id }], multi: true }
+//     );
+//     res.status(200).send({
+//       code: 200,
+//       message: "Thank You For Review And Rating",
+//     });
+//   }
+// };
 
 //Add product endpoint definition
 productsController.addProduct = async (req, res) => {
@@ -620,46 +620,19 @@ productsController.get_admin_products = async (req, res) => {
 
 
 productsController.get_admin_inventory = async (req, res) => {
+  console.log("aaa");
   try {
-    const total = await Products.countDocuments({
-      isdeleted: false,
-    });
-    const products = await Products.aggregate([
-      {
-        $match: {
-          isdeleted: false,
-        },
-      },
-      {
-        $lookup: {
-          from: "categories",
-          localField: "category",
-          foreignField: "_id",
-          as: "category",
-        },
-      },
-      { $unwind: "$category" },
-      {
-        $lookup: {
-          from: "sub_categories",
-          localField: "sub_category",
-          foreignField: "_id",
-          as: "sub_category",
-        },
-      },
-      { $unwind: "$sub_category" },
-      {
-        $skip: (req.query.page - 1) * req.query.limit,
-      },
-      {
-        $limit: parseInt(req.query.limit),
-      },
-    ]);
+    let products= await Products.paginate({
+      isdeleted:false
+    },
+    {
+      limit: parseInt(req.query.limit),
+      page: parseInt(req.query.page),
+    }); 
     res.status(200).send({
       code: 200,
       message: "Successful",
       data: products,
-      total,
     });
   } catch (error) {
     return res.status(500).send(error);

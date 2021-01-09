@@ -697,6 +697,8 @@ usersController.reset_password = async (req, res) => {
 
 usersController.add_to_cart = async (req, res) => {
   const body = req.body;
+  var datetime = new Date();
+  body.entry_date = datetime;
   if (!req.params._id) {
     Fu;
     res.status(500).send({
