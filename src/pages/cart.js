@@ -366,7 +366,7 @@ export default function Cart(props) {
                                                             </Col>
                                                             <Col lg={2} md={2} sm={6} xs={6} className='d-flex justify-content-center align-items-center'>
                                                                 <label className='p-0 m-0' style={{ color: consts.COLORS.SEC }}>
-                                                                    {element.product.discount}{'%'}
+                                                                    {element.product.discount || 0}{'%'}
                                                                     <span style={{ textDecorationLine: 'line-through', color: consts.COLORS.GRAY, fontSize: '12px', marginLeft: '5px' }}>{'Rs.'}{element.product.price * element.quantity}</span>
                                                                 </label>
                                                             </Col>

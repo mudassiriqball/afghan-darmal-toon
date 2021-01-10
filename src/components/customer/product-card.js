@@ -9,6 +9,8 @@ import CustomButton from '../CustomButton';
 import axios from 'axios';
 import urls from '../../utils/urls';
 import AlertModal from '../alert-modal';
+import constants from '../../constants';
+import CalculateDiscountPrice from '../../hooks/customer/calculate-discount';
 
 export default function ProductCard(props) {
     const { element, user, token, getUser } = props;
@@ -57,7 +59,7 @@ export default function ProductCard(props) {
         }
     }
     // ENd of Add to cart
-
+    console.log('ahah:', element)
     return (
         <div className='_productCard'>
             <AlertModal
@@ -68,7 +70,16 @@ export default function ProductCard(props) {
             />
             <Link href='/products/[category]/[sub_category]/[product]' as={`/products/${element.categoryId}/${element.subCategoryId}/${element._id}`}>
                 <Card className='_card' >
+                    {/* 5006 7900 827 803 */}
                     <Card.Body className='p-3'>
+                        {element.discount && element.discount > 0 &&
+                            <div style={{
+                                position: 'absolute', right: '0px', top: '0px', background: constants.COLORS.LIGHT_GRAY, opacity: 0.5,
+                                width: '60px', height: '60px', borderBottomLeftRadius: '90%', justifyContent: 'center', alignItems: 'center', display: 'flex'
+                            }}>
+                                <label style={{ color: constants.COLORS.SEC }}>-{element.discount}% </label>
+                            </div>
+                        }
                         <Card.Title style={{
                             textOverflow: 'ellipsis',
                             overflow: 'hidden',
@@ -83,19 +94,27 @@ export default function ProductCard(props) {
                             variant="top"
                             ref={ref}
                             src={element.imagesUrl[0].imageUrl}
-                            style={{ minWidth: '100%', minHeight: width + (width / consts.SIZES.IMAGE_HEIGHT_DIVIDE), maxHeight: width + (width / consts.SIZES.IMAGE_HEIGHT_DIVIDE) }}
+                            style={{ minWidth: '100%', minHeight: width + (width / (consts.SIZES.IMAGE_HEIGHT_DIVIDE + 1)), maxHeight: width + (width / (consts.SIZES.IMAGE_HEIGHT_DIVIDE + 1)) }}
                         />
                         <div style={{ borderTop: `1px solid lightgray`, margin: '5px 0px' }} />
                         <Row noGutters>
                             <Col className='p-0'>
                                 <ReactStars
                                     count={5}
-                                    value={3}
+                                    value={element && element.rating_review && element.rating_review.rating && element.rating_review.rating.overall || 0}
                                     edit={false}
                                     size={15}
                                     activeColor='orange'
                                 />
-                                <h6 className='p-0 m-0' style={{ color: consts.COLORS.MAIN, fontWeight: 'bold' }}>{'Rs: ' + element.price}</h6>
+                                {element.discount && element.discount > 0 ?
+                                    <h6 className='p-0 m-0' style={{ color: consts.COLORS.MAIN, fontWeight: 'bold' }}>
+                                        {'Rs: '}
+                                        <CalculateDiscountPrice price={element.price} discount={element.discount} />
+                                        <span style={{ textDecorationLine: 'line-through', color: consts.COLORS.GRAY, fontSize: '12px', marginLeft: '5px' }}>{element.price}</span>
+                                    </h6>
+                                    :
+                                    <h6 className='p-0 m-0' style={{ color: consts.COLORS.MAIN, fontWeight: 'bold' }}>{'Rs: ' + element.price}</h6>
+                                }
                             </Col>
                             <Col
                                 onMouseEnter={() => setIsCartHover(true)}

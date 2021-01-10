@@ -400,7 +400,7 @@ function SmallImage(props) {
                 ref={ref}
                 src={imageUrl}
                 onClick={setActiveImgIndex}
-                style={{ minWidth: '100%', maxWidth: '100%', minHeight: width + width / consts.SIZES.IMAGE_HEIGHT_DIVIDE, maxHeight: width + width / consts.SIZES.IMAGE_HEIGHT_DIVIDE, cursor: 'pointer' }}
+                style={{ minWidth: '100%', maxWidth: '100%', minHeight: width + (width / consts.SIZES.IMAGE_HEIGHT_DIVIDE), maxHeight: width + (width / consts.SIZES.IMAGE_HEIGHT_DIVIDE), cursor: 'pointer' }}
             />
         </div>
     )
