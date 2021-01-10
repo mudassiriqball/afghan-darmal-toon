@@ -54,80 +54,84 @@ function MultiCarosuelRow(props) {
 
     return (
         <div className='_multiCarosuel'>
-            <Row noGutters>
-                <Col lg={12} md={12} sm={12} xs={12}>
-                    <Card style={{ flex: 1, border: 'none', }}>
-                        <Card.Body className='pb-0 mb-0'>
-                            <Row noGutters>
-                                <Col lg={5} md={5} sm={8} xs={8} className='d-flex align-items-center'>
-                                    <h3>{props.category.value}</h3>
-                                </Col>
-                                <Col lg={5} md={5} className='align-items-center sm_xs_display_none'>
-                                    <div style={{ borderBottom: `0.25px solid ${consts.COLORS.SHADOW}`, width: '100%', maxHeight: '0.5px' }} />
-                                </Col>
-                                <Col lg={2} md={2} sm={4} xs={4} className='ml-auto d-flex align-items-center'>
-                                    <Link href='/products/[category]' as={`/products/${category._id}`}  >
-                                        <a style={{ marginLeft: 'auto', color: consts.COLORS.LINK, fontSize: '15px', cursor: 'pointer' }}>{'Show More'}</a>
-                                    </Link>
-                                </Col>
-                            </Row>
-                        </Card.Body>
-                    </Card>
-                </Col>
-            </Row>
-            <Row noGutters>
-                <Col lg={3} md={3} className='sm_xs_display_none overflow-auto'>
-                    <Card style={{ flex: 1, border: 'none', }}>
-                        <Card.Body>
-                            {sub_categories_list && sub_categories_list.map((element, index) => {
-                                if (category._id === element.category_id) {
-                                    return <div key={index} onClick={() => setSubCategory_id(element._id)} className='_a'>{element.label}</div>
-                                }
-                            })}
-                        </Card.Body>
-                    </Card>
-                </Col>
-                <Col lg={9} md={9} sm={12} xs={12} >
-                    {PRODUCTS_PAGE_LIMIT_LOADING ?
-                        <Loading />
-                        :
-                        PRODUCTS_PAGE_LIMIT_PRODUCTS && PRODUCTS_PAGE_LIMIT_PRODUCTS.length > 0 ?
-                            <Carousel
-                                swipeable={true}
-                                draggable={true}
-                                showDots={false}
-                                slidesToSlide={1}
-                                responsive={responsive}
-                                ssr={true} // means to render carousel on server-side.
-                                infinite={true}
-                                // autoPlay={true}
-                                // autoPlaySpeed={1000}
-                                keyBoardControl={true}
-                                // customTransition="transform 300ms ease-in-out"
-                                customTransition="all .5s linear"
-                                // transitionDuration={3000}
-                                containerClass="carousel-container"
-                                removeArrowOnDeviceType={["tablet", "mobile"]}
-                                // deviceType={this.props.deviceType}
-                                // dotListClass="custom-dot-list-style"
-                                // customLeftArrow={}
-                                itemClass="carousel-item-padding-50-px"
-                            >
-                                {PRODUCTS_PAGE_LIMIT_PRODUCTS && PRODUCTS_PAGE_LIMIT_PRODUCTS.map((element, index) => (
-                                    <ProductCard
-                                        user={user}
-                                        getUser={getUser}
-                                        token={token}
-                                        element={element}
-                                        key={index}
-                                    />
-                                ))}
-                            </Carousel>
-                            :
-                            <NoDataFound />
-                    }
-                </Col>
-            </Row>
+            { PRODUCTS_PAGE_LIMIT_PRODUCTS && PRODUCTS_PAGE_LIMIT_PRODUCTS.length > 0 &&
+                <>
+                    <Row noGutters>
+                        <Col lg={12} md={12} sm={12} xs={12}>
+                            <Card style={{ flex: 1, border: 'none', }}>
+                                <Card.Body className='pb-0 mb-0'>
+                                    <Row noGutters>
+                                        <Col lg={5} md={5} sm={8} xs={8} className='d-flex align-items-center'>
+                                            <h3>{props.category.value}</h3>
+                                        </Col>
+                                        <Col lg={5} md={5} className='align-items-center sm_xs_display_none'>
+                                            <div style={{ borderBottom: `0.25px solid ${consts.COLORS.SHADOW}`, width: '100%', maxHeight: '0.5px' }} />
+                                        </Col>
+                                        <Col lg={2} md={2} sm={4} xs={4} className='ml-auto d-flex align-items-center'>
+                                            <Link href='/products/[category]' as={`/products/${category._id}`}  >
+                                                <a style={{ marginLeft: 'auto', color: consts.COLORS.LINK, fontSize: '15px', cursor: 'pointer' }}>{'Show More'}</a>
+                                            </Link>
+                                        </Col>
+                                    </Row>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                    </Row>
+                    <Row noGutters>
+                        <Col lg={3} md={3} className='sm_xs_display_none overflow-auto'>
+                            <Card style={{ flex: 1, border: 'none', }}>
+                                <Card.Body>
+                                    {sub_categories_list && sub_categories_list.map((element, index) => {
+                                        if (category._id === element.category_id) {
+                                            return <div key={index} onClick={() => setSubCategory_id(element._id)} className='_a'>{element.label}</div>
+                                        }
+                                    })}
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                        <Col lg={9} md={9} sm={12} xs={12} >
+                            {PRODUCTS_PAGE_LIMIT_LOADING ?
+                                <Loading />
+                                :
+                                PRODUCTS_PAGE_LIMIT_PRODUCTS && PRODUCTS_PAGE_LIMIT_PRODUCTS.length > 0 ?
+                                    <Carousel
+                                        swipeable={true}
+                                        draggable={true}
+                                        showDots={false}
+                                        slidesToSlide={1}
+                                        responsive={responsive}
+                                        ssr={true} // means to render carousel on server-side.
+                                        infinite={true}
+                                        // autoPlay={true}
+                                        // autoPlaySpeed={1000}
+                                        keyBoardControl={true}
+                                        // customTransition="transform 300ms ease-in-out"
+                                        customTransition="all .5s linear"
+                                        // transitionDuration={3000}
+                                        containerClass="carousel-container"
+                                        removeArrowOnDeviceType={["tablet", "mobile"]}
+                                        // deviceType={this.props.deviceType}
+                                        // dotListClass="custom-dot-list-style"
+                                        // customLeftArrow={}
+                                        itemClass="carousel-item-padding-50-px"
+                                    >
+                                        {PRODUCTS_PAGE_LIMIT_PRODUCTS && PRODUCTS_PAGE_LIMIT_PRODUCTS.map((element, index) => (
+                                            <ProductCard
+                                                user={user}
+                                                getUser={getUser}
+                                                token={token}
+                                                element={element}
+                                                key={index}
+                                            />
+                                        ))}
+                                    </Carousel>
+                                    :
+                                    <NoDataFound />
+                            }
+                        </Col>
+                    </Row>
+                </>
+            }
             <style type="text/css">{`
                 ._multiCarosuel ._a {
                     width: 100%;
