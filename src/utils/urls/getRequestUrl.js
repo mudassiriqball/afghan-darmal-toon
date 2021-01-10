@@ -22,6 +22,7 @@ export default {
     PRODUCTS_BY_CATEGORY_SUB_CATEGORY_PAGE_LIMIT: baseUrl + '/api/products/page/limit/category/sub-category',
     SEARCH_PRODUCTS: baseUrl + '/api/products/search/products/query-only',
     INVENTRY_PAGE_LIMIT: baseUrl + '/api/products/inventory/page/limit/all/products',
+    INVENTRY_SEARCH: baseUrl + '/api/products/inventory/admin/search/all/products',
     SLIDERS: baseUrl + '/api/sliders/all/sliders-list',
     HOME_CATEGORIES: baseUrl + '/api/categories/home-categories',
     USER_PAGE_LIMIT: baseUrl + '/api/users/',

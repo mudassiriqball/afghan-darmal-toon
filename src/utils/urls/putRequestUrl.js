@@ -4,7 +4,6 @@ export default {
     CHANGE_CUSTOMER_STATUS: baseUrl + '/api/users/status/id/customer-only/',
 
     DELETE_PRODUCT: baseUrl + '/api/products/delete-product/',
-    UPDATE_Order_STATUS: baseUrl + '/api/orders/user-order-status/',
     UPDATE_USER_STATUS: baseUrl + '/api/users/user-status/',
     UPDATE_USER_PROFILE: baseUrl + '/api/users/profile/id/update-all/',
     REMOVE_ITEM_TO_WISHLIST: baseUrl + '/api/users/remove/id/wishlist/obj-id/',
@@ -24,4 +23,7 @@ export default {
 
     // Rating Review
     ADD_RATING_REVIEW: baseUrl + '/api/products/add/review/rating/',
+
+    // ORDERS
+    UPDATE_Order_STATUS: baseUrl + '/api/orders/admin/id/update/order-status/',
 }

@@ -12,7 +12,6 @@ import urls from '../../../utils/urls/index'
 import CardSearchAccordion from '../../card-search-accordion';
 import PaginationRow from '../../pagination-row'
 import Loading from '../../loading'
-import CountColoredCard from '../../count-colored-card';
 
 import getUsersPageLimit from '../../../hooks/getUsersPageLimit'
 import getUsersBySearch from '../../../hooks/getUsersBySearch'
@@ -104,16 +103,6 @@ class deliveryBoy extends React.Component {
                 {!this.state.isViewUser ?
                     <div >
                         <TitleRow icon={faUsers} title={' Admin Dashboard / Delivery Boy'} />
-                        <Row className='Card' noGutters>
-                            <Col lg={4} md={4} sm={12} xs={12} style={styles.col} className='p-0 m-0'>
-                                <CountColoredCard
-                                    count={this.props.delivery_boy_count}
-                                    header={'All Delivery Boys'}
-                                    background={'lightblue'}
-                                    iconname={faUserPlus}
-                                />
-                            </Col>
-                        </Row>
                         <DeliveryBoyTable
                             header={'All Delivery Boys'}
                             rank={true}

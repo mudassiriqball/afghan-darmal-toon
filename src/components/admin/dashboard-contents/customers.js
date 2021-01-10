@@ -16,7 +16,6 @@ import getUsersPageLimit from '../../../hooks/getUsersPageLimit';
 import getUsersBySearch from '../../../hooks/getUsersBySearch';
 
 import Loading from '../../loading';
-import CountColoredCard from '../../count-colored-card';
 import urls from '../../../utils/urls';
 
 class Customers extends React.Component {
@@ -126,42 +125,6 @@ class Customers extends React.Component {
                 {!this.state.isViewUser ?
                     <div>
                         <TitleRow icon={faUsers} title={' Admin Dashboard / Customers'} />
-                        <Row className='Card' noGutters>
-                            <Col lg={12} md={12} sm={12} xs={12} className='p-0 m-0'>
-                                <CountColoredCard
-                                    count={this.props.customers_count}
-                                    header={'All Customers'}
-                                    background={'lightblue'}
-                                    iconname={faUsers}
-                                />
-                            </Col>
-                            <Col lg={4} md={4} sm={12} xs={12} className='p-0 m-0'>
-                                <CountColoredCard
-                                    count={this.props.customers_count - this.props.restricted_customers_count - this.props.new_customers_count}
-                                    header={'Unrestricted Customers'}
-                                    background={'lightblue'}
-                                    iconname={faUsers}
-                                />
-                            </Col>
-                            <Col lg={4} md={4} sm={12} xs={12} className='p-0 m-0'>
-                                <CountColoredCard
-                                    count={this.props.new_customers_count}
-                                    header={'New Customers'}
-                                    background={'lightgreen'}
-                                    iconname={faUserPlus}
-                                />
-                            </Col>
-                            <Col lg={4} md={4} sm={12} xs={12} className='p-0 m-0'>
-                                <CountColoredCard
-                                    count={this.props.restricted_customers_count}
-                                    header={'Restriced Customers'}
-                                    background={'orange'}
-                                    iconname={faBan}
-                                />
-                            </Col>
-                        </Row>
-
-
                         <CustomersTable
                             header={'All Customers'}
                             rank={true}

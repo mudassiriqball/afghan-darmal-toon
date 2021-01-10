@@ -3,7 +3,7 @@ import axios from 'axios'
 import moment from 'moment'
 import urls from '../../utils/urls/index'
 
-export default function getAllOrdersSearch(token, refresh, status, fieldName, query, pageNumber, limit, start_date, end_date) {
+export default function getAllOrdersSearch(token, refresh, status, fieldName, query, pageNumber, limit) {
     const [ALL_ORDERS_SEARCH_LOADING, setLoading] = useState(false)
     const [ALL_ORDERS_SEARCH_ERROR, setError] = useState('')
     const [ALL_ORDERS_SEARCH_ORDERS, setQueryOrders] = useState([])
@@ -12,7 +12,7 @@ export default function getAllOrdersSearch(token, refresh, status, fieldName, qu
 
     useEffect(() => {
         setQueryOrders([])
-    }, [fieldName, query, refresh, start_date, end_date])
+    }, [fieldName, query, refresh])
 
     useEffect(() => {
         let unmounted = true
@@ -20,8 +20,8 @@ export default function getAllOrdersSearch(token, refresh, status, fieldName, qu
         const source = CancelToken.source();
         const getData = () => {
             if (query != null) {
-                // setLoading(true)
-                // setError(false)
+                setLoading(true)
+                setError(false)
                 axios({
                     method: 'GET',
                     url: urls.GET_REQUEST.ALL_ORDERS_SEARCH_BY_STATUS + status,
@@ -54,7 +54,7 @@ export default function getAllOrdersSearch(token, refresh, status, fieldName, qu
             unmounted = false
             source.cancel();
         };
-    }, [fieldName, query, pageNumber, refresh, , start_date, end_date])
+    }, [fieldName, query, pageNumber, refresh])
 
     return {
         ALL_ORDERS_SEARCH_LOADING,

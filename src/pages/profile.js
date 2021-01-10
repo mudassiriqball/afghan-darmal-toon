@@ -188,6 +188,12 @@ export default function Profile(props) {
                                 >
                                     {'My Orders'}
                                 </ListGroup.Item>
+
+                                <ListGroup.Item disabled={isOrderDisabled} style={{ color: view == 'progress_orders' && 'blue' }}
+                                    onClick={() => { setView('progress_orders') }}
+                                >
+                                    {'Progress'}
+                                </ListGroup.Item>
                                 <ListGroup.Item disabled={isOrderDisabled} style={{ color: view == 'pending_orders' && 'blue' }}
                                     onClick={() => { setView('pending_orders') }}
                                 >
@@ -203,11 +209,6 @@ export default function Profile(props) {
                                 >
                                     {'Cancelled'}
                                 </ListGroup.Item>
-                                {/* <ListGroup.Item disabled={isOrderDisabled} style={{ color: view == 'returned_orders' && 'blue' }}
-                                        onClick={() => { setView('returned_orders') }}
-                                    >
-                                        {'Returned'}
-                                    </ListGroup.Item> */}
                             </ListGroup>
                         </>
                         }

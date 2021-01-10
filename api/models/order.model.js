@@ -3,9 +3,6 @@ const mongoosePaginate = require("mongoose-paginate");
 const Schema = mongoose.Schema;
 
 const Orders = new Schema({
-    vendor_id: {
-        type: Schema.Types.ObjectId,
-    },
     // TODO
     c_id: {
         type: String,
