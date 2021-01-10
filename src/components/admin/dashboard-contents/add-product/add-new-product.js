@@ -1,22 +1,19 @@
 
-import React, { Component, useRef, useState } from 'react';
-import { Accordion, Form, Col, Row, Card, Modal, InputGroup, Button, Toast, Alert, Nav, Tabs, Spinner } from 'react-bootstrap';
+import React, { Component } from 'react';
+import { Form, Col, Row, Card, InputGroup, Button, Spinner } from 'react-bootstrap';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
 import {
-    faPlus, faArrowLeft, faExclamationTriangle,
+    faPlus
 } from '@fortawesome/free-solid-svg-icons';
-import { faThumbsUp, faThumbsDown } from '@fortawesome/free-regular-svg-icons';
 import Select from 'react-select';
 import AlertModal from '../../../alert-modal';
 import TitleRow from '../../../title-row';
 import CardAccordion from '../../../card-accordion';
 import consts from '../../../../constants';
 import urls from '../../../../utils/urls';
-
 import Specifications from './specifications';
-
 import Scanner from '../../../../utils/scanner/scanner';
 
 // Yup Schema for validation fields
@@ -24,12 +21,11 @@ const schema = yup.object({
     id: yup.string().required('Required *'),
     name: yup.string().required('Required *')
         .min(2, "Must have at least 2 characters")
-        .max(40, "Can't be longer than 40 characters"),
+        .max(200, "Can't be longer than 200 characters"),
 
     description: yup.string()
         .min(5, "Must have at least 5 characters")
-        .max(200, "Can't be longer than 200 characters"),
-    // Product Data
+        .max(10000, "Can't be longer than 10000 characters"),
     sku: yup.string()
         .min(0, 'Enter Between 0-100')
         .max(100, 'Enter Between 0-100'),
@@ -169,29 +165,16 @@ class AddNew extends Component {
         this.setState({ files: copyArray, imagePreviewArray: imgCopyArray })
     }
 
-    uploadedImages = async (values) => {
-        let array = [];
-        this.state.files && this.state.files.forEach(async (element) => {
-            const data = new FormData();
-            data.append('file', element);
-            data.append('upload_preset', 'afghandarmaltoon');
-            await fetch('https://api.cloudinary.com/v1_1/dhm7n3lg7/image/upload', {
-                method: 'POST',
-                body: data,
-            }).then(async res => {
-                let dataa = await res.json();
-                array.push({ 'imageUrl': dataa.secure_url });
-                console.log('imageUrl:', dataa.secure_url)
-            }).catch(err => {
-                console.log('error:', err)
-                this.setState({ isLoading: false });
-                alert("An Error Occured While Uploading")
-                return false;
-            })
-        })
-        values.imagesUrl = array;
-        return true;
-    }
+    // uploadedImages = async (values) => {
+    //     if (count === this.state.files.length) {
+    //         debugger
+    //         return true;
+    //     }
+    //     if (errorCount > 0) {
+    //         debugger
+    //         return false;
+    //     }
+    // }
 
 
     addProduct = async (values, setSubmitting, resetForm) => {
@@ -200,8 +183,42 @@ class AddNew extends Component {
         values.specifications = this.state.customFieldsArray;
         const currentComponent = this;
         this.setState({ isLoading: true });
-        let uploaded = await this.uploadedImages(values);
-        if (uploaded) {
+
+        let array = [];
+        var bar = new Promise((resolve, reject) => {
+            let count = 0;
+            let errorCount = 0;
+            this.state.files && this.state.files.forEach(async (element) => {
+                const data = new FormData();
+                data.append('file', element);
+                data.append('upload_preset', 'afghandarmaltoon');
+                await fetch('https://api.cloudinary.com/v1_1/dhm7n3lg7/image/upload', {
+                    method: 'POST',
+                    body: data,
+                }).then(async res => {
+                    let dataa = await res.json();
+                    array.push({ imageUrl: dataa.secure_url });
+                    console.log('imageUrl:', dataa.secure_url)
+                    count = parseInt(count) + 1;
+                }).catch(err => {
+                    errorCount = parseInt(errorCount) + 1;
+                    console.log('error:', err)
+                    currentComponent.setState({ isLoading: false });
+                    alert("An Error Occured While Uploading")
+                    return false;
+                })
+                if (count === this.state.files.length)
+                    resolve();
+                if (errorCount > 0)
+                    reject();
+            })
+        });
+
+        values.imagesUrl = array;
+        console.log(array)
+        debugger
+        bar.then(async () => {
+            console.log(values)
             const config = {
                 headers: {
                     'authorization': this.props.token,
@@ -238,7 +255,7 @@ class AddNew extends Component {
                 alert('Product Upload failed')
             });
             setSubmitting(false);
-        }
+        });
     }
     render() {
         return (

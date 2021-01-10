@@ -5,7 +5,6 @@ const OrdersController = require('../controllers/orders.controller');
 
 // get Requests
 router.get("/single/order/by/id/search/:_id", OrdersController.get_order_by_id);
-router.get("/customer/all/orders/count/:_id", OrdersController.get_count_order);
 router.get("/admin/all/search/query/page/limit/:_status", OrdersController.get_order_query_search);
 
 // post Requests

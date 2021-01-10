@@ -49,21 +49,6 @@ OrdersController.get_order_query_search = async (req, res) => {
   }
 };
 
-OrdersController.get_count_order = async (req, res) => {
-  let order;
-  try {
-    order = await Orders.find({});
-    res.status(200).send({
-      code: 200,
-      message: "Successful",
-      data: order,
-    });
-  } catch (error) {
-    console.log("error", error);
-    return res.status(500).send(error);
-  }
-};
-
 // Put Methods
 
 // Delete Methods

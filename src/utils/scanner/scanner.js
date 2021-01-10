@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import Quagga from 'quagga';
 import { Button, Col, Modal, Row } from "react-bootstrap";
-import Result from "./result";
 import Scan from "./scan";
 
 class Scanner extends Component {
@@ -21,6 +20,10 @@ class Scanner extends Component {
 
     componentDidMount() {
         document.querySelector("#inputId").addEventListener("change", this.handleFileSelect, false);
+    }
+
+    componentWillUnmount() {
+        document.querySelector("#inputId").removeEventListener("change", this.handleFileSelect, false);
     }
 
     handleFileSelect(evt) {

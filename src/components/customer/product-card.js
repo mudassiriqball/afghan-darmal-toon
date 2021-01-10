@@ -74,10 +74,10 @@ export default function ProductCard(props) {
                     <Card.Body className='p-3'>
                         {element.discount && element.discount > 0 &&
                             <div style={{
-                                position: 'absolute', right: '0px', top: '0px', background: constants.COLORS.LIGHT_GRAY, opacity: 0.5,
+                                position: 'absolute', right: '0px', top: '0px', background: constants.COLORS.LIGHT_GRAY, opacity: 0.8,
                                 width: '60px', height: '60px', borderBottomLeftRadius: '90%', justifyContent: 'center', alignItems: 'center', display: 'flex'
                             }}>
-                                <label style={{ color: constants.COLORS.SEC }}>-{element.discount}% </label>
+                                <label style={{ color: constants.COLORS.SEC, fontSize: '14px' }}>-{element.discount}% </label>
                             </div>
                         }
                         <Card.Title style={{
@@ -93,7 +93,7 @@ export default function ProductCard(props) {
                         <Card.Img
                             variant="top"
                             ref={ref}
-                            src={element.imagesUrl[0].imageUrl}
+                            src={element.imagesUrl && element.imagesUrl[0] && element.imagesUrl[0].imageUrl}
                             style={{ minWidth: '100%', minHeight: width + (width / (consts.SIZES.IMAGE_HEIGHT_DIVIDE + 1)), maxHeight: width + (width / (consts.SIZES.IMAGE_HEIGHT_DIVIDE + 1)) }}
                         />
                         <div style={{ borderTop: `1px solid lightgray`, margin: '5px 0px' }} />
@@ -161,8 +161,8 @@ export default function ProductCard(props) {
                     box-shadow: 0px 0px 10px 0.5px ${consts.COLORS.SHADOW};
                     transition: width 0.5s, height 0.5s, opacity 0.5s 0.5s;
                     cursor: pointer;
-                    border: none;
-                    margin: 2%;
+                    // border: none;
+                    // margin: 2%;
                 }
             `}</style>
         </div>
