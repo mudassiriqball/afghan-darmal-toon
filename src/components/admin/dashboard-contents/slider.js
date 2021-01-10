@@ -256,7 +256,7 @@ class Slider extends Component {
                 currentComponent.setState({
                     isLoading: false,
                     showToast: true,
-                    toastMsg: 'Category Added Successfully',
+                    toastMsg: 'Slider Added Successfully',
                     sub_categories: [],
                     category: '',
                     sub_category: '',
@@ -380,22 +380,6 @@ class Slider extends Component {
                             </CardAccordion>
 
                             <CardAccordion title={'All Slider Images'}>
-
-                                {/* <Form.Row style={{ margin: '0% 5%' }}>
-                                                <Form.Group as={Col}>
-                                                    <InputGroup>
-                                                        <Form.Control
-                                                            type="text"
-                                                            size="sm"
-                                                            placeholder="Search Here"
-                                                            name="search"
-                                                            value={this.state.filterStr}
-                                                            onChange={(e) => this.handleFilterStrChange(e)}
-                                                        />
-                                                    </InputGroup>
-                                                </Form.Group>
-                                            </Form.Row>
-                                            <hr /> */}
                                 {this.state.sliders_list && this.state.sliders_list.map((element, index) =>
                                     <div key={index}>
                                         <Form.Row>
@@ -450,15 +434,6 @@ class Slider extends Component {
                                                     null
                                                 }
                                                 <Row>
-                                                    {/* <Form.Group as={Col} lg="auto" md="auto" sm="auto" xs="auto">
-                                                        <Button type="submit" className='d-inline-flex' variant={!element.isEdit ? "outline-primary" : "outline-success"} size="sm"
-                                                            onClick={!element.isEdit ? () => this.handleEditClick(index) : () => this.handleUpdateClick(index)}
-                                                            disabled={!element.isEdit ? false : element.error}
-                                                        >
-                                                            {!element.isEdit ? ' Edit ' : ' Update '}
-                                                            {!element.isEdit ? null : element.isLoading ? <Spinner animation="grow" size="sm" /> : null}
-                                                        </Button>
-                                                    </Form.Group> */}
                                                     <Form.Group as={Col} lg="auto" md="auto" sm="auto" xs="auto">
                                                         <Button type="submit" variant={!element.isEdit ? "outline-danger" : "outline-primary"}
                                                             size="sm" block style={styles.submit_btn}
@@ -471,7 +446,7 @@ class Slider extends Component {
                                                 </Row>
                                             </Col>
                                             <Col>
-                                                <Image src={element.imageUrl} fluid style={{ width: '100%', borderRadius: '5px', border: '0.5px solid lightgray' }} />
+                                                <Image src={element.imageUrl} fluid style={{ width: '100%', borderRadius: '5px', border: '0.5px solid lightgray', height: '20vw' }} />
                                             </Col>
                                         </Form.Row>
                                         <div className='w-100 mt-5 mb-2' style={{ background: 'lightgray', minHeight: '5px' }}></div>

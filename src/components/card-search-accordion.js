@@ -68,13 +68,7 @@ export default function CardSearchAccordion(props) {
         })
         if (props.option == 'inventory') {
             setOptions(prevPro => {
-                return [...new Set([...prevPro, { value: 'product_name', name: 'Product Name' }])]
-            })
-            setOptions(prevPro => {
-                return [...new Set([...prevPro, { value: 'category', name: 'Category' }])]
-            })
-            setOptions(prevPro => {
-                return [...new Set([...prevPro, { value: 'sub-category', name: 'Sub Category' }])]
+                return [...new Set([...prevPro, { value: 'name', name: 'Product Name' }])]
             })
 
         } else if (props.option == 'customer') {

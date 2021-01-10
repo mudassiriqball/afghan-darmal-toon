@@ -6,7 +6,6 @@ import { faEdit, faThumbsUp, faCheckCircle } from '@fortawesome/free-regular-svg
 import moment from 'moment'
 // import QRCode from 'qrcode'
 import QRCode from "react-qr-code";
-import CountColoredCard from '../../count-colored-card'
 import TitleRow from '../../title-row'
 import CardSearchAccordion from '../../card-search-accordion';
 
@@ -103,7 +102,7 @@ export default class Orders extends Component {
                 alertType: 'error',
                 showAlertModal: true,
             })
-            console.log(`Set order to ${this.state.method} failed: `, error)
+            // console.log(`Set order to ${this.state.method} failed: `, error)
         });
     }
 
@@ -130,41 +129,19 @@ export default class Orders extends Component {
                 {!this.state.isViewOrder ?
                     <>
                         <TitleRow icon={faEdit} title={' Admin Dashboard / Orders'} />
-                        <Row className='Card' noGutters>
-                            <Col lg={12} md={12} sm={12} xs={12} className='p-0 m-0'>
-                                <CountColoredCard
-                                    count={this.props.pending_orders_count}
-                                    header={'Pending'}
-                                    background={'yellow'}
-                                    iconname={faHistory}
-                                />
-                            </Col>
-                            <Col lg={4} md={4} sm={4} xs={12} className='p-0 m-0'>
-                                <CountColoredCard
-                                    count={this.props.delivered_orders_count}
-                                    header={'Delivered'}
-                                    background={'lightgreen'}
-                                    iconname={faCheckDouble}
-                                />
-                            </Col>
-                            <Col lg={4} md={4} sm={4} xs={12} className='p-0 m-0'>
-                                <CountColoredCard
-                                    count={this.props.cancelled_orders_count}
-                                    header={'Cancelled'}
-                                    background={'lightblue'}
-                                    iconname={faBan}
-                                />
-                            </Col>
-                            <Col lg={4} md={4} sm={4} xs={12} className='p-0 m-0'>
-                                <CountColoredCard
-                                    count={this.props.returned_orders_count}
-                                    header={'Returned'}
-                                    background={'orange'}
-                                    iconname={faBan}
-                                />
-                            </Col>
-                        </Row>
                         {this.state.token != '' && <>
+                            <Order
+                                header={'Progress Orders'}
+                                setView={(element) => this.setState({
+                                    isViewOrder: true,
+                                    singleOrderData: element,
+                                })}
+                                token={this.state.token}
+                                status={'progress'}
+                                refresh={this.state.refresh_count}
+                                setRefresh={() => this.setState({ refresh_count: this.state.refresh_count + 1 })}
+                                ordersReloadCountHandler={this.props.ordersReloadCountHandler}
+                            />
                             <Order
                                 header={'Pending Orders'}
                                 setView={(element) => this.setState({
@@ -201,18 +178,6 @@ export default class Orders extends Component {
                                 setRefresh={() => this.setState({ refresh_count: this.state.refresh_count + 1 })}
                                 ordersReloadCountHandler={this.props.ordersReloadCountHandler}
                             />
-                            <Order
-                                header={'Returned Orders'}
-                                setView={(element) => this.setState({
-                                    isViewOrder: true,
-                                    singleOrderData: element,
-                                })}
-                                token={this.state.token}
-                                status={'returned'}
-                                refresh={this.state.refresh_count}
-                                setRefresh={() => this.setState({ refresh_count: this.state.refresh_count + 1 })}
-                                ordersReloadCountHandler={this.props.ordersReloadCountHandler}
-                            />
                         </>
                         }
                     </>
@@ -228,6 +193,15 @@ export default class Orders extends Component {
                                 confirmModalMsg: 'Set Order Pnding?',
                                 confirmModalColor: '#ffc107',
                                 iconname: faHistory,
+                            })
+                        }}
+                        setProgress={() => {
+                            this.setState({
+                                method: 'progress',
+                                showConfirmModal: true,
+                                confirmModalMsg: 'Set Order Progress?',
+                                confirmModalColor: 'green',
+                                iconname: faCheckCircle,
                             })
                         }}
                         setDelivered={() => {
@@ -246,15 +220,6 @@ export default class Orders extends Component {
                                 confirmModalMsg: 'Cancel Order?',
                                 confirmModalColor: '#ff4d4d',
                                 iconname: faTimes,
-                            })
-                        }}
-                        setReturned={() => {
-                            this.setState({
-                                method: 'returned',
-                                showConfirmModal: true,
-                                confirmModalMsg: 'Set Order Returned?',
-                                confirmModalColor: '#ff4d4d',
-                                iconname: faBan,
                             })
                         }}
                     />
@@ -307,7 +272,7 @@ function Order(props) {
 
     const [showAlertModal, setShowAlertModal] = useState(false)
     const [alertModalMsg, setAlertModalMsg] = useState(false)
-
+    const [alertType, setAlertType] = useState('');
     const [iconname, setIconname] = useState(null)
 
     const [start_date, setStart_date] = useState(new Date("2020/01/01"))
@@ -315,7 +280,7 @@ function Order(props) {
 
     const { ALL_ORDERS_PAGE_LIMIT_LOADING, ALL_ORDERS_PAGE_LIMIT_ERROR, ALL_ORDERS_PAGE_LIMIT_ORDERS, ALL_ORDERS_PAGE_LIMIT_PAGES, ALL_ORDERS_PAGE_LIMIT_TOTAL } = getAllOrdersPageLimit(props.token, props.refresh, props.status, pageNumber, '20')
     const { ALL_ORDERS_SEARCH_LOADING, ALL_ORDERS_SEARCH_ERROR, ALL_ORDERS_SEARCH_ORDERS, ALL_ORDERS_SEARCH_PAGES, ALL_ORDERS_SEARCH_TOTAL } =
-        getAllOrdersSearch(props.token, props.refresh, props.status, fieldName, query, queryPageNumber, '20', start_date, end_date)
+        getAllOrdersSearch(props.token, props.refresh, props.status, fieldName, query, queryPageNumber, '20')
 
     async function handleSearch(type, value, start, end) {
         if (value != '') {
@@ -366,12 +331,17 @@ function Order(props) {
             data = {
                 status: 'returned'
             }
+        } else if (method == 'progress') {
+            data = {
+                status: 'progress'
+            }
         }
         await axios.put(urls.PUT_REQUEST.UPDATE_Order_STATUS + singleOrderData._id, data, {
             headers: { 'authorization': props.token }
         }).then(function (response) {
             setConfirmModalLoading(false)
             setShowConfirmModal(false)
+            setAlertType('success')
             setAlertModalMsg(`Order Status Updated successfully`)
             setShowAlertModal(true)
             props.ordersReloadCountHandler()
@@ -383,7 +353,9 @@ function Order(props) {
         }).catch(function (error) {
             setConfirmModalLoading(false)
             setShowConfirmModal(false)
-            alert(`Set order to ${method} failed: `);
+            setAlertType('error')
+            setAlertModalMsg(`Set order to ${method} failed`);
+            setShowAlertModal(true)
             console.log(`Set order to ${method} failed: `, error)
         });
     }
@@ -404,7 +376,7 @@ function Order(props) {
             <AlertModal
                 onHide={(e) => setShowAlertModal(false)}
                 show={showAlertModal}
-                alerttype={'success'}
+                alerttype={alertType}
                 message={alertModalMsg}
             />
             <CardSearchAccordion
@@ -440,6 +412,14 @@ function Order(props) {
                                         setConfirmModalColor('green')
                                         setIconname(faCheckCircle)
                                     }}
+                                    setProgress={(element) => {
+                                        setMethod('progress')
+                                        setSingle_order(element)
+                                        setShowConfirmModal(true)
+                                        setConfirmModalMsg('Set Order Progress?')
+                                        setConfirmModalColor('green')
+                                        setIconname(faCheckCircle)
+                                    }}
                                     setCancel={(element) => {
                                         setMethod('cancelled')
                                         setSingle_order(element)
@@ -447,14 +427,6 @@ function Order(props) {
                                         setConfirmModalMsg('Cancel Order?')
                                         setConfirmModalColor('#ff4d4d')
                                         setIconname(faTimes)
-                                    }}
-                                    setReturned={(element) => {
-                                        setMethod('returned')
-                                        setSingle_order(element)
-                                        setShowConfirmModal(true)
-                                        setConfirmModalMsg('Set Order Returned?')
-                                        setConfirmModalColor('#ff4d4d')
-                                        setIconname(faBan)
                                     }}
                                 />
                                 <hr />
@@ -501,14 +473,6 @@ function Order(props) {
                                         setConfirmModalMsg('Cancel Order?')
                                         setConfirmModalColor('#ff4d4d')
                                         setIconname(faTimes)
-                                    }}
-                                    setReturned={(element) => {
-                                        setMethod('returned')
-                                        setSingle_order(element)
-                                        setShowConfirmModal(true)
-                                        setConfirmModalMsg('Set Order Returned?')
-                                        setConfirmModalColor('#ff4d4d')
-                                        setIconname(faBan)
                                     }}
                                 />
                                 <hr />
@@ -578,26 +542,18 @@ function OrderTable(props) {
                                     {/* {props.status == 'pending' && <>
                                         <Nav.Link className='pt-0 success' onClick={() => props.setDelivered(element)} > Delivered </Nav.Link>
                                         <Nav.Link className='pt-0 delete' onClick={() => props.setCancel(element)} > Cancel </Nav.Link>
-                                        <Nav.Link className='pt-0 delete' onClick={() => props.setReturned(element)} > Returned </Nav.Link>
                                     </>
                                     } */}
                                     {/* {props.status == 'delivered' && <>
                                         <Nav.Link className='pt-0 warning' onClick={() => props.setPending(element)} > Pending </Nav.Link>
                                         <Nav.Link className='pt-0 delete' onClick={() => props.setCancel(element)} > Cancel </Nav.Link>
-                                        <Nav.Link className='pt-0 delete' onClick={() => props.setReturned(element)} > Returned </Nav.Link>
                                     </>
                                     }
                                     {props.status == 'cancelled' && <>
                                         <Nav.Link className='pt-0 warning' onClick={() => props.setPending(element)} > Pending </Nav.Link>
                                         <Nav.Link className='pt-0 success' onClick={() => props.setDelivered(element)} > Delivered </Nav.Link>
-                                        <Nav.Link className='pt-0 delete' onClick={() => props.setReturned(element)} > Returned </Nav.Link>
                                     </>
                                     }
-                                    {props.status == 'returned' && <>
-                                        <Nav.Link className='pt-0 warning' onClick={() => props.setPending(element)} > Pending </Nav.Link>
-                                        <Nav.Link className='pt-0 success' onClick={() => props.setDelivered(element)} > Delivered </Nav.Link>
-                                        <Nav.Link className='pt-0 delete' onClick={() => props.setCancel(element)} > Cancelled </Nav.Link>
-                                    </>
                                     } */}
                                 </div>
                             </td>
@@ -661,42 +617,44 @@ function ViewOrder(props) {
     return (
         <div className='admin_view_order'>
             <TitleRow icon={faEdit} title={`Admin Dashboard / Vendors / ${props.singleOrderData.c_name}`} />
-            <Form.Row style={{ margin: ' 0% 2%', display: 'flex', alignItems: 'center' }} >
-                <Button size='sm' variant='outline-primary' className="mr-auto mt-2" onClick={props.back}> Back </Button>
+            <Card>
+                <Card.Body>
+                    <Form.Row style={{ padding: '0% 2%', display: 'flex', alignItems: 'center' }} >
+                        <Button size='md' variant='primary' className="mr-auto mt-2" onClick={props.back}> Back </Button>
+                        {props.singleOrderData.status == 'progress' && <>
+                            <Button size='md' variant='success' className="mt-2 ml-1 mr-1" onClick={props.setDelivered}> Delivered </Button>
+                            <Button size='md' variant='warning' className="mt-2 ml-1 mr-1" onClick={props.setPending}> Pending </Button>
+                            <Button size='md' variant='danger' className="mt-2 ml-1 mr-1" onClick={props.setCancel}> Cancel </Button>
+                        </>
+                        }
+                        {props.singleOrderData.status == 'pending' && <>
+                            <Button size='md' variant='success' className="mt-2 ml-1 mr-1" onClick={props.setProgress}> Progress </Button>
+                            <Button size='md' variant='success' className="mt-2 ml-1 mr-1" onClick={props.setDelivered}> Delivered </Button>
+                            <Button size='md' variant='danger' className="mt-2 ml-1 mr-1" onClick={props.setCancel}> Cancel </Button>
+                        </>
+                        }
+                        {props.singleOrderData.status == 'delivered' && <>
+                            <Button size='md' variant='success' className="mt-2 ml-1 mr-1" onClick={props.setProgress}> Progress </Button>
+                            <Button size='md' variant='warning' className="mt-2 ml-1 mr-1" onClick={props.setPending}> Pending </Button>
+                            <Button size='md' variant='danger' className="mt-2 ml-1 mr-1" onClick={props.setCancel}> Cancel </Button>
+                        </>
+                        }
+                        {props.singleOrderData.status == 'cancelled' && <>
+                            <Button size='md' variant='success' className="mt-2 ml-1 mr-1" onClick={props.setProgress}> Progress </Button>
+                            <Button size='md' variant='warning' className="mt-2 ml-1 mr-1" onClick={props.setPending}> Pending </Button>
+                            <Button size='md' variant='success' className="mt-2 ml-1 mr-1" onClick={props.setDelivered}> Delivered </Button>
+                        </>
+                        }
 
-                {props.singleOrderData.status == 'pending' && <>
-                    <Button size='sm' variant='outline-success' className="mt-2 ml-1 mr-1" onClick={props.setDelivered}> Delivered </Button>
-                    <Button size='sm' variant='outline-danger' className="mt-2 ml-1 mr-1" onClick={props.setCancel}> Cancel </Button>
-                    <Button size='sm' variant='outline-primary' className="mt-2 ml-1 mr-1" onClick={props.setReturned}> Returned </Button>
-                </>
-                }
-                {props.singleOrderData.status == 'delivered' && <>
-                    <Button size='sm' variant='outline-warning' className="mt-2 ml-1 mr-1" onClick={props.setPending}> Pending </Button>
-                    <Button size='sm' variant='outline-danger' className="mt-2 ml-1 mr-1" onClick={props.setCancel}> Cancel </Button>
-                    <Button size='sm' variant='outline-primary' className="mt-2 ml-1 mr-1" onClick={props.setReturned}> Returned </Button>
-                </>
-                }
-                {props.singleOrderData.status == 'cancelled' && <>
-                    <Button size='sm' variant='outline-warning' className="mt-2 ml-1 mr-1" onClick={props.setPending}> Pending </Button>
-                    <Button size='sm' variant='outline-success' className="mt-2 ml-1 mr-1" onClick={props.setDelivered}> Delivered </Button>
-                    <Button size='sm' variant='outline-primary' className="mt-2 ml-1 mr-1" onClick={props.setReturned}> Returned </Button>
-                </>
-                }
-                {props.singleOrderData.status == 'returned' && <>
-                    <Button size='sm' variant='outline-warning' className="mt-2 ml-1 mr-1" onClick={props.setPending}> Pending </Button>
-                    <Button size='sm' variant='outline-success' className="mt-2 ml-1 mr-1" onClick={props.setDelivered}> Delivered </Button>
-                    <Button size='sm' variant='outline-danger' className="mt-2 ml-1 mr-1" onClick={props.setCancel}> Cancel </Button>
-                </>
-                }
-
-                <ReactToPrint
-                    trigger={() => <Button size='sm' variant='primary' className='mt-2 ml-4'> Print </Button>}
-                    content={() => componentRef.current}
-                    bodyClass='print_style'
-                    documentTitle='Order'
-                />
-
-            </Form.Row>
+                        <ReactToPrint
+                            trigger={() => <Button size='md' variant='primary' className='mt-2 ml-4'> Print </Button>}
+                            content={() => componentRef.current}
+                            bodyClass='print_style'
+                            documentTitle='Order'
+                        />
+                    </Form.Row>
+                </Card.Body>
+            </Card>
             <Card className='view_user' ref={componentRef}>
                 <Card.Body>
                     <div className='logo_col'>

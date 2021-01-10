@@ -2,7 +2,6 @@ import React from 'react'
 import { Row, Col } from 'react-bootstrap'
 import { faTachometerAlt } from '@fortawesome/free-solid-svg-icons';
 
-import CountColoredCard from '../../count-colored-card'
 import consts from '../../../constants'
 import TitleRow from '../../title-row';
 class AdminDashboard extends React.Component {
@@ -10,42 +9,6 @@ class AdminDashboard extends React.Component {
         return (
             <div >
                 <TitleRow icon={faTachometerAlt} title={' Admin Dashboard'} />
-
-                <Row style={styles.row}>
-                    <Col lg={3} md={3} sm={12} xs={12} className='p-0 m-0'>
-                        <CountColoredCard
-                            count={this.props.cancelled_orders_count}
-                            header={'Vendors'}
-                            background={'lightblue'}
-                            iconname={''}
-                        />
-                    </Col>
-                    <Col lg={3} md={3} sm={12} xs={12} className='p-0 m-0'>
-                        <CountColoredCard
-                            count={this.props.cancelled_orders_count}
-                            header={'Customers'}
-                            background={'lightgreen'}
-                            iconname={''}
-                        />
-                    </Col>
-                    <Col lg={3} md={3} sm={12} xs={12} className='p-0 m-0'>
-                        <CountColoredCard
-                            count={this.props.cancelled_orders_count}
-                            header={'Products'}
-                            background={'lightblue'}
-                            iconname={''}
-                        />
-                    </Col>
-                    <Col lg={3} md={3} sm={12} xs={12} className='p-0 m-0'>
-                        <CountColoredCard
-                            count={this.props.cancelled_orders_count}
-                            header={'Orders'}
-                            background={'lightblue'}
-                            iconname={''}
-                        />
-                    </Col>
-                </Row>
-
                 <style jsx>
                     {`
                         .hover {
