@@ -2,7 +2,7 @@ import React from 'react'
 import axios from 'axios'
 import { Card, Form, Col, Row, Image, Button, InputGroup, Spinner } from 'react-bootstrap'
 import urls from '../../utils/urls'
-import consts from '../../constants'
+import constants from '../../constants'
 import CustomButton from '../CustomButton'
 
 import { BsUpload } from 'react-icons/bs';
@@ -82,7 +82,7 @@ export default function ChangrProfilePicture(props) {
                             title={'Upload'}
                             onClick={handleImgUpload}
                         >
-                            {!isLoading && <BsUpload style={{ fontSize: '20px', marginRight: '10px', color: consts.COLORS.WHITE }} />}
+                            {!isLoading && <BsUpload style={{ fontSize: '20px', marginRight: '10px', color: constants.COLORS.WHITE }} />}
                         </CustomButton>
                     </Form.Group>
                 </Card.Body>
@@ -90,9 +90,7 @@ export default function ChangrProfilePicture(props) {
             <style type="text/css">{`
                 .change_picture .card {
                     border: none;
-                    background: rgb(165,64,162);
-                    // background: linear-gradient(135deg, ${consts.COLORS.MAIN} 0%, ${consts.COLORS.SEC} 100%);
-                    background: white;
+                    background: ${constants.COLORS.SECONDARY};
                     min-height: 200px;
                 }
                 .change_picture .card-header {
@@ -100,7 +98,7 @@ export default function ChangrProfilePicture(props) {
                     align-items: center;
                     font-size: 15px;
                     font-weight: bold;
-                    color: ${consts.COLORS.TEXT};
+                    color: ${constants.COLORS.TEXT};
                     border: none;
                     padding-bottom: 0%;
                     background: none;
@@ -112,6 +110,7 @@ export default function ChangrProfilePicture(props) {
                     font-size: 18px;
                     margin-top: 10px;
                     width: 100%;
+                    text-align:center;
                 }
                 .change_picture .profile_img_col {
                     display:flex;

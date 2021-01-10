@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Card, Form, Col, Row, InputGroup, Button, Spinner } from 'react-bootstrap'
-import consts from '../../constants'
+import constants from '../../constants';
 import urls from '../../utils/urls'
 import CustomButton from '../CustomButton'
 
@@ -61,19 +61,21 @@ export default function MyProfile(props) {
                                 <Form.Control
                                     className='form_control'
                                     value={mobile || ''}
-                                    style={{ color: consts.COLORS.MUTED }}
+                                    style={{ color: constants.COLORS.MUTED }}
                                     disabled={true}
                                 />
                             </InputGroup>
                         </Form.Group>
-                        <Form.Group as={Col} lg={6} md={6} sm={6} xs={12} className='my_profile_col'>
+                    </Row>
+                    <Row className='p-0 m-0'>
+                        <Form.Group as={Col} className='my_profile_col'>
                             <Form.Label className='form_label'>{'Full Name'}</Form.Label>
                             <InputGroup>
                                 <Form.Control
                                     className='form_control'
                                     value={fullName || ''}
                                     onChange={(e) => setFull_name(e.target.value)}
-                                    style={{ color: isEditProfile ? consts.COLORS.TEXT : consts.COLORS.MUTED }}
+                                    style={{ color: isEditProfile ? constants.COLORS.TEXT : constants.COLORS.MUTED }}
                                     disabled={!isEditProfile}
                                 />
                             </InputGroup>
@@ -89,13 +91,13 @@ export default function MyProfile(props) {
                                     type='email'
                                     value={email || ''}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    style={{ color: isEditProfile ? consts.COLORS.TEXT : consts.COLORS.MUTED }}
+                                    style={{ color: isEditProfile ? constants.COLORS.TEXT : constants.COLORS.MUTED }}
                                     disabled={!isEditProfile}
                                 />
                             </InputGroup>
                         </Form.Group>
                     </Row>
-                    <Form.Group as={Row} className='ml-0 mr-0 mb-0 mt-5 p-0'>
+                    <Form.Group as={Row} className='ml-0 mr-0 mb-0 mt-2 p-0'>
                         <Col lg="auto" md="auto" sm="auto" xs="auto" className='my_profile_col'>
                             <CustomButton
                                 disabled={isLoading}
@@ -121,16 +123,14 @@ export default function MyProfile(props) {
             </Card>
             <style type="text/css">{`
                  .my_profile .card {
-                    background: rgb(165,64,162);
-                    background: white;
-                    min-height: 200px;
+                    background: ${constants.COLORS.SECONDARY};
                 }
                 .my_profile .card-header {
                     display: inline-flex;
                     align-items: center;
                     font-size: 15px;
                     font-weight: bold;
-                    color: ${consts.COLORS.TEXT};
+                    color: ${constants.COLORS.TEXT};
                     border: none;
                     padding-bottom: 0%;
                     background: none;
@@ -139,10 +139,11 @@ export default function MyProfile(props) {
                     font-size: 18px;
                     padding-top: 10px;
                     width: 100%;
+                    text-align:center;
                 }
                 .my_profile .form_label {
                     font-size: 13px;
-                    color: ${consts.COLORS.TEXT};
+                    color: ${constants.COLORS.TEXT};
                 }
                 .my_profile .form_control:disabled {
                     background: none;

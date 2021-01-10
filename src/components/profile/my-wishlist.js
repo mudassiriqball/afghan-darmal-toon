@@ -112,8 +112,7 @@ export default function WishlistScreen(props) {
             <style type="text/css">{`
                 .wishlist .card {
                     border: none;
-                    background: rgb(165,64,162);
-                    // background: linear-gradient(135deg, ${consts.COLORS.MAIN} 0%, ${consts.COLORS.SEC} 100%);
+                    background: ${constants.COLORS.SECONDARY};
                     background: white;
                     margin-bottom: 1.5%;
                 }
@@ -142,6 +141,7 @@ export default function WishlistScreen(props) {
                     font-size: 18px;
                     padding-top: 10px;
                     width: 100%;
+                    text-align:center;
                 }
                 
                 .wishlist .form_label {

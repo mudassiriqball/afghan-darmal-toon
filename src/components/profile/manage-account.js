@@ -1,13 +1,13 @@
 import React from 'react'
 import { Card, Row, Col, Nav, Image } from 'react-bootstrap'
-import consts from '../../constants'
+import constants from '../../constants'
 
 export default function ManageAccount(props) {
     return (
         <div className='manage_account'>
             <div className='heading'>{'Manage Account'}</div>
             <Row>
-                <Col className='card_col'>
+                <Col lg={12} md={12} sm={12} xs={12} className='card_col'>
                     <Card >
                         <Card.Header >
                             <div className='mr-auto'>{'Personal Info'}</div>
@@ -20,7 +20,7 @@ export default function ManageAccount(props) {
                         </Card.Body>
                     </Card>
                 </Col>
-                <Col className='card_col'>
+                <Col lg={12} md={12} sm={12} xs={12} className='card_col'>
                     <Card >
                         <Card.Header>
                             <div className='mr-auto'>{'Profile Picture'}</div>
@@ -32,7 +32,7 @@ export default function ManageAccount(props) {
                         </Card.Body>
                     </Card>
                 </Col>
-                <Col className='card_col'>
+                <Col lg={12} md={12} sm={12} xs={12} className='card_col'>
                     <Card >
                         <Card.Header >
                             <div className='mr-auto'>{'Shipping Address'}</div>
@@ -52,13 +52,11 @@ export default function ManageAccount(props) {
                 }
                 .manage_account .heading {
                     font-size: 18px;
-                    margin: 10px 5px;
+                    margin: 10px 0px;
+                    text-align:center;
                 }
                 .manage_account .card {
-                    border: none;
-                    background: rgb(165,64,162);
-                    // background: linear-gradient(135deg, ${consts.COLORS.MAIN} 0%, ${consts.COLORS.SEC} 100%);
-                    background: white;
+                    background: ${constants.COLORS.SECONDARY};
                     min-height: 200px;
                     opacity: 0.8;
                 }
@@ -67,7 +65,7 @@ export default function ManageAccount(props) {
                     align-items: center;
                     font-size: 15px;
                     font-weight: bold;
-                    color: ${consts.COLORS.TEXT};
+                    color: ${constants.COLORS.TEXT};
                     border: none;
                     padding-bottom: 0%;
                     background: none;
@@ -75,15 +73,15 @@ export default function ManageAccount(props) {
                 .manage_account .label {
                     font-size: 13px;
                     width: 100%;
-                    color: ${consts.COLORS.TEXT};
+                    color: ${constants.COLORS.TEXT};
                 }
                 .manage_account .address_label {
                     font-size: 11px;
                     width: 100%;
-                    color: ${consts.COLORS.TEXT};
+                    color: ${constants.COLORS.TEXT};
                 }
                 .manage_account .count_label {
-                    color: ${consts.COLORS.TEXT};
+                    color: ${constants.COLORS.TEXT};
                     font-size: 20px;
                 }
             `}</style>

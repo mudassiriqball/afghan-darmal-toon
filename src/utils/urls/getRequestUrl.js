@@ -33,6 +33,6 @@ export default {
     CUSTOMER_ALL_ORDERS_COUNT: baseUrl + '/api/orders/abc/abc/customer-orders-count/',
     ALL_ORDERS_PAGE_LIMIT_BY_STATUS: baseUrl + '/api/orders/admin/all/page/limit/orders/',
     ALL_ORDERS_SEARCH_BY_STATUS: baseUrl + '/api/orders/admin/all/search/query/page/limit/',
-
-    CUSTOMERS_ORDER_BY_STATUS: baseUrl + '/api/orders/customer/page/limit/orders/by-status/',
+    CUSTOMERS_ORDERS_BY_STATUS: baseUrl + '/api/orders/customer/page/limit/orders/by-status/',
+    DELIVERY_BOY_ORDERS: baseUrl + '/api/orders/delivery/boy/page/limit/orders/by-status/',
 }

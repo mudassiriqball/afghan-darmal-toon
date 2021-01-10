@@ -13,7 +13,9 @@ const mongoose = require("mongoose");
 OrdersController.get_order_by_id = async (req, res) => {
   let order;
   try {
-    order = await Orders.find({});
+    order = await Orders.find({
+      _id: req.params._id
+    });
     res.status(200).send({
       code: 200,
       message: "Successful",
