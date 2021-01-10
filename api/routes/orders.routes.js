@@ -14,10 +14,10 @@ router.post("/place/order/id/user-order/:_id", OrdersController.place_order);
 // get Requests
 router.get("/admin/all/page/limit/orders/:_status", OrdersController.get_admin_orders_page_limit_by_status);
 router.get("/customer/page/limit/orders/by-status/:_id", OrdersController.get_customer_orders_page_limit_by_id);
+router.get("/delivery/boy/page/limit/orders/by-status/:_id", OrdersController.get_delivery_boy_orders);
 
 // put Requests
-// router.put("/:_id", OrdersController.updateUser);
-
+router.put("/admin/id/update/order-status/:_id", OrdersController.updateStatus);
 // delete Requests
 // router.delete("/user/:_id", checkAuth, OrdersController.deleteUser);
 

@@ -23,96 +23,43 @@ productsController.add_rating_and_review = async (req, res) => {
     search = "five_star";
   }
 
-    const products1 = await Products.update(
-      { _id: req.query._id },
-      {
-        $push: { "rating_review.reviews": body },
-        $inc: { [`rating_review.rating.${search}`]: 1 },
-      }
-    );
+  const products1 = await Products.update(
+    { _id: req.params._id },
+    {
+      $push: { "rating_review.reviews": body },
+      $inc: { [`rating_review.rating.${search}`]: 1 },
+    }
+  );
 
-    const products2 = await Products.findOne(
-      { _id: req.query._id },
-      { rating_review: 1 }
-    );
-    const one = products2.rating_review.rating.one_star;
-    const two = products2.rating_review.rating.two_star;
-    const three = products2.rating_review.rating.three_star;
-    const four = products2.rating_review.rating.four_star;
-    const five = products2.rating_review.rating.five_star;
-    const up = one * 1 + two * 2 + three * 3 + four * 4 + five * 5;
-    const down = one + two + three + four + five;
-    const overall = up / down;
+  const products2 = await Products.findOne(
+    { _id: req.params._id },
+    { rating_review: 1 }
+  );
+  const one = products2.rating_review.rating.one_star;
+  const two = products2.rating_review.rating.two_star;
+  const three = products2.rating_review.rating.three_star;
+  const four = products2.rating_review.rating.four_star;
+  const five = products2.rating_review.rating.five_star;
+  const up = one * 1 + two * 2 + three * 3 + four * 4 + five * 5;
+  const down = one + two + three + four + five;
+  const overall = up / down;
 
-    const products3 = await Products.update(
-      { _id: req.query._id },
-      {
-        $set: { "rating_review.rating.overall": overall.toFixed(1) },
-      }
-    );
-    res.status(200).send({
-      code: 200,
-      message: "Thank You For Review And Rating",
-    });
-  } 
-//   else {
-//     const products1 = await Products.update(
-//       { _id: req.query._id },
-//       {
-//         $push: { [`product_variations.$[i].rating_review.reviews`]: body },
-//         $inc: { [`product_variations.$[i].rating_review.rating.${search}`]: 1 },
-//       },
-//       { arrayFilters: [{ "i._id": req.query.variation_id }], multi: true }
-//     );
-//     const products2 = await Products.find(
-//       { _id: req.query._id },
-//       { product_variations: 1, _id: 0 }
-//     );
-//     var one = 0;
-//     var two = 0;
-//     var three = 0;
-//     var four = 0;
-//     var five = 0;
-//     var up = 0;
-//     var down = 0;
-//     var overall = 0;
-//     var index = req.query.variation_index;
-
-//     products2.forEach((element) => {
-//       one = element.product_variations[index].rating_review.rating.one_star;
-//       two = element.product_variations[index].rating_review.rating.two_star;
-//       three = element.product_variations[index].rating_review.rating.three_star;
-//       four = element.product_variations[index].rating_review.rating.four_star;
-//       five = element.product_variations[index].rating_review.rating.five_star;
-//     });
-//     up = one * 1 + two * 2 + three * 3 + four * 4 + five * 5;
-//     down = one + two + three + four + five;
-//     overall = up / down;
-
-//     const products3 = await Products.update(
-//       { _id: req.query._id },
-//       {
-//         $set: {
-//           "product_variations.$[i].rating_review.rating.overall": overall.toFixed(
-//             1
-//           ),
-//         },
-//       },
-//       { arrayFilters: [{ "i._id": req.query.variation_id }], multi: true }
-//     );
-//     res.status(200).send({
-//       code: 200,
-//       message: "Thank You For Review And Rating",
-//     });
-//   }
-// };
-
+  const products3 = await Products.update(
+    { _id: req.params._id },
+    {
+      $set: { "rating_review.rating.overall": overall.toFixed(1) },
+    }
+  );
+  res.status(200).send({
+    code: 200,
+    message: "Thank You For Review And Rating",
+  });
+};
 //Add product endpoint definition
 productsController.addProduct = async (req, res) => {
   const body = req.body;
 
   try {
-
     var datetime = new Date();
     body.isdeleted = false;
     body.entry_date = datetime;
@@ -618,17 +565,18 @@ productsController.get_admin_products = async (req, res) => {
   }
 };
 
-
 productsController.get_admin_inventory = async (req, res) => {
   console.log("aaa");
   try {
-    let products= await Products.paginate({
-      isdeleted:false
-    },
-    {
-      limit: parseInt(req.query.limit),
-      page: parseInt(req.query.page),
-    }); 
+    let products = await Products.paginate(
+      {
+        isdeleted: false,
+      },
+      {
+        limit: parseInt(req.query.limit),
+        page: parseInt(req.query.page),
+      }
+    );
     res.status(200).send({
       code: 200,
       message: "Successful",
@@ -639,15 +587,14 @@ productsController.get_admin_inventory = async (req, res) => {
   }
 };
 
-
 productsController.get_products_by_category = async (req, res) => {
   try {
     if (req.query.subCategory) {
       let products = await Products.paginate({
         isdeleted: false,
-        categoryId:req.query.category,
-        subCategoryId:req.query.subCategory,
-      })
+        categoryId: req.query.category,
+        subCategoryId: req.query.subCategory,
+      });
       res.status(200).send({
         code: 200,
         message: "Successful",
@@ -656,8 +603,8 @@ productsController.get_products_by_category = async (req, res) => {
     } else if (!req.query.subCategory) {
       let products = await Products.paginate({
         isdeleted: false,
-        categoryId:req.query.category,
-      })
+        categoryId: req.query.category,
+      });
       res.status(200).send({
         code: 200,
         message: "Successful",
@@ -1164,15 +1111,13 @@ productsController.get_search_products = async (req, res) => {
   const query = req.query.q;
   var regex = new RegExp(["^", query, "$"].join(""), "i");
 
-  let actual_products=0;
+  let actual_products = 0;
   let products1 = 0;
   let products2 = 0;
   let products3 = 0;
   let set = 0;
   try {
-    const products = await Products.paginate(
-      { name: regex },
-    );
+    const products = await Products.paginate({ name: regex });
     if (products.total > 0) {
       console.log("1");
       actual_products = products;
@@ -1182,9 +1127,7 @@ productsController.get_search_products = async (req, res) => {
       category = await Categories.find({ value: regex }, { _id: 1 });
       if (category.length > 0) {
         console.log("3");
-        products1 = await Products.paginate(
-          { categoryId: category[0]._id },
-        );
+        products1 = await Products.paginate({ categoryId: category[0]._id });
         if (products1.total > 0) {
           console.log("4");
           actual_products = products1;
@@ -1204,9 +1147,9 @@ productsController.get_search_products = async (req, res) => {
       sub_category = await Sub_categories.find({ value: regex }, { _id: 1 });
       if (sub_category.length > 0) {
         console.log("8");
-        products2 = await Products.paginate(
-          { subCategoryId: sub_category[0]._id },
-        );
+        products2 = await Products.paginate({
+          subCategoryId: sub_category[0]._id,
+        });
         if (products2.total > 0) {
           console.log("9");
           actual_products = products2;
@@ -1222,9 +1165,7 @@ productsController.get_search_products = async (req, res) => {
 
     if (set === 2) {
       console.log("12");
-      products3 = await Products.paginate(
-        { name: new RegExp(query, "i") },
-      );
+      products3 = await Products.paginate({ name: new RegExp(query, "i") });
       if (products3.total > 0) {
         console.log("13");
         actual_products = products3;
@@ -1491,15 +1432,32 @@ productsController.get_vendor_product_less_stock_by_id = async (req, res) => {
   }
 };
 
-productsController.update_product_data = async (req, res) => {
+productsController.get_search_all_product = async (req, res) => {
+  const field = req.query.field;
+  const search = {};
+  search[field] = req.query.q;
+  try {
+    let products = await Products.paginate(search, {
+      limit: parseInt(req.query.limit),
+      page: parseInt(req.query.page),
+    });
+    res.status(200).send({
+      data: products,
+    });
+  } catch (error) {
+    console.log("error", error);
+    return res.status(500).send(error);
+  }
+};
 
+productsController.update_product_data = async (req, res) => {
   const body = req.body;
   try {
     const _id = req.params._id;
     Products.findOneAndUpdate(
       { _id: _id },
       {
-        $set: body ,
+        $set: body,
       },
       {
         returnNewDocument: true,

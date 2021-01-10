@@ -24,6 +24,7 @@ router.get("/search/products/query-only", productController.get_search_products)
 
 router.get("/less-stock/:_id", productController.get_less_stock_products);
 router.get("/vendor-search-less-stock/:_id", productController.get_vendor_product_less_stock_by_id);
+router.get("/inventory/admin/search/all/products", productController.get_search_all_product);
 
 router.put("/add/review/rating/:_id", checkAuth, productController.add_rating_and_review);
 // put Requests

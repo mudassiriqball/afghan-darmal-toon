@@ -57,7 +57,8 @@
     "react-transition-group": "^4.4.1",
     "react-use-dimensions": "^1.2.1",
     "serve": "^11.3.2",
-    "stripe": "^8.129.0",
+    "strip": "^3.0.0",
+    "stripe": "^8.130.0",
     "uuid": "^8.3.2",
     "yup": "^0.32.1"
   }
