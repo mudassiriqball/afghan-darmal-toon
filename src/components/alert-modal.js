@@ -38,6 +38,8 @@ function AlertModal(props) {
                     {message}
                 </Form.Label>
                 <CustomButton
+                    block
+                    size='lg'
                     title={'Close'}
                     onClick={() => onHide()}
                 />

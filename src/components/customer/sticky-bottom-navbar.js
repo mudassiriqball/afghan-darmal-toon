@@ -34,7 +34,6 @@ const StickyBottomNavbar = (props) => {
     };
 
     useEffect(() => {
-        console.log('window.location.href:', window.location.href)
         if (window.location.href === baseUrl + '/' || window.location.href === baseUrl || window.location.href === baseUrl + '/index') {
             setCurentHref('index')
         } else if (window.location.href === baseUrl + '/categories') {
