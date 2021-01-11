@@ -36,7 +36,7 @@ export default function getProductsByCategorySubCategoryPageLimit(category, subC
                         setLoading(false)
                         setProducts(prevPro => {
                             return [...new Set([...prevPro, ...res.data.data.docs])]
-                        })
+                        });
                         setHasMore(res.data.data && res.data.data.docs && res.data.data.docs.length > 0);
                     }
                 }).catch(err => {

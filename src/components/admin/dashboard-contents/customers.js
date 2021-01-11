@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { Row, Col, Card, Nav, Table, Form, Button, InputGroup } from 'react-bootstrap'
+import { Row, Col, Card, Nav, Table, Form, Button, InputGroup, Image } from 'react-bootstrap'
 import { faUsers, faUserPlus, faPersonBooth, faBan, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faThumbsUp, faCheckCircle } from '@fortawesome/free-regular-svg-icons';
 
@@ -17,6 +17,7 @@ import getUsersBySearch from '../../../hooks/getUsersBySearch';
 
 import Loading from '../../loading';
 import urls from '../../../utils/urls';
+import constants from '../../../constants';
 
 class Customers extends React.Component {
     constructor(props) {
@@ -33,8 +34,9 @@ class Customers extends React.Component {
             viewConfirmModalColor: '',
             viewConfirmModalLoading: false,
 
-            viewShowAlertModal: false,
-            viewAlertModalMsg: '',
+            showAlert: false,
+            alertMsg: '',
+            alertType: '',
         }
     }
 
@@ -54,8 +56,9 @@ class Customers extends React.Component {
                 currentComponent.setState({
                     viewConfirmModalLoading: false,
                     showViewConfirmModal: false,
-                    viewAlertModalMsg: 'New Customer Discarded Successfully',
-                    viewShowAlertModal: true,
+                    alertMsg: 'New Customer Discarded Successfully',
+                    alertType: 'success',
+                    showAlert: true,
                     refresh_count: currentComponent.state.refresh_count + 1,
                     isViewUser: false,
                 })
@@ -64,8 +67,11 @@ class Customers extends React.Component {
                 currentComponent.setState({
                     viewConfirmModalLoading: false,
                     showViewConfirmModal: false,
+                    alertMsg: 'New customer Ddiscarded failed, Please try again later.',
+                    alertType: 'error',
+                    showAlert: true,
                 })
-                alert('Error');
+                console.log('New customer Ddiscarded failed, Please try again later.', err);
             });
             return
         } else if (this.state.method == 'Restricted') {
@@ -84,8 +90,9 @@ class Customers extends React.Component {
             currentComponent.setState({
                 viewConfirmModalLoading: false,
                 showViewConfirmModal: false,
-                viewAlertModalMsg: `Customer ${currentComponent.state.method}  successfully`,
-                viewShowAlertModal: true,
+                alertMsg: `Customer ${currentComponent.state.method}  successfully`,
+                alertType: 'success',
+                showAlert: true,
                 refresh_count: currentComponent.state.refresh_count + 1
             })
             let obj = {}
@@ -97,8 +104,11 @@ class Customers extends React.Component {
             currentComponent.setState({
                 viewConfirmModalLoading: false,
                 showViewConfirmModal: false,
+                alertMsg: `Customer ${currentComponent.state.method} failed, Please try again later`,
+                alertType: 'error',
+                showAlert: true,
             })
-            alert('Error'); console.log('jjj:', err)
+            console.log(`Customer ${currentComponent.state.method} failed, Please try again later`, err);
         });
     }
 
@@ -117,10 +127,10 @@ class Customers extends React.Component {
                     loading={this.state.viewConfirmModalLoading}
                 />
                 <AlertModal
-                    onHide={() => this.setState({ viewShowAlertModal: false })}
-                    show={this.state.viewShowAlertModal}
-                    message={this.state.viewAlertModalMsg}
-                    alerttype={'success'}
+                    onHide={() => this.setState({ showAlert: false })}
+                    show={this.state.showAlert}
+                    message={this.state.alertMsg}
+                    alerttype={this.state.alertType}
                 />
                 {!this.state.isViewUser ?
                     <div>
@@ -212,6 +222,13 @@ class Customers extends React.Component {
                         <Card className='view_user'>
                             <Card.Body>
                                 <Row>
+                                    <Form.Group as={Col} lg={12} md={12} sm={12} xs={12} className='d-flex justify-content-center align-items-center pt-3 pb-3' style={{ background: constants.COLORS.SECONDARY }}>
+                                        <InputGroup style={{ width: '100px', height: '100px', borderRadius: '50%' }}>
+                                            <Image src={this.state.single_user && this.state.single_user.avatar && this.state.single_user.avatar}
+                                                style={{ width: '100px', height: '100px', borderRadius: '50%', background: constants.COLORS.WHITE }}
+                                            />
+                                        </InputGroup>
+                                    </Form.Group>
                                     <p className='p'><span>Personal Info</span></p>
                                     <Form.Group as={Col} lg={4} md={6} sm={6} xs={12}>
                                         <Form.Label className='form_label'>ID</Form.Label>
@@ -585,8 +602,8 @@ function CustomerTableBody(props) {
     const [upper_limit, setupper_limit] = useState(0)
 
     useEffect(() => {
-        setlower_limit(props.pageNumber * 20 - 20)
-        setupper_limit(props.pageNumber * 20)
+        setlower_limit(props.pageNumber * 20 - 20);
+        setupper_limit(props.pageNumber * 20);
     }, [props.pageNumber])
 
     return (

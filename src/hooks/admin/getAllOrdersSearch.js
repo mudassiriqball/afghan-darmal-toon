@@ -15,7 +15,6 @@ export default function getAllOrdersSearch(token, refresh, status, fieldName, qu
     }, [fieldName, query, refresh])
 
     useEffect(() => {
-        let unmounted = true
         const CancelToken = axios.CancelToken;
         const source = CancelToken.source();
         const getData = () => {
@@ -32,27 +31,23 @@ export default function getAllOrdersSearch(token, refresh, status, fieldName, qu
                         field: fieldName, q: query, page: pageNumber, limit: limit,
                     },
                 }).then(res => {
-                    if (unmounted) {
-                        setLoading(false)
-                        setQueryOrders(prevPro => {
-                            return [...new Set([...prevPro, ...res.data.data.docs])]
-                        })
-                        setPages(res.data.data.pages)
-                        setTotal(res.data.data.total)
-                    }
+                    setLoading(false)
+                    setQueryOrders(prevPro => {
+                        return [...new Set([...prevPro, ...res.data.data.docs])]
+                    })
+                    setPages(res.data.data.pages)
+                    setTotal(res.data.data.total)
                 }).catch(err => {
-                    if (unmounted) {
-                        setLoading(false)
-                        if (axios.isCancel(err)) return
-                        setError(true)
-                    }
+                    setLoading(false)
+                    if (axios.isCancel(err)) return
+                    setError(true)
                 })
             }
         }
         getData()
         return () => {
-            unmounted = false
             source.cancel();
+            getData;
         };
     }, [fieldName, query, pageNumber, refresh])
 

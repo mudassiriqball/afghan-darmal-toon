@@ -50,7 +50,7 @@ function ConfirmModal(props) {
                     }
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button size="sm" className='mr-auto' onClick={props.confirm}
+                    <Button size="sm" className='mr-auto' onClick={() => { props.confirm(), props.onHide() }}
                         disabled={props.loading}
                         variant={props.color == 'red' ? 'outline-danger' : props.color == 'blue' ? 'outline-primary' : 'outline-success'}>Confirm</Button>
                     <Button size="sm" variant='outline-primary' disabled={props.loading} onClick={props.onHide}>Cancel</Button>

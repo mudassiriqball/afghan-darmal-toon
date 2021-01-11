@@ -25,5 +25,12 @@ export default {
     ADD_RATING_REVIEW: baseUrl + '/api/products/add/review/rating/',
 
     // ORDERS
-    UPDATE_Order_STATUS: baseUrl + '/api/orders/admin/id/update/order-status/',
+    UPDATE_ORDER_STATUS: baseUrl + '/api/orders/admin/id/update/order-status/',
+
+    // PRODUCTS
+    UPDATE_PRODUCT: baseUrl + '/api/products/update/product/by-id/admin/inventory/',
+    DELETE_PRODUCT: baseUrl + '/api/products/delete/put/isdeleted-true/product/by-id/admin/inventory/',
 }
+
+
+

@@ -59,7 +59,6 @@ export default function ProductCard(props) {
         }
     }
     // ENd of Add to cart
-    console.log('ahah:', element)
     return (
         <div className='_productCard'>
             <AlertModal

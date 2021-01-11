@@ -86,7 +86,7 @@ class Scanner extends Component {
         return (
             <Row>
                 <Col>
-                    <Button variant="primary" block onClick={this._toggle}>
+                    <Button variant="primary" size={this.props.small ? 'sm' : 'lg'} block onClick={this._toggle}>
                         {'Scan Barcode'}
                     </Button>
                 </Col>

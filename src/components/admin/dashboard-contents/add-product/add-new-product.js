@@ -18,14 +18,14 @@ import Scanner from '../../../../utils/scanner/scanner';
 
 // Yup Schema for validation fields
 const schema = yup.object({
-    id: yup.string().required('Required *'),
+    qr_id: yup.string().required('Required *'),
     name: yup.string().required('Required *')
         .min(2, "Must have at least 2 characters")
         .max(200, "Can't be longer than 200 characters"),
 
     description: yup.string()
         .min(5, "Must have at least 5 characters")
-        .max(10000, "Can't be longer than 10000 characters"),
+        .max(100000, "Can't be longer than 100000 characters"),
     sku: yup.string()
         .min(0, 'Enter Between 0-100')
         .max(100, 'Enter Between 0-100'),
@@ -36,7 +36,7 @@ const schema = yup.object({
     stock: yup.number().required('Required *')
         .integer("Enter Only Numbers")
         .positive('Enter Between 1-1000000')
-        .max(1000000, "Can't be longer than 1000000"),
+        .max(10000, "Can't be longer than 10000"),
     brand: yup.string()
         .min(2, "Must have at least 2 characters")
         .max(40, "Can't be longer than 40 characters"),
@@ -46,8 +46,8 @@ const schema = yup.object({
         .max(1000, 'Enter Between 0-1000'),
     warrantyType: yup.string(),
     discount: yup.number().integer("Enter Only Numbers")
-        .min(0, 'Enter Between 0-100')
-        .max(100, 'Enter Between 0-100'),
+        .min(0, 'Enter Between 0-99')
+        .max(99, 'Enter Between 0-99'),
     purchaseNote: yup.string(),
     shippingCharges: yup.number("Enter Only Numbers")
         .positive('Enter Between 0-10000')
@@ -66,7 +66,6 @@ class AddNew extends Component {
         super(props);
         this.state = {
             isUpdateProduct: false,
-            _id: this.props._id,
             clearFields: false,
             isLoading: false,
             showToast: false,
@@ -215,8 +214,6 @@ class AddNew extends Component {
         });
 
         values.imagesUrl = array;
-        console.log(array)
-        debugger
         bar.then(async () => {
             console.log(values)
             const config = {
@@ -263,7 +260,7 @@ class AddNew extends Component {
                 validationSchema={schema}
                 initialValues={
                     {
-                        id: '',
+                        qr_id: '',
                         name: '',
                         price: '',
                         stock: '',
@@ -313,20 +310,6 @@ class AddNew extends Component {
                             :
                             null
                         }
-                        {/* {this.props.status == 'disapproved' ?
-                            <Alert variant='danger' style={{ fontSize: '14px' }}>
-                                You can't upload product, Your account is not approved yet
-                                </Alert>
-                            :
-                            null
-                        }
-                        {this.props.status == 'restricted' ?
-                            <Alert variant='danger' style={{ fontSize: '14px' }}>
-                                You can't upload product, Your account is blocked, Contact to Admin
-                                </Alert>
-                            :
-                            null
-                        } */}
                         <Form noValidate onSubmit={handleSubmit}>
                             <AlertModal
                                 onHide={(e) => this.setState({ showToast: false })}
@@ -348,18 +331,18 @@ class AddNew extends Component {
                                 </Col>
                                 <Col lg={12} md={12} sm={12} xs={12}>
                                     <Form.Group as={Row} style={{ margin: '0.5% 2% 2% 2%', padding: '0%' }}>
-                                        <Form.Label style={styles.label}>{'Product Id '}<span>*</span></Form.Label>
+                                        <Form.Label style={styles.label}>{'QR Code '}<span>*</span></Form.Label>
                                         <InputGroup>
                                             <Form.Control
                                                 type="text"
                                                 placeholder="Scan Barcode or Choose File"
-                                                name="id"
-                                                value={values.id}
+                                                name="qr_id"
+                                                value={values.qr_id}
                                                 onChange={handleChange}
-                                                isInvalid={errors.id && touched.id}
+                                                isInvalid={errors.qr_id && touched.qr_id}
                                             />
                                             <Form.Control.Feedback type="invalid">
-                                                {errors.id}
+                                                {errors.qr_id}
                                             </Form.Control.Feedback>
                                         </InputGroup>
                                     </Form.Group>

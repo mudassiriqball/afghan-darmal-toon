@@ -14,40 +14,37 @@ export default function getInventorySearch(refresh_count, fieldName, query, quer
     }, [refresh_count])
 
     useEffect(() => {
-        let unmounted = true
         const CancelToken = axios.CancelToken;
         const source = CancelToken.source();
         const getData = () => {
-            setLoading(true);
-            setError(false);
-            axios({
-                method: 'GET',
-                url: urls.GET_REQUEST.INVENTRY_PAGE_LIMIT,
-                params: {
-                    field: fieldName, q: query, page: queryPageNumber, limit: limit,
-                },
-                cancelToken: source.token,
-            }).then(res => {
-                if (unmounted) {
+            if (query !== '' && fieldName !== '') {
+                setLoading(true);
+                setError(false);
+                axios({
+                    method: 'GET',
+                    url: urls.GET_REQUEST.INVENTRY_PAGE_LIMIT,
+                    params: {
+                        field: fieldName, q: query, page: queryPageNumber, limit: limit,
+                    },
+                    cancelToken: source.token,
+                }).then(res => {
                     setLoading(false);
                     setProducts(prevPro => {
                         return [...new Set([...prevPro, ...res.data.data.docs])]
                     });
                     setPages(Math.ceil(res.data.pages));
-                }
-            }).catch(err => {
-                console.log('Get products by search:', err);
-                setLoading(false)
-                if (unmounted) {
-                    if (axios.isCancel(err)) return
+                }).catch(err => {
+                    console.log('Get products by search:', err);
+                    setLoading(false)
                     setError(true)
-                }
-            })
+                    if (axios.isCancel(err)) return
+                })
+            }
         }
-        getData()
+        getData();
         return () => {
-            unmounted = false
             source.cancel();
+            getData;
         };
     }, [queryPageNumber]);
 

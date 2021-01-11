@@ -13,11 +13,10 @@ export default function getUsersPageLimit(token, refresh, role, status, pageNumb
     }, [refresh])
 
     useEffect(() => {
-        let unmounted = true;
         const CancelToken = axios.CancelToken;
         const source = CancelToken.source();
         const getData = () => {
-            if (token != null) {
+            if (token != null && status !== '') {
                 setLoading(true)
                 setError(false)
                 axios({
@@ -36,17 +35,17 @@ export default function getUsersPageLimit(token, refresh, role, status, pageNumb
                     setPages(res.data.data.pages)
                     setTotal(res.data.data.total)
                 }).catch(err => {
-                    console.log('Get User By page limit Error:', err);
                     setLoading(false)
-                    if (axios.isCancel(err)) return
                     setError(true)
+                    if (axios.isCancel(err)) return
+                    console.log('Get User By page limit Error:', err);
                 })
             }
         }
         getData()
         return () => {
-            unmounted = false
             source.cancel();
+            getData;
         };
     }, [status, pageNumber, refresh, token])
 

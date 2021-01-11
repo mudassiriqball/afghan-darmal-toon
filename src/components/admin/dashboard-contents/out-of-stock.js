@@ -22,7 +22,7 @@ import QRCode from "react-qr-code";
 import constants from '../../../constants';
 
 
-export default function Inventory(props) {
+export default function OutOfStock(props) {
     const [page, setPage] = useState(1)
     const [queryPage, setQueryPage] = useState(1)
 
@@ -139,7 +139,7 @@ export default function Inventory(props) {
                 return <>
                     <TitleRow icon={faPlus} title={' Vendor Dashboard / All Products'} />
                     <CardSearchAccordion
-                        title={'Inventory'}
+                        title={'Out Of Stock Inventory'}
                         option={'inventory'}
                         value={query}
                         handleSearch={handleSearch}
@@ -266,35 +266,37 @@ function ProductTable(props) {
                 </thead>
                 <tbody>
                     {props.list && props.list.map((element, index) =>
-                        index >= lower_limit && index < upper_limit ?
-                            <tr key={index} style={(element.stock && element.stock < constants.SIZES.LESS_STOCK) ? { background: constants.COLORS.LIGHT_RED } : {}}>
-                                <td align="center" >{index + 1}</td>
-                                <td >
-                                    {element._id}
-                                    <div className="td">
-                                        <Nav.Link style={styles.nav_link} className='pt-0' onClick={() => props.setViewProduct(element)} >View</Nav.Link>
-                                        <Nav.Link style={styles.nav_link} className='pt-0' onClick={() => props.handleEditProduct(element)}>Edit</Nav.Link>
-                                        <Nav.Link style={styles.nav_link} className='pt-0 delete' onClick={() => props.handleShowConfirmModal(element)}>Delete</Nav.Link>
-                                    </div>
-                                </td>
-                                <td align="center" >{element.name}</td>
-                                <td align="center" >
-                                    {element.price}
-                                </td>
-                                <td align="center" >
-                                    {element.stock}
-                                </td>
-                                <td align="center" >
-                                    {element.categoryId}
-                                </td>
-                                <td align="center" >
-                                    {element.subCategoryId}
-                                </td>
-                                <td align="center" >
-                                    {element.entry_date.substring(0, 10)}
-                                </td>
-                            </tr>
-
+                        element.stock && element.stock < constants.SIZES.LESS_STOCK ?
+                            index >= lower_limit && index < upper_limit ?
+                                <tr key={index} style={(element.stock && element.stock < constants.SIZES.LESS_STOCK) ? { background: constants.COLORS.LIGHT_RED } : {}}>
+                                    <td align="center" >{index + 1}</td>
+                                    <td >
+                                        {element._id}
+                                        <div className="td">
+                                            <Nav.Link style={styles.nav_link} className='pt-0' onClick={() => props.setViewProduct(element)} >View</Nav.Link>
+                                            <Nav.Link style={styles.nav_link} className='pt-0' onClick={() => props.handleEditProduct(element)}>Edit</Nav.Link>
+                                            <Nav.Link style={styles.nav_link} className='pt-0 delete' onClick={() => props.handleShowConfirmModal(element)}>Delete</Nav.Link>
+                                        </div>
+                                    </td>
+                                    <td align="center" >{element.name}</td>
+                                    <td align="center" >
+                                        {element.price}
+                                    </td>
+                                    <td align="center" >
+                                        {element.stock}
+                                    </td>
+                                    <td align="center" >
+                                        {element.categoryId}
+                                    </td>
+                                    <td align="center" >
+                                        {element.subCategoryId}
+                                    </td>
+                                    <td align="center" >
+                                        {element.entry_date.substring(0, 10)}
+                                    </td>
+                                </tr>
+                                :
+                                null
                             :
                             null
                     )}

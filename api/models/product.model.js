@@ -3,6 +3,10 @@ const mongoosePaginate = require("mongoose-paginate");
 const Schema = mongoose.Schema;
 
 const Product = new Schema({
+  qr_id: {
+    type: String,
+    unique: true,
+  },
   vendor_id: {
     type: Schema.Types.ObjectId,
   },

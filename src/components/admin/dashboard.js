@@ -5,10 +5,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faBars, faPowerOff, faChevronRight, faPlusCircle, faChevronDown, faChevronUp,
     faPersonBooth, faHandsHelping, faUsers, faTachometerAlt,
-    faWarehouse, faTh, faCog,
+    faWarehouse, faTh, faCog, faImages,
 } from '@fortawesome/free-solid-svg-icons';
 import { faEdit, faUserCircle } from '@fortawesome/free-regular-svg-icons'
-import { faProductHunt } from '@fortawesome/free-brands-svg-icons';
+import { MdRemoveShoppingCart } from 'react-icons/md';
 
 import AddProduct from './dashboard-contents/add-product/add-new-product'
 import Customers from './dashboard-contents/customers';
@@ -21,6 +21,7 @@ import AllCategories from './dashboard-contents/category-contents/all-categories
 import Inventory from './dashboard-contents/inventory';
 import Orders from './dashboard-contents/orders'
 import consts from '../../constants';
+import OutOfStock from "./dashboard-contents/out-of-stock";
 
 const Dashboard = props => {
     let wprapper_Casses = "wrapper";
@@ -84,7 +85,7 @@ const Dashboard = props => {
                             <Nav.Item>
                                 <div className="nav_link">
                                     <Nav.Link eventKey="Customers" style={styles.nav_link} onClick={() => setShow_category(false)}>
-                                        <FontAwesomeIcon size="xs" icon={faPersonBooth} style={styles.fontawesome} />
+                                        <FontAwesomeIcon size="xs" icon={faUsers} style={styles.fontawesome} />
                                         <div className="mr-auto">Customers</div>
                                         <FontAwesomeIcon icon={faChevronRight} style={styles.forword_fontawesome} />
                                     </Nav.Link>
@@ -110,8 +111,17 @@ const Dashboard = props => {
                             </Nav.Item>
                             <Nav.Item>
                                 <div className="nav_link">
+                                    <Nav.Link eventKey="OutOfStock" style={styles.nav_link} onClick={() => setShow_category(false)}>
+                                        <MdRemoveShoppingCart style={styles.fontawesome} />
+                                        <div className="mr-auto">Out Of Stock</div>
+                                        <FontAwesomeIcon icon={faChevronRight} style={styles.forword_fontawesome} />
+                                    </Nav.Link>
+                                </div>
+                            </Nav.Item>
+                            <Nav.Item>
+                                <div className="nav_link">
                                     <Nav.Link eventKey="AddProduct" onClick={props.click} style={styles.nav_link}>
-                                        <FontAwesomeIcon size="xs" icon={faTachometerAlt} style={styles.fontawesome} />
+                                        <FontAwesomeIcon size="xs" icon={faPlusCircle} style={styles.fontawesome} />
                                         <div className="mr-auto">Add Product</div>
                                         <FontAwesomeIcon icon={faChevronRight} style={styles.forword_fontawesome} />
                                     </Nav.Link>
@@ -129,7 +139,7 @@ const Dashboard = props => {
                             <Nav.Item>
                                 <div className="nav_link" >
                                     <Nav.Link eventKey="Slider" style={styles.nav_link} onClick={() => setShow_category(false)}>
-                                        <FontAwesomeIcon icon={faUsers} style={styles.fontawesome} />
+                                        <FontAwesomeIcon icon={faImages} style={styles.fontawesome} />
                                         <div className="mr-auto">Slider</div>
                                         <FontAwesomeIcon icon={faChevronRight} style={styles.forword_fontawesome} />
                                     </Nav.Link>
@@ -182,6 +192,9 @@ const Dashboard = props => {
                                 </Tab.Pane>
                                 <Tab.Pane eventKey="Inventory">
                                     <Inventory {...props} />
+                                </Tab.Pane>
+                                <Tab.Pane eventKey="OutOfStock">
+                                    <OutOfStock {...props} />
                                 </Tab.Pane>
                                 <Tab.Pane eventKey="Orders">
                                     <Orders

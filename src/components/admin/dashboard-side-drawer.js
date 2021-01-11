@@ -1,12 +1,12 @@
-import { Nav, Tab, Row, Col, Image } from "react-bootstrap";
+import { Nav, Tab, Col, Image } from "react-bootstrap";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faPersonBooth, faTachometerAlt, faChevronRight, faUsers, faChevronUp, faChevronDown,
-    faWarehouse, faTags, faPercent, faChartBar, faPlusCircle, faTh, faPowerOff, faShoppingBag
+    faWarehouse, faPlusCircle, faTh, faPowerOff, faImages
 } from '@fortawesome/free-solid-svg-icons';
 import { faEdit } from '@fortawesome/free-regular-svg-icons'
-import { faProductHunt } from '@fortawesome/free-brands-svg-icons';
+import { MdRemoveShoppingCart } from 'react-icons/md';
 
 // import AdminDashboard from './dashboard-contents/admin-dashboard';
 import AddProduct from './dashboard-contents/add-product/add-new-product'
@@ -23,6 +23,7 @@ import AllCategories from './dashboard-contents/category-contents/all-categories
 import Inventory from './dashboard-contents/inventory';
 import Orders from './dashboard-contents/orders'
 import consts from '../../constants';
+import OutOfStock from "./dashboard-contents/out-of-stock";
 
 const DashboardSideDrawer = props => {
     let drawerClasses = "tabs_side_drawer";
@@ -48,7 +49,7 @@ const DashboardSideDrawer = props => {
                         <Nav.Item>
                             <div className="nav_link">
                                 <Nav.Link eventKey="Customers" onClick={props.click} style={styles.nav_link}>
-                                    <FontAwesomeIcon size="xs" icon={faPersonBooth} style={styles.fontawesome} />
+                                    <FontAwesomeIcon size="xs" icon={faUsers} style={styles.fontawesome} />
                                     <div className="mr-auto">Customers</div>
                                     <FontAwesomeIcon icon={faChevronRight} style={styles.forword_fontawesome} />
                                 </Nav.Link>
@@ -74,8 +75,17 @@ const DashboardSideDrawer = props => {
                         </Nav.Item>
                         <Nav.Item>
                             <div className="nav_link">
+                                <Nav.Link eventKey="OutOfStock" onClick={props.click} style={styles.nav_link}>
+                                    <MdRemoveShoppingCart style={styles.fontawesome} />
+                                    <div className="mr-auto">Out Of Stock</div>
+                                    <FontAwesomeIcon icon={faChevronRight} style={styles.forword_fontawesome} />
+                                </Nav.Link>
+                            </div>
+                        </Nav.Item>
+                        <Nav.Item>
+                            <div className="nav_link">
                                 <Nav.Link eventKey="AddProduct" onClick={props.click} style={styles.nav_link}>
-                                    <FontAwesomeIcon size="xs" icon={faTachometerAlt} style={styles.fontawesome} />
+                                    <FontAwesomeIcon size="xs" icon={faPlusCircle} style={styles.fontawesome} />
                                     <div className="mr-auto">Add Product</div>
                                     <FontAwesomeIcon icon={faChevronRight} style={styles.forword_fontawesome} />
                                 </Nav.Link>
@@ -90,7 +100,15 @@ const DashboardSideDrawer = props => {
                                 </Nav.Link>
                             </div>
                         </Nav.Item>
-
+                        <Nav.Item>
+                            <div className="nav_link">
+                                <Nav.Link eventKey="Slider" onClick={props.click} style={styles.nav_link}>
+                                    <FontAwesomeIcon icon={faImages} style={styles.fontawesome} />
+                                    <div className="mr-auto">Slider</div>
+                                    <FontAwesomeIcon icon={faChevronRight} style={styles.forword_fontawesome} />
+                                </Nav.Link>
+                            </div>
+                        </Nav.Item>
                         <Nav.Item>
                             <div className="nav_link">
                                 <Nav.Link style={styles.nav_link} onClick={() => setShow_category(!show_category)}>
@@ -119,16 +137,6 @@ const DashboardSideDrawer = props => {
                             </div>
                             : null
                         }
-
-                        <Nav.Item>
-                            <div className="nav_link">
-                                <Nav.Link eventKey="Slider" onClick={props.click} style={styles.nav_link}>
-                                    <FontAwesomeIcon icon={faUsers} style={styles.fontawesome} />
-                                    <div className="mr-auto">Slider</div>
-                                    <FontAwesomeIcon icon={faChevronRight} style={styles.forword_fontawesome} />
-                                </Nav.Link>
-                            </div>
-                        </Nav.Item>
                         <Nav.Item>
                             <div className="nav_link" >
                                 <Nav.Link onClick={props.click, props.logout} style={styles.nav_link}>
@@ -152,6 +160,9 @@ const DashboardSideDrawer = props => {
                             </Tab.Pane>
                             <Tab.Pane eventKey="Inventory">
                                 <Inventory {...props} />
+                            </Tab.Pane>
+                            <Tab.Pane eventKey="OutOfStock">
+                                <OutOfStock {...props} />
                             </Tab.Pane>
                             <Tab.Pane eventKey="AddProduct">
                                 <AddProduct {...props} />

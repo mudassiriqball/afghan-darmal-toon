@@ -16,6 +16,7 @@ import { TiTickOutline } from 'react-icons/ti'
 import { FiSend } from 'react-icons/fi'
 import { BsEyeSlash } from 'react-icons/bs'
 import { FaRegAddressCard } from 'react-icons/fa'
+import renderError from '../components/renderError';
 
 const schema = yup.object({
     email: yup.string().email('Enter Valid Email!')
@@ -260,9 +261,7 @@ class Signup extends Component {
                                                     disabled={this.state.isCodeSended}
                                                     onChange={phone => this.setState({ phone: "+" + phone, mobileError: '' })}
                                                 />
-                                                <Form.Control.Feedback type="invalid">
-                                                    {this.state.mobileError}
-                                                </Form.Control.Feedback>
+                                                {renderError(this.state.mobileError)}
                                                 <div className='feedback'>
                                                     <div className='mr-auto'>{this.state.feedback}</div>
                                                     {this.state.isCodeSended ?
@@ -292,9 +291,7 @@ class Signup extends Component {
                                                     isValid={this.state.isCodeVerified}
                                                     disabled={!this.state.isCodeSended || this.state.isCodeVerified}
                                                 />
-                                                <Form.Control.Feedback type="invalid">
-                                                    {this.state.verificationCodeError}
-                                                </Form.Control.Feedback>
+                                                {renderError(this.state.verificationCodeError)}
                                             </Form.Group>
                                         </Form.Row>
                                         {!this.state.isCodeSended &&
@@ -521,6 +518,7 @@ class Signup extends Component {
                                                     block
                                                     title={'Back'}
                                                     onClick={() => setFieldValue('role', '')}
+                                                    disabled={isSubmitting}
                                                 >
                                                     <BiArrowBack style={globalStyle.leftIcon} />
                                                 </CustomButton>

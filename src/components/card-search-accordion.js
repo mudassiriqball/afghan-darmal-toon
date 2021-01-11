@@ -3,74 +3,59 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSlidersH } from '@fortawesome/free-solid-svg-icons';
 import React, { useState, useEffect } from 'react';
 
-import DatePicker from "react-datepicker";
-import moment from "moment"
 import consts from '../constants';
+import Scanner from '../utils/scanner/scanner';
 
 export default function CardSearchAccordion(props) {
     const [options, setOptions] = useState([]);
+    const [showScanner, setShowScanner] = useState(false);
 
     const [searchType, setSearchType] = useState('_id');
     const [searchValue, setSearchValue] = useState(props.value);
 
-    const [start_date, setStart_date] = useState(new Date("2020/01/01"));
-    const [end_date, setEnd_date] = useState(new Date());
-
-    function handleSearchEnterPress(e) {
-        var key = e.keyCode || e.which;
-        if (key == 13) {
-            props.handleSearch(searchType, searchValue, start_date, end_date)
-        }
-    }
-
     function onSearchValueChange(val) {
         setSearchValue(val)
         if (val == '') {
-            props.handleSearch(searchType, '', start_date, end_date)
+            props.handleSearch(searchType, '')
         }
     }
 
     function handleSearchClearBtnClick() {
         setSearchValue('')
-        props.handleSearch(searchType, '', start_date, end_date)
+        props.handleSearch(searchType, '')
     }
 
     function handleSearchBtnClick(value) {
-        props.handleSearch(searchType, value, start_date, end_date)
+        if (searchType === 'order_qr_id') {
+            props.handleSearch('_id', value)
+        } else {
+            props.handleSearch(searchType, value)
+        }
     }
 
-
-    function handleSetStartDate(date) {
-        setStart_date(date)
+    function handleSearchEnterPress(e) {
+        var key = e.keyCode || e.which;
+        if (key == 13) {
+            if (searchType === 'order_qr_id') {
+                props.handleSearch('_id', value)
+            } else {
+                props.handleSearch(searchType, value)
+            }
+        }
     }
-    function handleSetEndDate(date) {
-        setEnd_date(date)
-    }
-    const ref = React.createRef();
-    const DatePickerBtn = React.forwardRef((props, ref) => (
-        <OverlayTrigger
-            placement="top"
-            overlay={<Tooltip>{props.tooltip}</Tooltip>}
-        >
-            <Button size='sm' variant='light' onClick={props.onClick}>
-                <div style={{ whiteSpace: 'nowrap' }}>{props.value}</div>
-            </Button>
-        </OverlayTrigger>
-    ))
 
     useEffect(() => {
-        // const datePicker = document.getElementsByClassName("react-datepicker__input-container")[0];
-        // datePicker.childNodes[0].setAttribute("readOnly", true);
-
         setOptions([])
         setOptions(prevPro => {
             return [...new Set([...prevPro, { value: '_id', name: 'ID' }])]
         })
         if (props.option == 'inventory') {
             setOptions(prevPro => {
+                return [...new Set([...prevPro, { value: 'qr_id', name: 'Scan Code' }])]
+            })
+            setOptions(prevPro => {
                 return [...new Set([...prevPro, { value: 'name', name: 'Product Name' }])]
             })
-
         } else if (props.option == 'customer') {
             setOptions(prevPro => {
                 return [...new Set([...prevPro, { value: 'mobile', name: 'Mobile' }])]
@@ -95,6 +80,9 @@ export default function CardSearchAccordion(props) {
 
         } else if (props.option == 'order') {
             setOptions(prevPro => {
+                return [...new Set([...prevPro, { value: 'order_qr_id', name: 'Scan Code' }])]
+            })
+            setOptions(prevPro => {
                 return [...new Set([...prevPro, { value: 'c_id', name: 'Cutomer ID' }])]
             })
             setOptions(prevPro => {
@@ -112,6 +100,7 @@ export default function CardSearchAccordion(props) {
     return (
         <>
             <Accordion as={Row} defaultActiveKey="0" style={{ margin: '2%' }} noGutters >
+
                 <Card className='p-0 m-0 w-100'>
                     <Card.Header as={Row} className='card_toggle_header'>
                         <Col lg={12} md={12} sm={12} sm={12}>
@@ -120,46 +109,17 @@ export default function CardSearchAccordion(props) {
                                 <FontAwesomeIcon icon={faSlidersH} className='search_accordian_fontawesome' />
                             </Accordion.Toggle>
                         </Col>
-
+                        <Col className='pb-3'>
+                            {showScanner && <Scanner small setScanerCode={(val) => { onSearchValueChange(val), setShowScanner(true); }} />}
+                        </Col>
                         <Col lg={12} md={12} sm={12} xs={12} className='accordian_col md_padding'>
                             <Row noGutters>
-                                {/* <Col lg='auto' md='auto' sm={12} xs={12}>
-                                    <Row className='m-0 p-0 date_row' noGutters>
-                                        <Col className='date_col'>
-                                            <DatePicker
-                                                className='start_date_picker'
-                                                dateFormat={'yyyy-MM-dd'}
-                                                minDate={new Date("2020/01/01")}
-                                                maxDate={end_date}
-                                                selected={start_date}
-                                                onChange={handleSetStartDate}
-                                                customInput={<DatePickerBtn ref={ref} tooltip={'Start Date'} />}
-                                                popperPlacement="bottom-start"
-                                            />
-                                        </Col>
-                                        <Col lg='auto' md='auto' sm='auto' xs='auto' className='d-flex align-items-center justify-content-center p-2'>
-                                            to
-                                        </Col>
-                                        <Col className='date_col'>
-                                            <DatePicker
-                                                dateFormat={'yyyy-MM-dd'}
-                                                minDate={start_date}
-                                                maxDate={new Date()}
-                                                selected={end_date}
-                                                todayButton="Today"
-                                                onChange={handleSetEndDate}
-                                                customInput={<DatePickerBtn ref={ref} tooltip={'End Date'} />}
-                                                popperPlacement="auto"
-                                            />
-                                        </Col>
-                                    </Row>
-                                </Col> */}
                                 <Col className='ml-1' lg='auto' md='auto' sm='auto' xs='auto'>
                                     <Form.Control as="select"
                                         variant="dark"
                                         size='sm'
                                         value={props.searchType}
-                                        onChange={(e) => setSearchType(e.target.value)}>
+                                        onChange={(e) => { setSearchType(e.target.value), setShowScanner((e.target.value === 'qr_id' || e.target.value === 'order_qr_id') ? true : false) }}>
                                         {options.map((element, index) =>
                                             <option value={element.value} key={index}>{element.name}</option>
                                         )}
@@ -178,7 +138,7 @@ export default function CardSearchAccordion(props) {
                                         />
                                         {searchValue && <InputGroup.Append >
                                             <Button size='sm' variant='danger' onClick={() => handleSearchClearBtnClick('')}>
-                                                {' x '}
+                                                {'clear'}
                                             </Button>
                                         </InputGroup.Append>
                                         }

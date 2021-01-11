@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { Row, Col, Card, Nav, Table, Form, Button, InputGroup } from 'react-bootstrap'
+import { Row, Col, Card, Nav, Table, Form, Button, InputGroup, Image } from 'react-bootstrap'
 import { faUsers, faUserPlus, faPersonBooth, faBan } from '@fortawesome/free-solid-svg-icons';
 import { faThumbsUp, faCheckCircle } from '@fortawesome/free-regular-svg-icons';
 
@@ -15,6 +15,7 @@ import Loading from '../../loading'
 
 import getUsersPageLimit from '../../../hooks/getUsersPageLimit'
 import getUsersBySearch from '../../../hooks/getUsersBySearch'
+import constants from '../../../constants';
 
 class deliveryBoy extends React.Component {
     constructor(props) {
@@ -144,6 +145,13 @@ class deliveryBoy extends React.Component {
                         <Card className='view_user'>
                             <Card.Body>
                                 <Row>
+                                    <Form.Group as={Col} lg={12} md={12} sm={12} xs={12} className='d-flex justify-content-center align-items-center pt-3 pb-3' style={{ background: constants.COLORS.SECONDARY }}>
+                                        <InputGroup style={{ width: '100px', height: '100px', borderRadius: '50%', background: constants.COLORS.WHITE }}>
+                                            <Image src={this.state.single_user && this.state.single_user.avatar && this.state.single_user.avatar}
+                                                style={{ width: '100px', height: '100px', borderRadius: '50%', background: constants.COLORS.WHITE }}
+                                            />
+                                        </InputGroup>
+                                    </Form.Group>
                                     <p className='p'><span>Personal Info</span></p>
                                     <Form.Group as={Col} lg={4} md={6} sm={6} xs={12}>
                                         <Form.Label className='form_label'>ID</Form.Label>
@@ -170,27 +178,15 @@ class deliveryBoy extends React.Component {
                                         </InputGroup>
                                     </Form.Group>
                                     <Form.Group as={Col} lg={4} md={6} sm={6} xs={12}>
-                                        <Form.Label className='form_label'>Country</Form.Label>
-                                        <InputGroup>
-                                            <Form.Control type="text" disabled={true} size="sm" value={this.state.single_user.countary} className='form_control' />
-                                        </InputGroup>
-                                    </Form.Group>
-                                    <Form.Group as={Col} lg={4} md={6} sm={6} xs={12}>
                                         <Form.Label className='form_label'>City</Form.Label>
                                         <InputGroup>
                                             <Form.Control type="text" disabled={true} size="sm" value={this.state.single_user.city} className='form_control' />
                                         </InputGroup>
                                     </Form.Group>
                                     <Form.Group as={Col} lg={4} md={6} sm={6} xs={12}>
-                                        <Form.Label className='form_label'>Gender</Form.Label>
-                                        <InputGroup>
-                                            <Form.Control type="text" disabled={true} size="sm" value={this.state.single_user.gender} className='form_control' />
-                                        </InputGroup>
-                                    </Form.Group>
-                                    <Form.Group as={Col} lg={4} md={6} sm={6} xs={12}>
                                         <Form.Label className='form_label'>Date</Form.Label>
                                         <InputGroup>
-                                            <Form.Control type="text" disabled={true} size="sm" value={this.state.single_user.entery_date} className='form_control' />
+                                            <Form.Control type="text" disabled={true} size="sm" value={this.state.single_user.entry_date && this.state.single_user.entry_date.substring(0, 10)} className='form_control' />
                                         </InputGroup>
                                     </Form.Group>
                                     <Form.Group as={Col} lg={12} md={12} sm={12} xs={12}>
@@ -447,6 +443,12 @@ function DeliveryBoyTableBody(props) {
                     {props.list && props.list.map((element, index) =>
                         index >= lower_limit && index < upper_limit && <tr key={index}>
                             <td align="center" >{index + 1}</td>
+                            <td>
+                                {element._id}
+                                <div className="td">
+                                    <Nav.Link className='pt-0' onClick={() => props.setView(element)} > View </Nav.Link>
+                                </div>
+                            </td>
                             <td align="center" >{element.mobile}</td>
                             <td align="center" >{element.fullName}</td>
                             <td align="center" >{element.city}</td>

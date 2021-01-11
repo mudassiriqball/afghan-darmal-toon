@@ -13,10 +13,8 @@ export default {
     INPUT_SUCCESS: '#7BDEB2',
     INPUT_ERROR: '#FCB3A4',
     ACTIVE: '#5E72E4', //same as primary
-    BUTTON_COLOR: '#9C26B0',
+    LIGHT_RED: '#ffcccc',
     PLACEHOLDER: '#9FA5AA',
-    SWITCH_ON: '#5E72E4',
-    SWITCH_OFF: '#D4D9DD',
     GRADIENT_START: '#6B24AA',
     GRADIENT_END: '#AC2688',
     PRICE_COLOR: '#EAD5FB',

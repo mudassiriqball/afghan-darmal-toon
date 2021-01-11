@@ -1,10 +1,8 @@
 import React, { Component, useState, useRef, useEffect } from 'react'
 import axios from 'axios'
 import { Row, Col, Card, Nav, Table, Form, Button, InputGroup, Image } from 'react-bootstrap'
-import { faBan, faCheckDouble, faHistory, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { faEdit, faThumbsUp, faCheckCircle } from '@fortawesome/free-regular-svg-icons';
+import { faEdit, faCheckCircle } from '@fortawesome/free-regular-svg-icons';
 import moment from 'moment'
-// import QRCode from 'qrcode'
 import QRCode from "react-qr-code";
 import TitleRow from '../../title-row'
 import CardSearchAccordion from '../../card-search-accordion';
@@ -18,8 +16,7 @@ import Loading from '../../loading'
 import PaginationRow from '../../pagination-row'
 import ReactToPrint from 'react-to-print'
 
-import urls from '../../../utils/urls/index'
-import consts from '../../../constants'
+import urls from '../../../utils/urls/index';
 
 export default class Orders extends Component {
     constructor(props) {
@@ -77,7 +74,7 @@ export default class Orders extends Component {
             }
         }
 
-        await axios.put(urls.PUT_REQUEST.UPDATE_Order_STATUS + this.state.singleOrderData._id, data, {
+        await axios.put(urls.PUT_REQUEST.UPDATE_ORDER_STATUS + this.state.singleOrderData._id, data, {
             headers: { 'authorization': currentComponent.props.token }
         }).then(function (response) {
             currentComponent.setState({
@@ -336,7 +333,7 @@ function Order(props) {
                 status: 'progress'
             }
         }
-        await axios.put(urls.PUT_REQUEST.UPDATE_Order_STATUS + singleOrderData._id, data, {
+        await axios.put(urls.PUT_REQUEST.UPDATE_ORDER_STATUS + singleOrderData._id, data, {
             headers: { 'authorization': props.token }
         }).then(function (response) {
             setConfirmModalLoading(false)
