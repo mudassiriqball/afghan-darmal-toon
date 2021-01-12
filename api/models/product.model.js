@@ -82,6 +82,10 @@ const Product = new Schema({
   isdeleted: {
     type: Boolean,
   },
+  qr_id: {
+    type: String,
+    unique: true,
+  },
 
   rating_review: {
     rating: {

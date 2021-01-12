@@ -30,6 +30,8 @@ router.put("/add/review/rating/:_id", checkAuth, productController.add_rating_an
 // put Requests
 router.put("/delete-product/:_id", checkAuth, productController.deleteProduct);
 
-router.put("/product/update/product/:_id", checkAuth, productController.update_product_data);
+router.put("/update/product/by-id/admin/inventory/:_id", checkAuth, productController.update_product_data);
+router.put("/delete/put/isdeleted-true/product/by-id/admin/inventory/:_id", checkAuth, productController.delete_product);
+
 router.put("/product/update/product-variation/:_id", checkAuth, productController.update_product_variation_data);
 module.exports = router;

@@ -60,6 +60,14 @@ productsController.addProduct = async (req, res) => {
   const body = req.body;
 
   try {
+    let check = await Products.countDocuments({qr_id:body.qr_id});
+    if(check===1){
+      res.status(201).send({
+        code: 201,
+        message: "QR Code already exists",
+      });  
+    }
+    else{
     var datetime = new Date();
     body.isdeleted = false;
     body.entry_date = datetime;
@@ -71,7 +79,7 @@ productsController.addProduct = async (req, res) => {
       code: 200,
       message: "product Added Successfully",
     });
-  } catch (error) {
+  }} catch (error) {
     console.log("error", error);
     return res
       .status(500)
@@ -594,6 +602,10 @@ productsController.get_products_by_category = async (req, res) => {
         isdeleted: false,
         categoryId: req.query.category,
         subCategoryId: req.query.subCategory,
+      },
+      {
+        limit: parseInt(req.query.limit),
+        page: parseInt(req.query.page),
       });
       res.status(200).send({
         code: 200,
@@ -604,6 +616,10 @@ productsController.get_products_by_category = async (req, res) => {
       let products = await Products.paginate({
         isdeleted: false,
         categoryId: req.query.category,
+      },
+      {
+        limit: parseInt(req.query.limit),
+        page: parseInt(req.query.page),
       });
       res.status(200).send({
         code: 200,
@@ -1474,6 +1490,32 @@ productsController.update_product_data = async (req, res) => {
     return res.status(500).send(error);
   }
 };
+
+productsController.delete_product = async (req, res) => {
+  const body = req.body;
+  try {
+    const _id = req.params._id;
+    Products.findOneAndUpdate(
+      { _id: _id },
+      {
+        $set: {isdeleted:true},
+      },
+      {
+        returnNewDocument: true,
+      },
+      function (error, result) {
+        res.status(200).send({
+          code: 200,
+          message: "updated Successfully",
+        });
+      }
+    );
+  } catch (error) {
+    console.log("error", error);
+    return res.status(500).send(error);
+  }
+};
+
 
 productsController.update_product_variation_data = async (req, res) => {
   const body = req.body;
