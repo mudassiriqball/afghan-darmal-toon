@@ -40,7 +40,7 @@ export default function getProductsByCategorySubCategoryPageLimit(category, subC
                         setHasMore(res.data.data && res.data.data.docs && res.data.data.docs.length > 0);
                     }
                 }).catch(err => {
-                    console.log('Get products by page limit error:', err);
+                    console.log('PRODUCTS_BY_CATEGORY_SUB_CATEGORY_PAGE_LIMIT ERROR:', err);
                     if (unmounted) {
                         setLoading(false)
                         if (axios.isCancel(err)) return

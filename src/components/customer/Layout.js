@@ -128,7 +128,7 @@ export default function Layout(props) {
                                     {'CATEGORIES'}
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu className='dropdown-menu dropdown_menue' style={{ border: 'none', paddingTop: '27px', background: 'none' }}>
-                                    <Row noGutters onMouseLeave={() => categoryMouseLeave()} style={{ boxShadow: `0px 0px 5px ${consts.COLORS.MAIN}`, paddingTop: '20px', background: consts.COLORS.WHITE }}>
+                                    <Row noGutters onMouseLeave={() => categoryMouseLeave()} style={{ boxShadow: `0px 0px 5px ${consts.COLORS.SHADOW}`, paddingTop: '20px', background: consts.COLORS.WHITE }}>
                                         <Col style={{ overflowY: 'auto', zIndex: 1, minHeight: '500px', maxHeight: '500px' }}>
                                             {props.categories_list && props.categories_list.map((element, index) =>
                                                 <Link key={index} href='/products/[category]' as={`/products/${element._id}`}>
@@ -181,9 +181,9 @@ export default function Layout(props) {
                                     {'HOME'}
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu className='dropdown-menu' style={{ border: 'none', paddingTop: '27px', background: 'none' }} >
-                                    <Card style={{ boxShadow: `0px 0px 5px ${consts.COLORS.MAIN}` }}>
+                                    <Card style={{ boxShadow: `0px 0px 5px ${consts.COLORS.SHADOW}` }}>
                                         <div className='link_div'>
-                                            <Nav.Link href="/" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '14px' }}>HOME</Nav.Link>
+                                            <Nav.Link href="/" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '13px', borderBottom: `1px solid #e6e6e6` }}>HOME</Nav.Link>
                                         </div>
                                     </Card>
                                 </Dropdown.Menu>
@@ -201,17 +201,26 @@ export default function Layout(props) {
                                     {'PAGES'}
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu className='dropdown-menu' style={{ border: 'none', paddingTop: '27px', background: 'none' }} >
-                                    <Card style={{ boxShadow: `0px 0px 5px ${consts.COLORS.MAIN}` }}>
+                                    <Card style={{ boxShadow: `0px 0px 5px ${consts.COLORS.SHADOW}` }}>
                                         {user.role == 'admin' &&
                                             <div className='link_div'>
-                                                <Nav.Link href="/admin" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '14px' }}>DASHBOARD</Nav.Link>
+                                                <Nav.Link href="/admin" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '13px', borderBottom: `1px solid #e6e6e6` }}>DASHBOARD</Nav.Link>
                                             </div>
                                         }
                                         <div className='link_div'>
-                                            <Nav.Link href="/profile" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '14px', borderBottom: `1px solid #e6e6e6` }}>PROFILE</Nav.Link>
+                                            <Nav.Link href="/profile" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '13px', borderBottom: `1px solid #e6e6e6` }}>PROFILE</Nav.Link>
                                         </div>
                                         <div className='link_div'>
-                                            <Nav.Link href="/cart" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '14px' }}>CART</Nav.Link>
+                                            <Nav.Link href="/cart" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '13px', borderBottom: `1px solid #e6e6e6` }}>CART</Nav.Link>
+                                        </div>
+                                        <div className='link_div'>
+                                            <Nav.Link href="/help" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '13px', borderBottom: `1px solid #e6e6e6` }}>HELP</Nav.Link>
+                                        </div>
+                                        <div className='link_div'>
+                                            <Nav.Link href="/terms-and-condition" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '13px', borderBottom: `1px solid #e6e6e6` }}>TERMS & CONDITIONS</Nav.Link>
+                                        </div>
+                                        <div className='link_div'>
+                                            <Nav.Link href="/privacy-policy" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '13px', borderBottom: `1px solid #e6e6e6` }}>PRIVACY POLICY</Nav.Link>
                                         </div>
                                     </Card>
                                 </Dropdown.Menu>
@@ -229,9 +238,12 @@ export default function Layout(props) {
                                     {'SERVICES'}
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu className='dropdown-menu' style={{ border: 'none', paddingTop: '27px', background: 'none' }} >
-                                    <Card style={{ boxShadow: `0px 0px 5px ${consts.COLORS.MAIN}` }}>
+                                    <Card style={{ boxShadow: `0px 0px 5px ${consts.COLORS.SHADOW}` }}>
                                         <div className='link_div'>
-                                            <Nav.Link href="/" style={{ fontWeight: 'bolder', padding: '10px 30px' }}>HOME</Nav.Link>
+                                            <Nav.Link href="/online-payment" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '13px', borderBottom: `1px solid #e6e6e6` }}>ONLINE PAYMENT</Nav.Link>
+                                        </div>
+                                        <div className='link_div'>
+                                            <Nav.Link href="/cash-on-delivery" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '13px', borderBottom: `1px solid #e6e6e6` }}>CASH ON DELIVERY</Nav.Link>
                                         </div>
                                     </Card>
                                 </Dropdown.Menu>
@@ -303,6 +315,7 @@ export default function Layout(props) {
                 }
                 ._layout .link_div {
                     color: ${consts.COLORS.SEC};
+                    width: 200px;
                 }
                 ._layout .link_div:hover {
                     background: ${consts.COLORS.MAIN};

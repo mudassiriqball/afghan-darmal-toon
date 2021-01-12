@@ -11,7 +11,7 @@ export default function getInventoryPageLimit(refresh_count, page, limit) {
         setProducts([]);
         return () => {
         }
-    }, [refresh_count])
+    }, [refresh_count]);
 
     useEffect(() => {
         let unmounted = true
@@ -50,7 +50,7 @@ export default function getInventoryPageLimit(refresh_count, page, limit) {
             unmounted = false
             source.cancel();
         };
-    }, [page]);
+    }, [page, refresh_count]);
 
     return {
         INVENTORY_PRODUCTS_LOADING,

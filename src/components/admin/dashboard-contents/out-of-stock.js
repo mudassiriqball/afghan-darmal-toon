@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Row, Table, Button, Nav, Col, Image, Form, InputGroup, Alert, } from 'react-bootstrap'
 import axios from 'axios'
@@ -79,20 +80,29 @@ export default function OutOfStock(props) {
         setShowConfirmDeleteModal(true)
     }
 
+    // Delete
+    const [deleteLoading, setDeleteLoading] = useState(false);
     async function handleDeleteProduct(element) {
-        setShowConfirmDeleteModal(false);
+        setDeleteLoading(true);
         await axios.put(urls.PUT_REQUEST.DELETE_PRODUCT + data._id, {}, {
             headers: {
                 'authorization': props.token
             }
         }).then(function (response) {
+            setDeleteLoading(false);
+            setShowConfirmDeleteModal(false);
+
             setAlertMsg('Product deleted successfully');
             setAlertType('success');
             setShowAlert(true);
+
             setViewProduct(false);
             setRefresh_count(refresh_count + 1);
         }).catch(function (error) {
             console.log(error);
+            setDeleteLoading(false);
+            setShowConfirmDeleteModal(false);
+
             setAlertMsg('Update delete failed, Please try again later.');
             setAlertType('error');
             setShowAlert(true);
@@ -101,13 +111,17 @@ export default function OutOfStock(props) {
 
     // Update Product
     const [isUpdate, setIsUpdate] = useState(false);
-
+    const [showUpdateConfirmModal, setShowUpdateConfirmModal] = useState(false);
+    const [updateLoading, setUpdateLoading] = useState(false);
     const handleUpdateProduct = async (updatedData) => {
+        setUpdateLoading(true);
         await axios.put(urls.PUT_REQUEST.UPDATE_PRODUCT + data._id, updatedData, {
             headers: {
                 'authorization': props.token
             }
         }).then(function (response) {
+            setUpdateLoading(false);
+            setShowUpdateConfirmModal(false);
             setAlertMsg('Product updated successfully');
             setAlertType('success');
             setShowAlert(true);
@@ -115,6 +129,8 @@ export default function OutOfStock(props) {
             setRefresh_count(refresh_count + 1);
         }).catch(function (error) {
             console.log(error);
+            setUpdateLoading(false);
+            setShowUpdateConfirmModal(false);
             setAlertMsg('Update product failed, Please try again later.');
             setAlertType('error');
             setShowAlert(true);
@@ -129,9 +145,16 @@ export default function OutOfStock(props) {
                     data={data}
                     isUpdate={isUpdate}
                     back={() => { setViewProduct(false), setData(data) }}
-                    handleDeleteProduct={() => handleDeleteProduct()}
                     cancel={() => setIsUpdate(false)}
                     edit={() => setIsUpdate(true)}
+
+                    deleteLoading={deleteLoading}
+                    setDeleteLoading={(val) => setDeleteLoading(val)}
+                    handleDeleteProduct={() => handleDeleteProduct()}
+
+                    showUpdateConfirmModal={showUpdateConfirmModal}
+                    setShowUpdateConfirmModal={(val) => setShowUpdateConfirmModal(val)}
+                    updateLoading={updateLoading}
                     handleUpdateProduct={(updatedData) => handleUpdateProduct(updatedData)}
                 />
                 break;
@@ -212,6 +235,7 @@ export default function OutOfStock(props) {
                 _id={data._id}
                 name={data.name}
                 confirm={handleDeleteProduct}
+                loading={deleteLoading}
             />
 
             {renderSwitch(viewProduct)}
@@ -367,7 +391,6 @@ const ViewProduct = props => {
     const [currentImgIndex, setCurrentImgIndex] = React.useState('')
     const [imgData, setImgData] = React.useState([])
 
-    const [showUpdateConfirmModal, setShowUpdateConfirmModal] = useState(false);
     const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false);
     // alert stack
     const [showAlert, setShowAlert] = useState(false);
@@ -449,7 +472,7 @@ const ViewProduct = props => {
             setAlertType('error');
             setShowAlert(true);
         } else {
-            setShowUpdateConfirmModal(true);
+            props.setShowUpdateConfirmModal(true);
         }
     }
 
@@ -470,16 +493,18 @@ const ViewProduct = props => {
                 _id={data._id}
                 name={data.name}
                 confirm={props.handleDeleteProduct}
+                loading={props.deleteLoading}
             />
             <ConfirmModal
-                onHide={() => setShowUpdateConfirmModal(false)}
-                show={showUpdateConfirmModal}
+                onHide={() => props.setShowUpdateConfirmModal(false)}
+                show={props.showUpdateConfirmModal}
                 iconname={faEdit}
                 color={'green'}
                 title={'Update Product?'}
                 _id={data._id}
                 name={data.name}
-                confirm={(productData) => props.handleUpdateProduct(productData)}
+                confirm={() => props.handleUpdateProduct(productData)}
+                loading={props.updateLoading}
             />
             <TitleRow icon={faPlus} title={` Vendor Dashboard / All Products / ${productData.name}`} />
             <Form.Row style={{ margin: ' 1% 2%', display: 'flex', alignItems: 'center' }} >
@@ -507,7 +532,7 @@ const ViewProduct = props => {
                     <Form.Group as={Col} lg={12} md={12} sm={12} xs={12}>
                         <Form.Label className='form_label'>QR Code:</Form.Label>
                         <InputGroup>
-                            <QRCode value={productData.qr_id} />
+                            <QRCode value={productData.qr_id ? productData.qr_id : ''} />
                         </InputGroup>
                     </Form.Group>
                     <Form.Group as={Col} lg={4} md={4} sm={6} xs={12}>

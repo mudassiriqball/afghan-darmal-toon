@@ -46,7 +46,7 @@ export default function getInventorySearch(refresh_count, fieldName, query, quer
             source.cancel();
             getData;
         };
-    }, [queryPageNumber]);
+    }, [queryPageNumber, refresh_count]);
 
     return {
         INVENTORY_SEARCH_LOADING,
