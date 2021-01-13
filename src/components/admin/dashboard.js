@@ -79,7 +79,7 @@ const Dashboard = props => {
                             <Nav.Item style={styles.image_div}>
                                 <p>
                                     <Image src={props.avatar} roundedCircle thumbnail fluid style={styles.image} />
-                                    <Nav.Link style={styles.muhalik}> {props.fullName} </Nav.Link>
+                                    <Nav.Link style={styles.afghan}> {props.fullName} </Nav.Link>
                                 </p>
                             </Nav.Item>
                             <Nav.Item>
@@ -384,7 +384,7 @@ const styles = {
         minHeight: '100px',
         maxHeight: '100px',
     },
-    muhalik: {
+    afghan: {
         color: `${consts.COLORS.ADMIN_MAIN}`,
         fontSize: '14px',
         margin: '0%',

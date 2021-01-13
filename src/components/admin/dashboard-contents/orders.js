@@ -17,6 +17,7 @@ import PaginationRow from '../../pagination-row'
 import ReactToPrint from 'react-to-print'
 
 import urls from '../../../utils/urls/index';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 export default class Orders extends Component {
     constructor(props) {
@@ -73,10 +74,12 @@ export default class Orders extends Component {
                 status: 'returned'
             }
         }
-
+        console.log(this.state.singleOrderData)
+        debugger
         await axios.put(urls.PUT_REQUEST.UPDATE_ORDER_STATUS + this.state.singleOrderData._id, data, {
             headers: { 'authorization': currentComponent.props.token }
         }).then(function (response) {
+            debugger
             currentComponent.setState({
                 confirmModalLoading: false,
                 showConfirmModal: false,
@@ -92,6 +95,7 @@ export default class Orders extends Component {
             currentComponent.setState({ singleOrderData: obj })
             currentComponent.props.ordersReloadCountHandler()
         }).catch(function (error) {
+            debugger
             currentComponent.setState({
                 confirmModalLoading: false,
                 showConfirmModal: false,
@@ -333,9 +337,12 @@ function Order(props) {
                 status: 'progress'
             }
         }
+        console.log(singleOrderData)
+        debuger
         await axios.put(urls.PUT_REQUEST.UPDATE_ORDER_STATUS + singleOrderData._id, data, {
             headers: { 'authorization': props.token }
         }).then(function (response) {
+            debugger
             setConfirmModalLoading(false)
             setShowConfirmModal(false)
             setAlertType('success')
@@ -346,8 +353,9 @@ function Order(props) {
             setQueryPageNumber(1)
             setPage(1)
             setQueryPage(1)
-            props.setRefresh()
+            props.setRefresh();
         }).catch(function (error) {
+            debugger
             setConfirmModalLoading(false)
             setShowConfirmModal(false)
             setAlertType('error')
@@ -460,6 +468,14 @@ function Order(props) {
                                         setSingle_order(element)
                                         setShowConfirmModal(true)
                                         setConfirmModalMsg('Set Order Delivered?')
+                                        setConfirmModalColor('green')
+                                        setIconname(faCheckCircle)
+                                    }}
+                                    setProgress={(element) => {
+                                        setMethod('progress')
+                                        setSingle_order(element)
+                                        setShowConfirmModal(true)
+                                        setConfirmModalMsg('Set Order Progress?')
                                         setConfirmModalColor('green')
                                         setIconname(faCheckCircle)
                                     }}
@@ -655,7 +671,7 @@ function ViewOrder(props) {
             <Card className='view_user' ref={componentRef}>
                 <Card.Body>
                     <div className='logo_col'>
-                        <Image src='/muhalik.jpg' className='logo' />
+                        <Image src='/logo.jpg' className='logo' />
                         <h2 className='p-0 ml-3'>afghandarmaltoon.com</h2>
                     </div>
                     <p className='p'><span>Order Info</span></p>

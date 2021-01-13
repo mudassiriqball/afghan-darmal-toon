@@ -105,6 +105,7 @@ export default function Home(props) {
         <MultiCarosuel
           user={user}
           token={token}
+          getUser={() => getUser(user._id)}
           categories_list={props.categories_list}
           sub_categories_list={props.sub_categories_list}
         />

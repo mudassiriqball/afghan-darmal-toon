@@ -217,7 +217,7 @@ export default function Product(props) {
                                 <Col lg={7} md={7} sm={12} xs={12} className='sm_xs_padding_top'>
                                     <h3 style={{ fontWeight: 'bold' }}>{productData.name}</h3>
                                     <h3 style={{ fontWeight: 'bold', borderBottom: `1px solid ${consts.COLORS.SHADOW}`, color: consts.COLORS.MAIN, padding: '10px 0px 10px 0px' }}>Rs: {productData.price}</h3>
-                                    <label style={{ minHeight: width / 1.5, color: consts.COLORS.GRAY }}>{productData.description}</label>
+                                    <label className='description' style={{ minHeight: width / 1.5, color: consts.COLORS.GRAY }}>{productData.description}</label>
                                     <Row>
                                         <Col lg={3} md={3} sm={6} xs={6} sm={6}>
                                             <div style={{ height: '100%', border: `2px solid ${consts.COLORS.LIGHT_GRAY}`, borderRadius: '5px', display: 'flex', flexDirection: 'row' }}>
@@ -347,7 +347,15 @@ export default function Product(props) {
                     color: gray;
                     font-size: 12px;
                 }
-
+                ._product .description {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 10; /* number of lines to show */
+                    -webkit-box-orient: vertical;
+                    font-size: 12px;
+                    color: ${consts.COLORS.GRAY}
+                }
                 @media only screen and (max-width: 600px) {
                     ._product {
                         padding: 2% 5%;

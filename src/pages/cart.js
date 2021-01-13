@@ -55,7 +55,6 @@ export default function Cart(props) {
 
     const [cart_list, setCart_list] = useState([])
     const [isCartLoading, setIsCartLoading] = useState(false)
-    const [cart_count, setCart_count] = useState(0)
     const [canUpdateCart, setCanUpdateCart] = useState(false);
 
     const [productsData, setProductsData] = useState('');
@@ -70,17 +69,8 @@ export default function Cart(props) {
         async function getData() {
             const _decoded_token = await checkTokenExpAuth();
             if (_decoded_token != null) {
-                setIsCartLoading(true)
-                setUser(_decoded_token)
-                await axios.get(urls.GET_REQUEST.USER_BY_ID + _decoded_token._id).then((res) => {
-                    setUser(res.data.data[0])
-                    setCart_count(res.data.data[0].cart && res.data.data[0].cart.length)
-                    setCart_list(res.data.data[0].cart)
-                    setIsCartLoading(false)
-                }).catch((err) => {
-                    console.log('get user error');
-                    setIsCartLoading(false)
-                })
+                setUser(_decoded_token);
+                getUser(_decoded_token._id);
                 const _token = await getTokenFromStorage();
                 setToken(_token)
             }
@@ -90,13 +80,29 @@ export default function Cart(props) {
         };
     }, []);
 
+    const getUser = async (id) => {
+        setIsCartLoading(true)
+        await axios.get(urls.GET_REQUEST.USER_BY_ID + id).then((res) => {
+            setUser(res.data.data[0]);
+            setCart_list(res.data.data[0].cart);
+            setIsCartLoading(false);
+        }).catch((err) => {
+            console.log('get user error');
+            setIsCartLoading(false)
+        })
+    }
 
     useEffect(() => {
         calculateSubTotalPrice();
     }, [productsData])
 
     useEffect(() => {
-        setProductsData('');
+        setProductsData([]);
+        return () => {
+        }
+    }, [cart_list]);
+
+    useEffect(() => {
         cart_list && cart_list.forEach((element, index) => {
             getProducts(element, index);
         })
@@ -118,6 +124,7 @@ export default function Cart(props) {
             })
         }
         return () => {
+            setProductsData([]);
         };
     }, [cart_list]);
 
@@ -149,7 +156,8 @@ export default function Cart(props) {
         let copyArray = []
         copyArray = Object.assign([], productsData)
         copyArray[index].isLoading = true
-        setProductsData(copyArray)
+        setProductsData(copyArray);
+        debugger
         await axios({
             method: 'PUT',
             url: urls.PUT_REQUEST.CLEAR_CART + user._id,
@@ -163,11 +171,11 @@ export default function Cart(props) {
             copyArray[index].isLoading = true
             setProductsData(copyArray)
             copyArray.splice(index, 1)
-            setCart_count(cart_count - 1)
             setProductsData(copyArray);
             setAlertType('success');
             setAlertMsg('Item Removed Successfully from Cart');
             setShowAlertModal(true);
+            getUser(user._id);
         }).catch(err => {
             let copyArray = []
             copyArray = Object.assign([], productsData)
@@ -634,7 +642,9 @@ function ProcedeOrder(props) {
                 'authorization': token
             }
         }).then(res => {
-            Router.reload();
+            setTimeout(() => {
+                Router.reload();
+            }, 1000);
         }).catch(err => {
             console.log('Clear Cart Data Failed Error:', err)
         })

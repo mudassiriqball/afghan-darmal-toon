@@ -48,7 +48,7 @@ export default function ProductCard(props) {
                 setAlertType('success');
                 setAlertMsg('Product Successfully Added to Cart');
                 setShowAlertModal(true);
-                getUser(user._id);
+                getUser();
             }).catch(function (err) {
                 setCartLoading(false)
                 setAlertType('error');

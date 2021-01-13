@@ -12,5 +12,5 @@ export default {
     DELETE_SUB_CATEGORY: baseUrl + '/api/categories/sub-category/',
 
     // Cart
-    DELETE_CART: baseUrl + '/api/delete-cart/id/delete-cart-by-id/',
+    DELETE_CART: baseUrl + '/api/users/delete-cart/id/delete-cart-by-id/',
 }

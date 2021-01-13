@@ -164,18 +164,6 @@ class AddNew extends Component {
         this.setState({ files: copyArray, imagePreviewArray: imgCopyArray })
     }
 
-    // uploadedImages = async (values) => {
-    //     if (count === this.state.files.length) {
-    //         debugger
-    //         return true;
-    //     }
-    //     if (errorCount > 0) {
-    //         debugger
-    //         return false;
-    //     }
-    // }
-
-
     addProduct = async (values, setSubmitting, resetForm) => {
         values.categoryId = this.state.categoryId;
         values.subCategoryId = this.state.subCategoryId;

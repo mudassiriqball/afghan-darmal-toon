@@ -162,7 +162,7 @@ export default function Toolbar(props) {
                                 <Dropdown.Toggle as={Nav.Link}
                                     style={{ fontWeight: 'bold', fontSize: '15px' }} active
                                 >
-                                    {'Account'}
+                                    {user.fullName}
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu className='dropdown-menu dropdown-menu-right' style={{ border: 'none', paddingTop: '7px', background: 'none' }} >
                                     <Card style={{ boxShadow: `1px 0px 3px lightgray` }}>

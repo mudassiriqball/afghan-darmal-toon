@@ -60,26 +60,27 @@ productsController.addProduct = async (req, res) => {
   const body = req.body;
 
   try {
-    let check = await Products.countDocuments({qr_id:body.qr_id});
-    if(check===1){
+    let check = await Products.countDocuments({ qr_id: body.qr_id });
+    if (check === 1) {
       res.status(201).send({
         code: 201,
         message: "QR Code already exists",
-      });  
+      });
     }
-    else{
-    var datetime = new Date();
-    body.isdeleted = false;
-    body.entry_date = datetime;
-    const header = jwt.decode(req.headers.authorization);
-    body.vendor_id = header.data._id;
-    const product = new Products(body);
-    const result = await product.save();
-    res.status(200).send({
-      code: 200,
-      message: "product Added Successfully",
-    });
-  }} catch (error) {
+    else {
+      var datetime = new Date();
+      body.isdeleted = false;
+      body.entry_date = datetime;
+      const header = jwt.decode(req.headers.authorization);
+      body.vendor_id = header.data._id;
+      const product = new Products(body);
+      const result = await product.save();
+      res.status(200).send({
+        code: 200,
+        message: "product Added Successfully",
+      });
+    }
+  } catch (error) {
     console.log("error", error);
     return res
       .status(500)
@@ -603,10 +604,10 @@ productsController.get_products_by_category = async (req, res) => {
         categoryId: req.query.category,
         subCategoryId: req.query.subCategory,
       },
-      {
-        limit: parseInt(req.query.limit),
-        page: parseInt(req.query.page),
-      });
+        {
+          limit: parseInt(req.query.limit),
+          page: parseInt(req.query.page),
+        });
       res.status(200).send({
         code: 200,
         message: "Successful",
@@ -617,10 +618,10 @@ productsController.get_products_by_category = async (req, res) => {
         isdeleted: false,
         categoryId: req.query.category,
       },
-      {
-        limit: parseInt(req.query.limit),
-        page: parseInt(req.query.page),
-      });
+        {
+          limit: parseInt(req.query.limit),
+          page: parseInt(req.query.page),
+        });
       res.status(200).send({
         code: 200,
         message: "Successful",
@@ -629,7 +630,11 @@ productsController.get_products_by_category = async (req, res) => {
     }
   } catch (error) {
     console.log("error", error);
-    return res.status(500).send(error);
+    return res.status(500).send({
+      code: 200,
+      message: "ERROR",
+      error: error,
+    });
   }
 };
 
@@ -1498,7 +1503,7 @@ productsController.delete_product = async (req, res) => {
     Products.findOneAndUpdate(
       { _id: _id },
       {
-        $set: {isdeleted:true},
+        $set: { isdeleted: true },
       },
       {
         returnNewDocument: true,

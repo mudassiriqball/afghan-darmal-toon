@@ -46,7 +46,7 @@ export default function MultiCarosuel(props) {
 
 function MultiCarosuelRow(props) {
     const { user, token, getUser, category, sub_categories_list } = props;
-    const [page, setPage] = useState(0);
+    const [page, setPage] = useState(1);
     const [subCategory_id, setSubCategory_id] = useState(null);
 
     const { PRODUCTS_PAGE_LIMIT_LOADING, PRODUCTS_PAGE_LIMIT_ERROR, PRODUCTS_PAGE_LIMIT_PRODUCTS, PRODUCTS_PAGE_LIMIT_HAS_MORE } =

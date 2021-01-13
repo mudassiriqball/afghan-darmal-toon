@@ -62,8 +62,6 @@ export default function Orders(props) {
         })
     }
 
-    console.log('ahaha:', orders)
-
     return (
         <div className='orders_style'>
             {!props.isMobile &&
