@@ -102,17 +102,22 @@ export default function Home(props) {
           />
           <InfoRow />
         </Layout>
-        <MultiCarosuel
-          user={user}
-          token={token}
-          getUser={() => getUser(user._id)}
-          categories_list={props.categories_list}
-          sub_categories_list={props.sub_categories_list}
-        />
+        <div className='_index'>
+          <MultiCarosuel
+            user={user}
+            token={token}
+            getUser={() => getUser(user._id)}
+            categories_list={props.categories_list}
+            sub_categories_list={props.sub_categories_list}
+          />
+        </div>
         <Footer />
         <StickyBottomNavbar user={user} />
       </main>
       <style jsx>{`
+        ._index {
+          min-height: 50vh;
+        }
         ._container {
           background: ${consts.COLORS.WHITE};
           min-height: 100vh;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Card, Col, Dropdown, Nav, Navbar, Row, Form, Badge, Modal, Button } from 'react-bootstrap'
-import consts from '../../constants'
+import { Card, Col, Dropdown, Nav, Navbar, Row, Form, Badge, Modal, Button, Image } from 'react-bootstrap'
+import constants from '../../constants'
 import CssTransition from './CssTransition'
 import Toolbar from './toolbar';
 import Link from 'next/link';
@@ -31,25 +31,25 @@ function SearchModal(props) {
                 {searchQuery !== '' && searchQuery !== null ?
                     <Link onClick={props.onHide} href={'/products/search/[search]'} as={`/products/search/${searchQuery}`} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
                         <div onClick={props.onHide} style={{ flex: 1 }} className='coloreBoxIcon d-flex justify-content-center align-items-center'>
-                            <RiSearch2Line style={{ fontSize: '25px', color: consts.COLORS.WHITE }} />
+                            <RiSearch2Line style={{ fontSize: '25px', color: constants.COLORS.WHITE }} />
                         </div>
                     </Link>
                     :
                     <Link href='' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
                         <div style={{ flex: 1 }} className='coloreBoxIcon d-flex justify-content-center align-items-center'>
-                            <RiSearch2Line style={{ fontSize: '25px', color: consts.COLORS.WHITE }} />
+                            <RiSearch2Line style={{ fontSize: '25px', color: constants.COLORS.WHITE }} />
                         </div>
                     </Link>
                 }
             </Modal.Body>
             <style type='text/css'>{`
                 ._searchModal .coloreBoxIcon {
-                    background: ${consts.COLORS.MAIN};
+                    background: ${constants.COLORS.MAIN};
                     min-width: 45px;
                     cursor: pointer;
                 }
                 ._searchModal .coloreBoxIcon:hover {
-                    background: ${consts.COLORS.SEC};
+                    background: ${constants.COLORS.SEC};
                 } 
             `}</style>
         </Modal >
@@ -115,21 +115,26 @@ export default function Layout(props) {
                 <Navbar collapseOnSelect expand="md" className='sticky-inner' style={{ justifyContent: 'center' }} variant='light'>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" style={{ marginTop: '10px', marginBottom: '10px', marginRight: 'auto' }} />
                     <Navbar.Collapse id="responsive-navbar-nav">
-                        {/* Categories lg md*/}
                         <Nav className='sm_xs_display_none'>
+                            <Image src='logo.jpg' style={{ width: '200', maxWidth: '200px' }} />
+                        </Nav>
+
+                        <Nav className="justify-content-center mr-auto ml-auto" >
+                            {/* Categories lg md*/}
                             <Dropdown
+                                className='sm_xs_display_none'
                                 onMouseOver={() => { setIsCategoryOpen(true), setHoverCategory(true) }}
                                 onMouseLeave={() => { setIsCategoryOpen(false), setHoverCategory(false) }}
                                 show={isCategoryOpen}
                             >
                                 <Dropdown.Toggle as={Nav.Link} className='d-flex flex-row align-items-center'
-                                    style={{ fontWeight: 'bold', background: hoverCategory ? consts.COLORS.MAIN : consts.COLORS.WHITE, color: hoverCategory ? consts.COLORS.WHITE : consts.COLORS.SEC, padding: '20px 30px', fontSize: '14px' }}
+                                    style={{ fontWeight: 'bold', background: hoverCategory ? constants.COLORS.MAIN : constants.COLORS.WHITE, color: hoverCategory ? constants.COLORS.WHITE : constants.COLORS.SEC, padding: '20px 30px', fontSize: '14px' }}
                                 >
                                     {'CATEGORIES'}
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu className='dropdown-menu dropdown_menue' style={{ border: 'none', paddingTop: '27px', background: 'none' }}>
-                                    <Row noGutters onMouseLeave={() => categoryMouseLeave()} style={{ boxShadow: `0px 0px 5px ${consts.COLORS.SHADOW}`, paddingTop: '20px', background: consts.COLORS.WHITE }}>
-                                        <Col style={{ overflowY: 'auto', zIndex: 1, minHeight: '500px', maxHeight: '500px' }}>
+                                    <Row noGutters onMouseLeave={() => categoryMouseLeave()} style={{ boxShadow: `0px 0px 5px ${constants.COLORS.LIGHT_GRAY}`, paddingTop: '20px', background: constants.COLORS.WHITE }}>
+                                        <Col style={{ overflowY: 'auto', zIndex: 1, minHeight: '450px', maxHeight: '450px' }}>
                                             {props.categories_list && props.categories_list.map((element, index) =>
                                                 <Link key={index} href='/products/[category]' as={`/products/${element._id}`}>
                                                     {props.active_category == element.value ?
@@ -144,7 +149,7 @@ export default function Layout(props) {
                                                 </Link>
                                             )}
                                         </Col>
-                                        <Col style={{ minHeight: '500px', maxHeight: '50px', overflowY: 'auto' }}>
+                                        <Col style={{ minHeight: '450px', maxHeight: '450px', overflowY: 'auto' }}>
                                             {props.sub_categories_list && props.sub_categories_list.map((element, index) =>
                                                 element.category_id == category_id._id ?
                                                     <Link href='/products/[category]/[sub_category]' as={`/products/${category_id._id}/${element._id}`} key={index} >
@@ -165,9 +170,6 @@ export default function Layout(props) {
                                     </Row>
                                 </Dropdown.Menu>
                             </ Dropdown>
-                        </Nav>
-                        {/* End of categories */}
-                        <Nav className="justify-content-center mr-auto ml-auto" >
                             {/* HOME */}
                             <Dropdown show={showHomeDropDown}
                                 flip={"true"}
@@ -176,14 +178,14 @@ export default function Layout(props) {
                                 <Dropdown.Toggle as={Nav.Link}
                                     onMouseEnter={() => sethomeHover(true)}
                                     onMouseLeave={() => sethomeHover(false)}
-                                    style={{ fontWeight: 'bold', background: homeHover ? consts.COLORS.MAIN : consts.COLORS.WHITE, color: homeHover ? consts.COLORS.WHITE : consts.COLORS.SEC, padding: '20px 30px', fontSize: '14px' }}
+                                    style={{ fontWeight: 'bold', background: homeHover ? constants.COLORS.MAIN : constants.COLORS.WHITE, color: homeHover ? constants.COLORS.WHITE : constants.COLORS.SEC, padding: '20px 30px', fontSize: '14px' }}
                                 >
                                     {'HOME'}
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu className='dropdown-menu' style={{ border: 'none', paddingTop: '27px', background: 'none' }} >
-                                    <Card style={{ boxShadow: `0px 0px 5px ${consts.COLORS.SHADOW}` }}>
+                                    <Card style={{ boxShadow: `0px 0px 5px ${constants.COLORS.SHADOW}` }}>
                                         <div className='link_div'>
-                                            <Nav.Link href="/" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '13px', borderBottom: `1px solid #e6e6e6` }}>HOME</Nav.Link>
+                                            <Nav.Link href="/" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '12px', borderBottom: `1px solid #e6e6e6` }}>HOME</Nav.Link>
                                         </div>
                                     </Card>
                                 </Dropdown.Menu>
@@ -196,54 +198,31 @@ export default function Layout(props) {
                                 <Dropdown.Toggle as={Nav.Link}
                                     onMouseEnter={() => setpagesHover(true)}
                                     onMouseLeave={() => setpagesHover(false)}
-                                    style={{ fontWeight: 'bold', background: pagesHover ? consts.COLORS.MAIN : consts.COLORS.WHITE, color: pagesHover ? consts.COLORS.WHITE : consts.COLORS.SEC, padding: '20px 30px', fontSize: '14px' }}
+                                    style={{ fontWeight: 'bold', background: pagesHover ? constants.COLORS.MAIN : constants.COLORS.WHITE, color: pagesHover ? constants.COLORS.WHITE : constants.COLORS.SEC, padding: '20px 30px', fontSize: '14px' }}
                                 >
                                     {'PAGES'}
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu className='dropdown-menu' style={{ border: 'none', paddingTop: '27px', background: 'none' }} >
-                                    <Card style={{ boxShadow: `0px 0px 5px ${consts.COLORS.SHADOW}` }}>
+                                    <Card style={{ boxShadow: `0px 0px 5px ${constants.COLORS.SHADOW}` }}>
                                         {user.role == 'admin' &&
                                             <div className='link_div'>
-                                                <Nav.Link href="/admin" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '13px', borderBottom: `1px solid #e6e6e6` }}>DASHBOARD</Nav.Link>
+                                                <Nav.Link href="/admin" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '12px', borderBottom: `1px solid #e6e6e6` }}>DASHBOARD</Nav.Link>
                                             </div>
                                         }
                                         <div className='link_div'>
-                                            <Nav.Link href="/profile" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '13px', borderBottom: `1px solid #e6e6e6` }}>PROFILE</Nav.Link>
+                                            <Nav.Link href="/profile" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '12px', borderBottom: `1px solid #e6e6e6` }}>PROFILE</Nav.Link>
                                         </div>
                                         <div className='link_div'>
-                                            <Nav.Link href="/cart" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '13px', borderBottom: `1px solid #e6e6e6` }}>CART</Nav.Link>
+                                            <Nav.Link href="/cart" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '12px', borderBottom: `1px solid #e6e6e6` }}>CART</Nav.Link>
                                         </div>
                                         <div className='link_div'>
-                                            <Nav.Link href="/help" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '13px', borderBottom: `1px solid #e6e6e6` }}>HELP</Nav.Link>
+                                            <Nav.Link href="/help" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '12px', borderBottom: `1px solid #e6e6e6` }}>HELP</Nav.Link>
                                         </div>
                                         <div className='link_div'>
-                                            <Nav.Link href="/terms-and-condition" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '13px', borderBottom: `1px solid #e6e6e6` }}>TERMS & CONDITIONS</Nav.Link>
+                                            <Nav.Link href="/terms-and-conditions" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '12px', borderBottom: `1px solid #e6e6e6` }}>TERMS & CONDITIONS</Nav.Link>
                                         </div>
                                         <div className='link_div'>
-                                            <Nav.Link href="/privacy-policy" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '13px', borderBottom: `1px solid #e6e6e6` }}>PRIVACY POLICY</Nav.Link>
-                                        </div>
-                                    </Card>
-                                </Dropdown.Menu>
-                            </Dropdown>
-                            {/* SERVICES */}
-                            <Dropdown show={showServicesDropDown}
-                                flip={"true"}
-                                onMouseEnter={() => setshowServicesDropDown(true)}
-                                onMouseLeave={() => setshowServicesDropDown(false)}>
-                                <Dropdown.Toggle as={Nav.Link}
-                                    onMouseEnter={() => setservicesHover(true)}
-                                    onMouseLeave={() => setservicesHover(false)}
-                                    style={{ fontWeight: 'bold', background: servicesHover ? consts.COLORS.MAIN : consts.COLORS.WHITE, color: servicesHover ? consts.COLORS.WHITE : consts.COLORS.SEC, padding: '20px 30px', fontSize: '14px' }}
-                                >
-                                    {'SERVICES'}
-                                </Dropdown.Toggle>
-                                <Dropdown.Menu className='dropdown-menu' style={{ border: 'none', paddingTop: '27px', background: 'none' }} >
-                                    <Card style={{ boxShadow: `0px 0px 5px ${consts.COLORS.SHADOW}` }}>
-                                        <div className='link_div'>
-                                            <Nav.Link href="/online-payment" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '13px', borderBottom: `1px solid #e6e6e6` }}>ONLINE PAYMENT</Nav.Link>
-                                        </div>
-                                        <div className='link_div'>
-                                            <Nav.Link href="/cash-on-delivery" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '13px', borderBottom: `1px solid #e6e6e6` }}>CASH ON DELIVERY</Nav.Link>
+                                            <Nav.Link href="/privacy-policy" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '12px', borderBottom: `1px solid #e6e6e6` }}>PRIVACY POLICY</Nav.Link>
                                         </div>
                                     </Card>
                                 </Dropdown.Menu>
@@ -282,9 +261,9 @@ export default function Layout(props) {
                     display: flex;
                 }
                 ._layout .dropdown_menue {
-                    min-width: 700px; 
-                    min-height: 500px;
-                    max-height: 500px; 
+                    min-width: 500px; 
+                    min-height: 450px;
+                    max-height: 450px; 
                     border-top: none; 
                     border-top-left-radius: 0px;
                 }
@@ -293,43 +272,44 @@ export default function Layout(props) {
                     width: 96%;
                     display: inline-flex;
                     align-items: center;
-                    font-size: 16px;
+                    font-size: 14px;
+                    text-transform: uppercase;
                     padding: 1.5% 4%;
                     margin: 0% 2% 0% 2%;
-                    color: gray;
+                    color: ${constants.COLORS.TEXT};
                 }
                 ._layout .category_list_item:hover{
                     z-index: 100;
                     color: #005ce6;
-                    background: ${consts.COLORS.MAIN};
+                    background: ${constants.COLORS.MAIN};
                 }
 
                 ._layout .coloreBoxIcon {
                     width: 60px;
                     height: 60px;
                     margin-left: 5%;
-                    background: ${consts.COLORS.MAIN};
+                    background: ${constants.COLORS.MAIN};
                 }
                 ._layout .coloreBoxIcon:hover {
-                    background: ${consts.COLORS.SEC};
+                    background: ${constants.COLORS.SEC};
                 }
                 ._layout .link_div {
-                    color: ${consts.COLORS.SEC};
+                    color: ${constants.COLORS.SEC};
                     width: 200px;
                 }
                 ._layout .link_div:hover {
-                    background: ${consts.COLORS.MAIN};
-                    color: ${consts.COLORS.WHITE};
+                    background: ${constants.COLORS.MAIN};
+                    color: ${constants.COLORS.WHITE};
                 }
 
                 ._layout .sticky-wrapper {
                     position: relative;
                 }
                 ._layout .sticky .sticky-inner {
-                    background: ${consts.COLORS.WHITE};
+                    background: ${constants.COLORS.WHITE};
                     padding: 1% 10%;
                     border-bottom: 1px solid white;
-                    box-shadow: 0px 0px 10px 0.5px ${consts.COLORS.SHADOW};
+                    box-shadow: 0px 0px 10px 0.5px ${constants.COLORS.SHADOW};
                     position: fixed;
                     align-items: center;
                     top: 0;
@@ -343,8 +323,8 @@ export default function Layout(props) {
                     padding: 1.7% 10%;
                     margin: 0;
                     width: 100%;
-                    background: ${consts.COLORS.WHITE};
-                    border-bottom: 0.1px solid ${consts.COLORS.SHADOW};
+                    background: ${constants.COLORS.WHITE};
+                    border-bottom: 0.1px solid ${constants.COLORS.SHADOW};
                 }
                 @media (max-width: 1199px) {
                     ._layout .sticky-inner{
@@ -412,23 +392,23 @@ export default function Layout(props) {
 
 const styles = {
     coloreBoxIcon: {
-        color: consts.COLORS.WHITE,
+        color: constants.COLORS.WHITE,
         fontSize: '30px',
         alignSelf: 'center'
     },
     dotsIcon: {
-        color: consts.COLORS.MAIN,
+        color: constants.COLORS.MAIN,
         fontSize: '30px',
         alignSelf: 'center',
         marginRight: '15px',
     },
     dotsSocialIcon: {
-        color: consts.COLORS.SEC,
+        color: constants.COLORS.SEC,
         fontSize: '50px',
         margin: '15px',
     },
     dotsSocialIconFB: {
-        color: consts.COLORS.SEC,
+        color: constants.COLORS.SEC,
         fontSize: '47px',
         margin: '15px',
     },

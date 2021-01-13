@@ -67,23 +67,22 @@ export default function ProductCard(props) {
                 alerttype={alerttype}
                 message={alertMsg}
             />
-            <Link href='/products/[category]/[sub_category]/[product]' as={`/products/${element.categoryId}/${element.subCategoryId}/${element._id}`}>
-                <Card className='_card' >
-                    {/* 5006 7900 827 803 */}
-                    <Card.Body className='p-3'>
+            <Card className='_card' >
+                <Card.Body className='p-3'>
+                    <Link href='/products/[category]/[sub_category]/[product]' as={`/products/${element.categoryId}/${element.subCategoryId}/${element._id}`}>
                         {element.discount && element.discount > 0 &&
                             <div style={{
-                                position: 'absolute', right: '0px', top: '0px', background: constants.COLORS.LIGHT_GRAY, opacity: 0.8,
+                                position: 'absolute', right: '0px', top: '0px', background: constants.COLORS.MAIN, opacity: 0.8,
                                 width: '60px', height: '60px', borderBottomLeftRadius: '90%', justifyContent: 'center', alignItems: 'center', display: 'flex'
                             }}>
-                                <label style={{ color: constants.COLORS.SEC, fontSize: '14px' }}>-{element.discount}% </label>
+                                <label style={{ color: constants.COLORS.WHITE, fontSize: '15px' }}>-{element.discount}% </label>
                             </div>
                         }
                         <Card.Title style={{
                             textOverflow: 'ellipsis',
                             overflow: 'hidden',
                             whiteSpace: 'nowrap',
-                            color: consts.COLORS.GRAY
+                            color: consts.COLORS.TEXT
                         }}
                         >{element.name}</Card.Title>
                         <Card.Text className='descriptions' >
@@ -96,53 +95,52 @@ export default function ProductCard(props) {
                             style={{ minWidth: '100%', minHeight: width + (width / (consts.SIZES.IMAGE_HEIGHT_DIVIDE + 1)), maxHeight: width + (width / (consts.SIZES.IMAGE_HEIGHT_DIVIDE + 1)) }}
                         />
                         <div style={{ borderTop: `1px solid lightgray`, margin: '5px 0px' }} />
-                        <Row noGutters>
-                            <Col className='p-0'>
-                                <ReactStars
-                                    count={5}
-                                    value={element && element.rating_review && element.rating_review.rating && element.rating_review.rating.overall || 0}
-                                    edit={false}
-                                    size={15}
-                                    activeColor='orange'
-                                />
-                                {element.discount && element.discount > 0 ?
-                                    <h6 className='p-0 m-0' style={{ color: consts.COLORS.MAIN, fontWeight: 'bold' }}>
-                                        {'Rs: '}
-                                        <CalculateDiscountPrice price={element.price} discount={element.discount} />
-                                        <span style={{ textDecorationLine: 'line-through', color: consts.COLORS.GRAY, fontSize: '12px', marginLeft: '5px' }}>{element.price}</span>
-                                    </h6>
-                                    :
-                                    <h6 className='p-0 m-0' style={{ color: consts.COLORS.MAIN, fontWeight: 'bold' }}>{'Rs: ' + element.price}</h6>
-                                }
-                            </Col>
-                            <Col
-                                onMouseEnter={() => setIsCartHover(true)}
-                                onMouseLeave={() => setIsCartHover(false)}
-                                lg={4} md={4} sm={4} xs={4} className='d-flex align-items-center p-0'
-                            >
-                                <div className='mr-auto' />
-                                {isCartHover ?
-                                    <div style={{ position: 'absolute', top: '0px', right: '0px', bottom: '0px' }}>
-                                        <CustomButton
-                                            size={'sm'}
-                                            loading={cartLoading}
-                                            disabled={cartLoading}
-                                            title={'ADD TO CART'}
-                                            // variant={'success'}
-                                            spinnerSize={'lg'}
-                                            onlyLoading
-                                            onClick={() => handleAddToCart()}
-                                        />
-                                    </div>
-                                    :
-                                    <div style={{ border: `1px solid ${consts.COLORS.LIGHT_GRAY}`, borderRadius: '3px', padding: '5px' }}>
-                                        <FiShoppingCart style={{ fontSize: '20px', color: consts.COLORS.GRAY }} />
-                                    </div>}
-                            </Col>
-                        </Row>
-                    </Card.Body>
-                </Card>
-            </Link>
+                    </Link>
+                    <Row noGutters>
+                        <Col className='p-0'>
+                            <ReactStars
+                                count={5}
+                                value={element && element.rating_review && element.rating_review.rating && element.rating_review.rating.overall || 0}
+                                edit={false}
+                                size={15}
+                                activeColor='orange'
+                            />
+                            {element.discount && element.discount > 0 ?
+                                <h6 className='p-0 m-0' style={{ color: consts.COLORS.MAIN, fontWeight: 'bold' }}>
+                                    {'Rs: '}
+                                    <CalculateDiscountPrice price={element.price} discount={element.discount} />
+                                    <span style={{ textDecorationLine: 'line-through', color: consts.COLORS.TEXT, fontSize: '12px', marginLeft: '5px' }}>{element.price}</span>
+                                </h6>
+                                :
+                                <h6 className='p-0 m-0' style={{ color: consts.COLORS.MAIN, fontWeight: 'bold' }}>{'Rs: ' + element.price}</h6>
+                            }
+                        </Col>
+                        <Col
+                            onMouseEnter={() => setIsCartHover(true)}
+                            onMouseLeave={() => setIsCartHover(false)}
+                            lg={4} md={4} sm={4} xs={4} className='d-flex align-items-center p-0'
+                        >
+                            <div className='mr-auto' />
+                            {isCartHover ?
+                                <div style={{ position: 'absolute', top: '0px', right: '0px', bottom: '0px' }}>
+                                    <CustomButton
+                                        size={'sm'}
+                                        loading={cartLoading}
+                                        disabled={cartLoading}
+                                        title={'ADD TO CART'}
+                                        spinnerSize={'lg'}
+                                        onlyLoading
+                                        onClick={() => handleAddToCart()}
+                                    />
+                                </div>
+                                :
+                                <div style={{ border: `1px solid ${consts.COLORS.TEXT}`, borderRadius: '3px', padding: '5px' }}>
+                                    <FiShoppingCart style={{ fontSize: '20px', color: consts.COLORS.DANGER }} />
+                                </div>}
+                        </Col>
+                    </Row>
+                </Card.Body>
+            </Card>
             <style type="text/css">{`
                 ._productCard ._card {
                     margin: 3%;
@@ -154,7 +152,7 @@ export default function ProductCard(props) {
                     -webkit-line-clamp: 2; /* number of lines to show */
                     -webkit-box-orient: vertical;
                     font-size: 12px;
-                    color: ${consts.COLORS.GRAY}
+                    color: ${consts.COLORS.TEXT}
                 }
                 ._productCard ._card:hover{
                     box-shadow: 0px 0px 10px 0.5px ${consts.COLORS.SHADOW};

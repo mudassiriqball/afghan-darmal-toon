@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 import getProductsByCategorySubCategoryPageLimit from '../../hooks/customer/getProductsByCategorySubCategoryPageLimit';
 import ProductCard from './product-card';
-import consts from '../../constants';
+import constants from '../../constants';
 import NoDataFound from '../no-data-found';
 import Loading from '../loading';
 
@@ -53,23 +53,23 @@ function MultiCarosuelRow(props) {
         getProductsByCategorySubCategoryPageLimit(category._id, subCategory_id, page, '9');
 
     return (
-        <div className='_multiCarosuel'>
+        <div>
             { PRODUCTS_PAGE_LIMIT_PRODUCTS && PRODUCTS_PAGE_LIMIT_PRODUCTS.length > 0 &&
-                <>
+                <div className='_multiCarosuel'>
                     <Row noGutters>
                         <Col lg={12} md={12} sm={12} xs={12}>
                             <Card style={{ flex: 1, border: 'none', }}>
                                 <Card.Body className='pb-0 mb-0'>
                                     <Row noGutters>
                                         <Col lg={5} md={5} sm={8} xs={8} className='d-flex align-items-center'>
-                                            <h3>{props.category.value}</h3>
+                                            <h3 style={{ color: constants.COLORS.TEXT }}>{props.category.value}</h3>
                                         </Col>
                                         <Col lg={5} md={5} className='align-items-center sm_xs_display_none'>
-                                            <div style={{ borderBottom: `0.25px solid ${consts.COLORS.SHADOW}`, width: '100%', maxHeight: '0.5px' }} />
+                                            <div style={{ borderBottom: `0.25px solid ${constants.COLORS.SHADOW}`, width: '100%', maxHeight: '0.5px' }} />
                                         </Col>
                                         <Col lg={2} md={2} sm={4} xs={4} className='ml-auto d-flex align-items-center'>
                                             <Link href='/products/[category]' as={`/products/${category._id}`}  >
-                                                <a style={{ marginLeft: 'auto', color: consts.COLORS.LINK, fontSize: '15px', cursor: 'pointer' }}>{'Show More'}</a>
+                                                <a style={{ marginLeft: 'auto', color: constants.COLORS.LINK, fontSize: '15px', cursor: 'pointer' }}>{'Show More'}</a>
                                             </Link>
                                         </Col>
                                     </Row>
@@ -130,27 +130,27 @@ function MultiCarosuelRow(props) {
                             }
                         </Col>
                     </Row>
-                </>
+                </div>
             }
             <style type="text/css">{`
                 ._multiCarosuel ._a {
                     width: 100%;
                     padding: 2% 5%;
                     border-radius: 5px;
-                    color: ${consts.COLORS.GRAY};
+                    color: ${constants.COLORS.TEXT};
                     cursor: pointer;
                 }
                 ._multiCarosuel ._a:hover{
                     text-decoration: none;
-                    background: ${consts.COLORS.MAIN};
-                    color: ${consts.COLORS.WHITE};
+                    background: ${constants.COLORS.MAIN};
+                    color: ${constants.COLORS.WHITE};
                 }
                 ._multiCarosuel h3 {
                     font-weight: bold;
                 }
                 ._multiCarosuel label {
                     font-weight: bold;
-                    color: ${consts.COLORS.MAIN};
+                    color: ${constants.COLORS.MAIN};
                     font-size: 18px;
                     font-family: Rubik, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif;
                 }

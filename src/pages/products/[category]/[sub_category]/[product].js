@@ -254,16 +254,20 @@ export default function Product(props) {
                                                 <label style={{ minHeight: width / 1.5, color: consts.COLORS.GRAY }}>{productData.description}</label>
                                             </Tab>
                                             <Tab eventKey="additional" title="Additional information" style={{ paddingTop: '50px' }}>
-                                                <Table striped bordered hover>
-                                                    <tbody>
-                                                        {productData && productData.specifications && productData.specifications.map((element, index) => (
-                                                            <tr>
-                                                                <td>{element.name}</td>
-                                                                <td>{element.value}</td>
-                                                            </tr>
-                                                        ))}
-                                                    </tbody>
-                                                </Table>
+                                                {productData && productData.specifications && productData.specifications.length > 0 ?
+                                                    <Table striped bordered hover>
+                                                        <tbody>
+                                                            {productData && productData.specifications && productData.specifications.map((element, index) => (
+                                                                <tr>
+                                                                    <td>{element.name}</td>
+                                                                    <td>{element.value}</td>
+                                                                </tr>
+                                                            ))}
+                                                        </tbody>
+                                                    </Table>
+                                                    :
+                                                    <NoDataFound />
+                                                }
                                             </Tab>
                                             <Tab eventKey="reviews" title="Reviews" style={{ paddingTop: '50px' }}>
                                                 {productData.rating_review && productData.rating_review ?
@@ -355,6 +359,11 @@ export default function Product(props) {
                     -webkit-box-orient: vertical;
                     font-size: 12px;
                     color: ${consts.COLORS.GRAY}
+                }
+                ._product {
+                    min-height: 70vh;
+                    align-items: center;
+                    display: flex;
                 }
                 @media only screen and (max-width: 600px) {
                     ._product {

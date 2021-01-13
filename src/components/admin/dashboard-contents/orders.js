@@ -17,7 +17,7 @@ import PaginationRow from '../../pagination-row'
 import ReactToPrint from 'react-to-print'
 
 import urls from '../../../utils/urls/index';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faHistory, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 export default class Orders extends Component {
     constructor(props) {
@@ -69,17 +69,15 @@ export default class Orders extends Component {
             data = {
                 status: 'delivered'
             }
-        } else if (this.state.method == 'returned') {
+        } else if (this.state.method == 'progress') {
             data = {
-                status: 'returned'
+                status: 'progress'
             }
         }
-        console.log(this.state.singleOrderData)
-        debugger
         await axios.put(urls.PUT_REQUEST.UPDATE_ORDER_STATUS + this.state.singleOrderData._id, data, {
             headers: { 'authorization': currentComponent.props.token }
         }).then(function (response) {
-            debugger
+            currentComponent.sendSms();
             currentComponent.setState({
                 confirmModalLoading: false,
                 showConfirmModal: false,
@@ -87,7 +85,6 @@ export default class Orders extends Component {
                 alertType: 'success',
                 showAlertModal: true,
                 refresh_count: currentComponent.refresh_count + 1,
-                // isViewOrder: false,
             })
             let obj = {}
             obj = currentComponent.state.singleOrderData
@@ -95,7 +92,6 @@ export default class Orders extends Component {
             currentComponent.setState({ singleOrderData: obj })
             currentComponent.props.ordersReloadCountHandler()
         }).catch(function (error) {
-            debugger
             currentComponent.setState({
                 confirmModalLoading: false,
                 showConfirmModal: false,
@@ -103,8 +99,30 @@ export default class Orders extends Component {
                 alertType: 'error',
                 showAlertModal: true,
             })
-            // console.log(`Set order to ${this.state.method} failed: `, error)
+            console.log(`Set order to ${currentComponent.state.method} failed: `, error)
         });
+    }
+
+    sendSms = async (status) => {
+        fetch(urls.POST_REQUEST.SEND_ORDER_STATUS_CHANGED_SMS, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                to: this.state.user.mobile,
+                body: `Welcome to Afghan Darmaltoon! Your order status updated to ${status}
+                \n order ID: ${this.state.singleOrderData._id}
+                 \nPlaced on: ${this.state.singleOrderData.entry_date.substring(0, 10)}
+                 \nPlaease contact to admin for more details: +92 313-9573389`
+            })
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                } else {
+                }
+            });
     }
 
     render() {
@@ -263,32 +281,14 @@ function Order(props) {
     const [fieldName, setFieldName] = useState('')
     const [query, setQuery] = useState('')
 
-    const [singleOrderData, setSingle_order] = useState({})
-    // Confirm Modal
-    const [method, setMethod] = useState('')
-    const [showConfirmModal, setShowConfirmModal] = useState(false)
-    const [confirmModalMsg, setConfirmModalMsg] = useState('')
-    const [confirmModalColor, setConfirmModalColor] = useState('green')
-    const [confirmModalLoading, setConfirmModalLoading] = useState(false)
-
-    const [showAlertModal, setShowAlertModal] = useState(false)
-    const [alertModalMsg, setAlertModalMsg] = useState(false)
-    const [alertType, setAlertType] = useState('');
-    const [iconname, setIconname] = useState(null)
-
-    const [start_date, setStart_date] = useState(new Date("2020/01/01"))
-    const [end_date, setEnd_date] = useState(new Date())
-
     const { ALL_ORDERS_PAGE_LIMIT_LOADING, ALL_ORDERS_PAGE_LIMIT_ERROR, ALL_ORDERS_PAGE_LIMIT_ORDERS, ALL_ORDERS_PAGE_LIMIT_PAGES, ALL_ORDERS_PAGE_LIMIT_TOTAL } = getAllOrdersPageLimit(props.token, props.refresh, props.status, pageNumber, '20')
     const { ALL_ORDERS_SEARCH_LOADING, ALL_ORDERS_SEARCH_ERROR, ALL_ORDERS_SEARCH_ORDERS, ALL_ORDERS_SEARCH_PAGES, ALL_ORDERS_SEARCH_TOTAL } =
         getAllOrdersSearch(props.token, props.refresh, props.status, fieldName, query, queryPageNumber, '20')
 
-    async function handleSearch(type, value, start, end) {
+    async function handleSearch(type, value) {
         if (value != '') {
             setFieldName(type)
             setQuery(value)
-            setStart_date(start)
-            setEnd_date(end)
             setIsSearch(true)
         } else {
             setIsSearch(false)
@@ -313,77 +313,8 @@ function Order(props) {
         }
     }
 
-    async function handleConfirmed() {
-        setConfirmModalLoading(true)
-        let data = []
-        if (method == 'cancelled') {
-            data = {
-                status: 'cancelled'
-            }
-        } else if (method == 'pending') {
-            data = {
-                status: 'pending'
-            }
-        } else if (method == 'delivered') {
-            data = {
-                status: 'delivered'
-            }
-        } else if (method == 'returned') {
-            data = {
-                status: 'returned'
-            }
-        } else if (method == 'progress') {
-            data = {
-                status: 'progress'
-            }
-        }
-        console.log(singleOrderData)
-        debuger
-        await axios.put(urls.PUT_REQUEST.UPDATE_ORDER_STATUS + singleOrderData._id, data, {
-            headers: { 'authorization': props.token }
-        }).then(function (response) {
-            debugger
-            setConfirmModalLoading(false)
-            setShowConfirmModal(false)
-            setAlertType('success')
-            setAlertModalMsg(`Order Status Updated successfully`)
-            setShowAlertModal(true)
-            props.ordersReloadCountHandler()
-            setpageNumber(1)
-            setQueryPageNumber(1)
-            setPage(1)
-            setQueryPage(1)
-            props.setRefresh();
-        }).catch(function (error) {
-            debugger
-            setConfirmModalLoading(false)
-            setShowConfirmModal(false)
-            setAlertType('error')
-            setAlertModalMsg(`Set order to ${method} failed`);
-            setShowAlertModal(true)
-            console.log(`Set order to ${method} failed: `, error)
-        });
-    }
-
     return (
         <div className='admin_table'>
-            <ConfirmModal
-                onHide={() => { setShowConfirmModal(false), setConfirmModalLoading(false) }}
-                show={showConfirmModal}
-                title={confirmModalMsg}
-                iconname={iconname}
-                color={confirmModalColor}
-                _id={singleOrderData._id}
-                name={singleOrderData.c_name}
-                confirm={handleConfirmed}
-                loading={confirmModalLoading}
-            />
-            <AlertModal
-                onHide={(e) => setShowAlertModal(false)}
-                show={showAlertModal}
-                alerttype={alertType}
-                message={alertModalMsg}
-            />
             <CardSearchAccordion
                 title={props.header}
                 option={'order'}
@@ -401,38 +332,6 @@ function Order(props) {
                                     list={ALL_ORDERS_PAGE_LIMIT_ORDERS}
                                     status={props.status}
                                     setView={props.setView}
-                                    setPending={(element) => {
-                                        setMethod('pending')
-                                        setSingle_order(element)
-                                        setShowConfirmModal(true)
-                                        setConfirmModalMsg('Set Order Pending?')
-                                        setConfirmModalColor('#ffc107')
-                                        setIconname(faHistory)
-                                    }}
-                                    setDelivered={(element) => {
-                                        setMethod('delivered')
-                                        setSingle_order(element)
-                                        setShowConfirmModal(true)
-                                        setConfirmModalMsg('Set Order Delivered?')
-                                        setConfirmModalColor('green')
-                                        setIconname(faCheckCircle)
-                                    }}
-                                    setProgress={(element) => {
-                                        setMethod('progress')
-                                        setSingle_order(element)
-                                        setShowConfirmModal(true)
-                                        setConfirmModalMsg('Set Order Progress?')
-                                        setConfirmModalColor('green')
-                                        setIconname(faCheckCircle)
-                                    }}
-                                    setCancel={(element) => {
-                                        setMethod('cancelled')
-                                        setSingle_order(element)
-                                        setShowConfirmModal(true)
-                                        setConfirmModalMsg('Cancel Order?')
-                                        setConfirmModalColor('#ff4d4d')
-                                        setIconname(faTimes)
-                                    }}
                                 />
                                 <hr />
                                 <PaginationRow
@@ -454,39 +353,6 @@ function Order(props) {
                                     list={ALL_ORDERS_SEARCH_ORDERS}
                                     status={props.status}
                                     setView={props.setView}
-
-                                    setPending={(element) => {
-                                        setMethod('pending')
-                                        setSingle_order(element)
-                                        setShowConfirmModal(true)
-                                        setConfirmModalMsg('Set Order Pending?')
-                                        setConfirmModalColor('green')
-                                        setIconname(faHistory)
-                                    }}
-                                    setDelivered={(element) => {
-                                        setMethod('delivered')
-                                        setSingle_order(element)
-                                        setShowConfirmModal(true)
-                                        setConfirmModalMsg('Set Order Delivered?')
-                                        setConfirmModalColor('green')
-                                        setIconname(faCheckCircle)
-                                    }}
-                                    setProgress={(element) => {
-                                        setMethod('progress')
-                                        setSingle_order(element)
-                                        setShowConfirmModal(true)
-                                        setConfirmModalMsg('Set Order Progress?')
-                                        setConfirmModalColor('green')
-                                        setIconname(faCheckCircle)
-                                    }}
-                                    setCancel={(element) => {
-                                        setMethod('cancelled')
-                                        setSingle_order(element)
-                                        setShowConfirmModal(true)
-                                        setConfirmModalMsg('Cancel Order?')
-                                        setConfirmModalColor('#ff4d4d')
-                                        setIconname(faTimes)
-                                    }}
                                 />
                                 <hr />
                                 <PaginationRow
@@ -524,7 +390,6 @@ function OrderTable(props) {
     function print(element) {
         window.print(element);
     }
-    let componentref = React.useRef();
 
     return (
         <div className='admin_order_table'>
@@ -552,22 +417,6 @@ function OrderTable(props) {
                                 {element._id}
                                 <div className="td">
                                     <Nav.Link className='pt-0' onClick={() => props.setView(element)} > View </Nav.Link>
-                                    {/* {props.status == 'pending' && <>
-                                        <Nav.Link className='pt-0 success' onClick={() => props.setDelivered(element)} > Delivered </Nav.Link>
-                                        <Nav.Link className='pt-0 delete' onClick={() => props.setCancel(element)} > Cancel </Nav.Link>
-                                    </>
-                                    } */}
-                                    {/* {props.status == 'delivered' && <>
-                                        <Nav.Link className='pt-0 warning' onClick={() => props.setPending(element)} > Pending </Nav.Link>
-                                        <Nav.Link className='pt-0 delete' onClick={() => props.setCancel(element)} > Cancel </Nav.Link>
-                                    </>
-                                    }
-                                    {props.status == 'cancelled' && <>
-                                        <Nav.Link className='pt-0 warning' onClick={() => props.setPending(element)} > Pending </Nav.Link>
-                                        <Nav.Link className='pt-0 success' onClick={() => props.setDelivered(element)} > Delivered </Nav.Link>
-                                    </>
-                                    }
-                                    } */}
                                 </div>
                             </td>
                             <td align="center" >{element.c_id}</td>
@@ -671,7 +520,7 @@ function ViewOrder(props) {
             <Card className='view_user' ref={componentRef}>
                 <Card.Body>
                     <div className='logo_col'>
-                        <Image src='/logo.jpg' className='logo' />
+                        <Image src='logo.jpg' className='logo' />
                         <h2 className='p-0 ml-3'>afghandarmaltoon.com</h2>
                     </div>
                     <p className='p'><span>Order Info</span></p>
