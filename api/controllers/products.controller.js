@@ -575,23 +575,49 @@ productsController.get_admin_products = async (req, res) => {
 };
 
 productsController.get_admin_inventory = async (req, res) => {
-  console.log("aaa");
   try {
-    let products = await Products.paginate(
+    // var ObjectId = mongoose.Types.ObjectId;
+    // const _id = new ObjectId(req.params._id);
+    const products = await Products.aggregate([
       {
-        isdeleted: false,
+        $match: {
+          // _id: _id,
+          isdeleted: "false",
+        },
       },
       {
-        limit: parseInt(req.query.limit),
-        page: parseInt(req.query.page),
-      }
-    );
-    res.status(200).send({
-      code: 200,
-      message: "Successful",
-      data: products,
-    });
+        $lookup: {
+          from: "categories",
+          localField: "category",
+          foreignField: "_id",
+          as: "category",
+        },
+      },
+      { $unwind: "$category" },
+      {
+        $lookup: {
+          from: "sub_categories",
+          localField: "sub_category",
+          foreignField: "_id",
+          as: "sub_category",
+        },
+      },
+      { $unwind: "$sub_category" },
+    ]);
+    if (products.length) {
+      res.status(200).send({
+        code: 200,
+        message: "Successful",
+        data: products,
+      });
+    } else {
+      res.status(500).send({
+        code: 500,
+        message: "This Product Does Not Exists",
+      });
+    }
   } catch (error) {
+    console.log("error", error);
     return res.status(500).send(error);
   }
 };

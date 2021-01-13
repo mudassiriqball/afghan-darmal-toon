@@ -234,8 +234,9 @@ OrdersController.get_delivery_boy_orders = async (req, res) => {
   }
 };
 OrdersController.updateStatus = async (req, res) => {
+
   try {
-    const order = await Orders.paginate(
+    const order = await Orders.findOneAndUpdate(
       { _id: req.params._id },
       {
         $set: { status: req.body.status },
@@ -244,7 +245,6 @@ OrdersController.updateStatus = async (req, res) => {
     res.status(200).send({
       code: 200,
       message: "Successful",
-      data: order,
     });
   } catch (error) {
     return res.status(500).send(error);
