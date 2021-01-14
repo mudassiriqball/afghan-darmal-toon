@@ -575,19 +575,16 @@ productsController.get_admin_products = async (req, res) => {
 
 productsController.get_admin_inventory = async (req, res) => {
   try {
-    // var ObjectId = mongoose.Types.ObjectId;
-    // const _id = new ObjectId(req.params._id);
-    const products = await Products.aggregate([
+    let products = await Products.aggregate([
       {
         $match: {
-          // _id: _id,
-          isdeleted: "false",
+          isdeleted: false,
         },
       },
       {
         $lookup: {
           from: "categories",
-          localField: "category",
+          localField: "categoryId",
           foreignField: "_id",
           as: "category",
         },
@@ -596,25 +593,25 @@ productsController.get_admin_inventory = async (req, res) => {
       {
         $lookup: {
           from: "sub_categories",
-          localField: "sub_category",
+          localField: "subCategoryId",
           foreignField: "_id",
           as: "sub_category",
         },
       },
       { $unwind: "$sub_category" },
     ]);
-    if (products.length) {
+    //if (products.length) {
       res.status(200).send({
         code: 200,
         message: "Successful",
         data: products,
       });
-    } else {
-      res.status(500).send({
-        code: 500,
-        message: "This Product Does Not Exists",
-      });
-    }
+    // } else {
+    //   res.status(500).send({
+    //     code: 500,
+    //     message: "This Product Does Not Exists",
+    //   });
+    // }
   } catch (error) {
     console.log("error", error);
     return res.status(500).send(error);
