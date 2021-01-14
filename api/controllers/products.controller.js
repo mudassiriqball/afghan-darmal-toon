@@ -599,6 +599,12 @@ productsController.get_admin_inventory = async (req, res) => {
         },
       },
       { $unwind: "$sub_category" },
+      {
+        $skip: (req.query.page - 1) * req.query.limit,
+      },
+      {
+        $limit: parseInt(req.query.limit),
+      },
     ]);
     //if (products.length) {
       res.status(200).send({
