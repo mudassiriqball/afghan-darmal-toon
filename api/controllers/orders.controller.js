@@ -14,9 +14,6 @@ OrdersController.add = async (req, res) => {
   let order = await Orders.findOne({ _id: req.query.order_id }, { status: 1 });
   if (order.status === "pending") {
     const body=req.query;
-    // var ObjectId = mongoose.Types.ObjectId;
-    // const _id = new ObjectId(req.query.order_id);
-    // body.order_id = _id;
     var datetime = new Date();
     body.entry_date = datetime;
     const delivery = new Delivery(body);
