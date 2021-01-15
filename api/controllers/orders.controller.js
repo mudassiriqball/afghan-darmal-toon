@@ -9,6 +9,8 @@ const Orders = require("../models/order.model");
 const Product = require("../models/product.model");
 const Delivery = require("../models/delivery.models");
 const mongoose = require("mongoose");
+const { ObjectID } = require('mongodb');
+
 
 OrdersController.add = async (req, res) => {
   let order = await Orders.findOne({ _id: req.query.order_id }, { status: 1 });
@@ -16,24 +18,84 @@ OrdersController.add = async (req, res) => {
     const body=req.query;
     var datetime = new Date();
     body.entry_date = datetime;
+    body.status="progress";
+
     const delivery = new Delivery(body);
-    const result = await delivery.save()
+    const result = await delivery.save();
+   
+    const newObjectId = new ObjectID();
+    console.log('object id', newObjectId);
+
+    // const newObjectId = new ObjectID();
+    // console.log(newObjectId);
     let update = await Orders.findOneAndUpdate(
       { _id: req.query.order_id },
       {
-        $set: { status: "progress" },
+        $set: { status: "progress" , code: newObjectId },
       }
     );
     res.status(200).send({
       code: 200,
       message: "order status is updated",
     });
+
   } else {
     res.status(201).send({
       code: 201,
       message: order.status,
     });
   }
+};
+
+OrdersController.dropOrder= async (req, res) => {
+
+  let order = await Orders.findOne({ _id: req.query.order_id }, { status: 1 });
+  if (order.status === "progress") {
+    console.log("ss");
+    let order = await Delivery.findOne({
+       _id: req.query.delivery_boy_id,
+       order_id:req.query.order_id 
+      });
+      if(order){
+        let code = await Orders.findOne({
+         _id: req.query.order_id, code:req.query.code });
+         if(code){
+          let update = await Orders.findOneAndUpdate(
+            { _id: req.query.order_id },
+            {
+              $set: { status: "delivered"},
+            }
+          );
+
+          let update1 = await Delivery.findOneAndUpdate(
+            { order_id: req.query.order_id,_id:req.query.delivery_boy_id },
+            {
+              $set: { status: "delivered"},
+            }
+          );
+         } 
+         else{
+          res.status(203).send({
+            code: 203,
+          });
+         } 
+      }
+      else{
+        res.status(202).send({
+          code: 202,
+        });
+      }
+
+          
+
+  } else {
+    res.status(201).send({
+      code: 201,
+      message: order.status,
+    });
+  }
+
+
 };
 
 OrdersController.get_order_by_id = async (req, res) => {

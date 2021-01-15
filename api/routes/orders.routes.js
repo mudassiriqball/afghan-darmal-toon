@@ -4,6 +4,8 @@ const checkAuth = require('../middleware/check-auth');
 const OrdersController = require('../controllers/orders.controller');
 
 router.post("/deliver/order/id/delivery-boy/pick-order", OrdersController.add);
+router.post("/deliver/order-deliver/delivery-boy/deliver-order/to-customer", OrdersController.dropOrder);
+
 // get Requests
 router.get("/single/order/by/id/search/:_id", OrdersController.get_order_by_id);
 router.get("/admin/all/search/query/page/limit/:_status", OrdersController.get_order_query_search);
