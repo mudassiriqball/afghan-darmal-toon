@@ -393,7 +393,7 @@ function OrderTable(props) {
 
     return (
         <div className='admin_order_table'>
-            <Table responsive striped bordered hover variant='dark' >
+            <Table responsive striped bordered hover  >
                 <thead>
                     <tr>
                         <th>#</th>

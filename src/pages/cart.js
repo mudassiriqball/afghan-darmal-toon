@@ -79,7 +79,6 @@ export default function Cart(props) {
         return () => {
         };
     }, []);
-    console.log('productsData:', productsData)
     const getUser = async (id) => {
         setIsCartLoading(true)
         await axios.get(urls.GET_REQUEST.USER_BY_ID + id).then((res) => {

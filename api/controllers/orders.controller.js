@@ -49,10 +49,6 @@ OrdersController.get_order_query_search = async (req, res) => {
   }
 };
 
-// Put Methods
-
-// Delete Methods
-
 OrdersController.place_order = async (req, res) => {
   let data = [];
   var found = false;
