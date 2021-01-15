@@ -17,8 +17,7 @@ OrdersController.add = async (req, res) => {
     var datetime = new Date();
     body.entry_date = datetime;
     const delivery = new Delivery(body);
-    const result = await delivery.save();
-
+    const result = await delivery.save()
     let update = await Orders.findOneAndUpdate(
       { _id: req.query.order_id },
       {
