@@ -362,8 +362,6 @@ export default function Product(props) {
                 }
                 ._product {
                     min-height: 70vh;
-                    align-items: center;
-                    display: flex;
                 }
                 @media only screen and (max-width: 600px) {
                     ._product {

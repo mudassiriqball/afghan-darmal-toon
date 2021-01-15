@@ -67,9 +67,9 @@ export default function ProductCard(props) {
                 alerttype={alerttype}
                 message={alertMsg}
             />
-            <Card className='_card' >
-                <Card.Body className='p-3'>
-                    <Link href='/products/[category]/[sub_category]/[product]' as={`/products/${element.categoryId}/${element.subCategoryId}/${element._id}`}>
+            <Link href='/products/[category]/[sub_category]/[product]' as={`/products/${element.categoryId}/${element.subCategoryId}/${element._id}`}>
+                <Card className='_card' >
+                    <Card.Body className='p-3'>
                         {element.discount && element.discount > 0 &&
                             <div style={{
                                 position: 'absolute', right: '0px', top: '0px', background: constants.COLORS.MAIN, opacity: 0.8,
@@ -95,52 +95,52 @@ export default function ProductCard(props) {
                             style={{ minWidth: '100%', minHeight: width + (width / (consts.SIZES.IMAGE_HEIGHT_DIVIDE + 1)), maxHeight: width + (width / (consts.SIZES.IMAGE_HEIGHT_DIVIDE + 1)) }}
                         />
                         <div style={{ borderTop: `1px solid lightgray`, margin: '5px 0px' }} />
-                    </Link>
-                    <Row noGutters>
-                        <Col className='p-0'>
-                            <ReactStars
-                                count={5}
-                                value={element && element.rating_review && element.rating_review.rating && element.rating_review.rating.overall || 0}
-                                edit={false}
-                                size={15}
-                                activeColor='orange'
-                            />
-                            {element.discount && element.discount > 0 ?
-                                <h6 className='p-0 m-0' style={{ color: consts.COLORS.MAIN, fontWeight: 'bold' }}>
-                                    {'Rs: '}
-                                    <CalculateDiscountPrice price={element.price} discount={element.discount} />
-                                    <span style={{ textDecorationLine: 'line-through', color: consts.COLORS.TEXT, fontSize: '12px', marginLeft: '5px' }}>{element.price}</span>
-                                </h6>
-                                :
-                                <h6 className='p-0 m-0' style={{ color: consts.COLORS.MAIN, fontWeight: 'bold' }}>{'Rs: ' + element.price}</h6>
-                            }
-                        </Col>
-                        <Col
-                            onMouseEnter={() => setIsCartHover(true)}
-                            onMouseLeave={() => setIsCartHover(false)}
-                            lg={4} md={4} sm={4} xs={4} className='d-flex align-items-center p-0'
-                        >
-                            <div className='mr-auto' />
-                            {isCartHover ?
-                                <div style={{ position: 'absolute', top: '0px', right: '0px', bottom: '0px' }}>
-                                    <CustomButton
-                                        size={'sm'}
-                                        loading={cartLoading}
-                                        disabled={cartLoading}
-                                        title={'ADD TO CART'}
-                                        spinnerSize={'lg'}
-                                        onlyLoading
-                                        onClick={() => handleAddToCart()}
-                                    />
-                                </div>
-                                :
-                                <div style={{ border: `1px solid ${consts.COLORS.TEXT}`, borderRadius: '3px', padding: '5px' }}>
-                                    <FiShoppingCart style={{ fontSize: '20px', color: consts.COLORS.DANGER }} />
-                                </div>}
-                        </Col>
-                    </Row>
-                </Card.Body>
-            </Card>
+                        <Row noGutters>
+                            <Col className='p-0'>
+                                <ReactStars
+                                    count={5}
+                                    value={element && element.rating_review && element.rating_review.rating && element.rating_review.rating.overall || 0}
+                                    edit={false}
+                                    size={15}
+                                    activeColor='orange'
+                                />
+                                {element.discount && element.discount > 0 ?
+                                    <h6 className='p-0 m-0' style={{ color: consts.COLORS.MAIN, fontWeight: 'bold' }}>
+                                        {'Rs: '}
+                                        <CalculateDiscountPrice price={element.price} discount={element.discount} />
+                                        <span style={{ textDecorationLine: 'line-through', color: consts.COLORS.TEXT, fontSize: '12px', marginLeft: '5px' }}>{element.price}</span>
+                                    </h6>
+                                    :
+                                    <h6 className='p-0 m-0' style={{ color: consts.COLORS.MAIN, fontWeight: 'bold' }}>{'Rs: ' + element.price}</h6>
+                                }
+                            </Col>
+                            <Col
+                                onMouseEnter={() => setIsCartHover(true)}
+                                onMouseLeave={() => setIsCartHover(false)}
+                                lg={4} md={4} sm={4} xs={4} className='d-flex align-items-center p-0'
+                            >
+                                <div className='mr-auto' />
+                                {isCartHover ?
+                                    <div style={{ position: 'absolute', top: '0px', right: '0px', bottom: '0px' }}>
+                                        <CustomButton
+                                            size={'sm'}
+                                            loading={cartLoading}
+                                            disabled={cartLoading}
+                                            title={'ADD TO CART'}
+                                            spinnerSize={'lg'}
+                                            onlyLoading
+                                            onClick={() => handleAddToCart()}
+                                        />
+                                    </div>
+                                    :
+                                    <div style={{ border: `1px solid ${consts.COLORS.TEXT}`, borderRadius: '3px', padding: '5px' }}>
+                                        <FiShoppingCart style={{ fontSize: '20px', color: consts.COLORS.DANGER }} />
+                                    </div>}
+                            </Col>
+                        </Row>
+                    </Card.Body>
+                </Card>
+            </Link>
             <style type="text/css">{`
                 ._productCard ._card {
                     margin: 3%;

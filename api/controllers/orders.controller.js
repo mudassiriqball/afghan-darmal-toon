@@ -111,13 +111,10 @@ OrdersController.place_order = async (req, res) => {
               );
             })
             .then((result) => {
-              // res.status(200).send(result);
               console.log("\n\n\npayment successfull:", result);
-              // paymentResult = result;
             })
             .catch((error) => {
               console.log("\n\n\nerror in make ransaction:", error);
-              // return res.status(500).send(error);
               return res.status(500).send({
                 code: 500,
                 message: "Error in payment:" + error,
@@ -148,25 +145,20 @@ OrdersController.place_order = async (req, res) => {
         saveorder = true;
       }
     }
-    // if (saveorder === true) {
-    //   var datetime = new Date();
-    //   body.entry_date = datetime;
-    //   body.status = "pending";
-    //   body.c_id = req.params._id;
-    //   body.sub_total = body.sub_total;
-    //   const orders = new Orders(body);
-    //   const result = await orders.save();
-    //   res.status(200).send({
-    //     code: 200,
-    //     message: "orders Added Successfully",
-    //     result: paymentResult,
-    //   });
-    // }
-    res.status(200).send({
-      code: 200,
-      message: "orders Added Successfully",
-      result: paymentResult,
-    });
+    if (saveorder === true) {
+      var datetime = new Date();
+      body.entry_date = datetime;
+      body.status = "pending";
+      body.c_id = req.params._id;
+      body.sub_total = body.sub_total;
+      const orders = new Orders(body);
+      const result = await orders.save();
+      res.status(200).send({
+        code: 200,
+        message: "orders Added Successfully",
+        result: paymentResult,
+      });
+    }
   } catch (error) {
     console.log("Place order Error:", error);
     res.status(500).send({
