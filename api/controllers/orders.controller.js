@@ -10,11 +10,37 @@ const Product = require("../models/product.model");
 const Delivery = require("../models/delivery.models");
 const mongoose = require("mongoose");
 
+OrdersController.add = async (req, res) => {
+  let order = await Orders.findOne({ _id: req.query.order_id }, { status: 1 });
+  if (order.status === "pending") {
+    const body=req.query;
+    var datetime = new Date();
+    body.entry_date = datetime;
+    const delivery = new Delivery(body);
+    const result = await delivery.save()
+    let update = await Orders.findOneAndUpdate(
+      { _id: req.query.order_id },
+      {
+        $set: { status: "progress" },
+      }
+    );
+    res.status(200).send({
+      code: 200,
+      message: "order status is updated",
+    });
+  } else {
+    res.status(201).send({
+      code: 201,
+      message: order.status,
+    });
+  }
+};
+
 OrdersController.get_order_by_id = async (req, res) => {
   let order;
   try {
     order = await Orders.find({
-      _id: req.params._id
+      _id: req.params._id,
     });
     res.status(200).send({
       code: 200,
@@ -227,7 +253,6 @@ OrdersController.get_delivery_boy_orders = async (req, res) => {
   }
 };
 OrdersController.updateStatus = async (req, res) => {
-
   try {
     const order = await Orders.findOneAndUpdate(
       { _id: req.params._id },
