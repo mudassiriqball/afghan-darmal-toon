@@ -76,8 +76,7 @@ export default function Cart(props) {
             }
         }
         getData()
-        return () => {
-        };
+        return () => { };
     }, []);
     const getUser = async (id) => {
         setIsCartLoading(true)
@@ -550,7 +549,15 @@ function ProcedeOrder(props) {
     const [onlinePaymentChecked, setOnlinePaymentChecked] = useState(false);
 
     const handleConfirmOrder = async (_token) => {
-        if (name == '' || city == '' || mobile == '' || address == '') {
+        if (user.role === 'customer' && user.status === 'disapproved') {
+            setAlertType('error');
+            setAlertMsg('Your account is not approved yet, Contact to admin for more information');
+            setShowAlertModal(true);
+        } else if (user.role === 'customer' && user.status === 'restricted') {
+            setAlertType('error');
+            setAlertMsg('Your account is restricted, Contact to admin for more information');
+            setShowAlertModal(true);
+        } else if (name == '' || city == '' || mobile == '' || address == '') {
             setAlertType('error');
             setAlertMsg('Please Enter All Required Fields in Personel Information!');
             setShowAlertModal(true);

@@ -8,11 +8,11 @@ const handle = app.getRequestHandler();
 const dotenv = require('dotenv');
 dotenv.config();
 
-// const pino = require('express-pino-logger')();
-// const client = require('twilio')(
-//     process.env.TWILIO_ACCOUNT_SID,
-//     process.env.TWILIO_AUTH_TOKEN
-// );
+const pino = require('express-pino-logger')();
+const client = require('twilio')(
+    process.env.TWILIO_ACCOUNT_SID,
+    process.env.TWILIO_AUTH_TOKEN
+);
 
 app
     .prepare()
@@ -73,9 +73,9 @@ app
         app.set("port", process.env.PORT);
         app.use(accessControls);
 
-        // app.use(bodyParser.urlencoded({ extended: false }));
-        // app.use(bodyParser.json());
-        // app.use(pino);
+        app.use(bodyParser.urlencoded({ extended: false }));
+        app.use(bodyParser.json());
+        app.use(pino);
 
         const UsersRoutes = require("./api/routes/users.routes");
         const ProductRoutes = require("./api/routes/products.routes");
@@ -87,22 +87,24 @@ app
         app.use("/api/categories", CategoryRoutes);
         app.use("/api/sliders", SlidersRoutes);
         app.use("/api/orders", OrdersRoutes);
-        // app.post('/api/sms/to-customer/order/status/update/sms', (req, res) => {
-        //     res.header('Content-Type', 'application/json');
-        //     client.messages
-        //         .create({
-        //             from: process.env.TWILIO_PHONE_NUMBER,
-        //             to: req.body.to,
-        //             body: req.body.body
-        //         })
-        //         .then(() => {
-        //             res.send(JSON.stringify({ success: true }));
-        //         })
-        //         .catch(err => {
-        //             console.log(err);
-        //             res.send(JSON.stringify({ success: false }));
-        //         });
-        // });
+        app.post('/api/sms/to-customer/order/status/update/sms', (req, res) => {
+            client.messages
+                .create({
+                    from: process.env.TWILIO_PHONE_NUMBER,
+                    to: req.body.to,
+                    body: req.body.body
+                })
+                .then(() => {
+                    res.status(200).send({
+                        code: 200,
+                        message: "Field Added Successfully",
+                    });
+                })
+                .catch(err => {
+                    console.log(err);
+                    return res.status(500).send(err);
+                });
+        });
 
         app.get("*", (req, res) => {
             return handle(req, res);

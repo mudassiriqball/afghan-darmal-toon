@@ -88,6 +88,7 @@ export default function Orders(props) {
                             <Form.Label style={{ fontSize: '14px', color: `${constants.COLORS.MAIN}` }}>{'To cancel order, Please contact to admin.'}</Form.Label>
                         </Row>
                     }
+
                     {orders && orders.map((element, index) =>
                         orders.length == (index + 1) ?
                             <Card key={index} ref={lastProducrRef} >
@@ -174,12 +175,29 @@ export default function Orders(props) {
     )
 }
 
+import QRCode from "react-qr-code";
 function CardBody(props) {
     const [ref, { x, y, width }] = useDimensions();
-    let element = props.element
-    let index = element.index
+    const { element, status } = props;
+
     return (
         <Card.Body>
+            {status === 'progress' &&
+                <Row className='p-0 m-0'>
+                    <Form.Group as={Col} lg='auto' md='auto' sm={12} xs={12} className='order_col'>
+                        <InputGroup>
+                            <QRCode value={element._id} />
+                        </InputGroup>
+                    </Form.Group>
+                    <Form.Group as={Col} className='order_col'>
+                        <InputGroup>
+                            <Form.Label className='form_control'>
+                                {'This QR Code is used to receive order, The delivery boy scan this code an your order status will updated in our system.'}
+                            </Form.Label>
+                        </InputGroup>
+                    </Form.Group>
+                </Row>
+            }
             <Row className='p-0 m-0'>
                 <Form.Group as={Col} lg={4} md={4} sm={12} xs={12} className='order_col'>
                     <Form.Label className='form_label'>{'Order ID'}</Form.Label>

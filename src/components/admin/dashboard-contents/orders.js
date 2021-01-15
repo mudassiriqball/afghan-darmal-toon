@@ -28,7 +28,7 @@ export default class Orders extends Component {
 
             singleOrderData: {},
             token: this.props.token,
-            user_id: this.props.user_id,
+            user: this.props.user,
 
             showConfirmModal: false,
             confirmModalLoading: false,
@@ -48,7 +48,7 @@ export default class Orders extends Component {
     UNSAFE_componentWillReceiveProps(nextProps) {
         this.setState({
             token: nextProps.token,
-            user_id: nextProps.user_id
+            user: nextProps.user,
         });
     }
 
@@ -104,25 +104,24 @@ export default class Orders extends Component {
     }
 
     sendSms = async (status) => {
-        fetch(urls.POST_REQUEST.SEND_ORDER_STATUS_CHANGED_SMS, {
+        axios({
             method: 'POST',
+            url: urls.POST_REQUEST.SEND_ORDER_STATUS_CHANGED_SMS,
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
+            data: JSON.stringify({
                 to: this.state.user.mobile,
                 body: `Welcome to Afghan Darmaltoon! Your order status updated to ${status}
                 \n order ID: ${this.state.singleOrderData._id}
                  \nPlaced on: ${this.state.singleOrderData.entry_date.substring(0, 10)}
                  \nPlaease contact to admin for more details: +92 313-9573389`
             })
-        })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                } else {
-                }
-            });
+        }).then(res => res.json()).then(data => {
+            if (data.success) {
+            } else {
+            }
+        });
     }
 
     render() {
@@ -483,7 +482,8 @@ function ViewOrder(props) {
                 <Card.Body>
                     <Form.Row style={{ padding: '0% 2%', display: 'flex', alignItems: 'center' }} >
                         <Button size='md' variant='primary' className="mr-auto mt-2" onClick={props.back}> Back </Button>
-                        {props.singleOrderData.status == 'progress' && <>
+                        {props.singleOrderData.status == 'pending' && <Button size='md' variant='primary' className="mr-auto mt-2" onClick={props.back}> Back </Button>}
+                        {/* {props.singleOrderData.status == 'progress' && <>
                             <Button size='md' variant='success' className="mt-2 ml-1 mr-1" onClick={props.setDelivered}> Delivered </Button>
                             <Button size='md' variant='warning' className="mt-2 ml-1 mr-1" onClick={props.setPending}> Pending </Button>
                             <Button size='md' variant='danger' className="mt-2 ml-1 mr-1" onClick={props.setCancel}> Cancel </Button>
@@ -506,7 +506,7 @@ function ViewOrder(props) {
                             <Button size='md' variant='warning' className="mt-2 ml-1 mr-1" onClick={props.setPending}> Pending </Button>
                             <Button size='md' variant='success' className="mt-2 ml-1 mr-1" onClick={props.setDelivered}> Delivered </Button>
                         </>
-                        }
+                        } */}
 
                         <ReactToPrint
                             trigger={() => <Button size='md' variant='primary' className='mt-2 ml-4'> Print </Button>}
@@ -617,7 +617,6 @@ function ViewOrder(props) {
                                             <th>SKU</th>
                                             <th>Vendor Id</th>
                                             <th>Quantity</th>
-                                            <th>Price</th>
                                         </tr>
                                     </thead>
                                     {props.singleOrderData.products && props.singleOrderData.products.map((element, index) =>
@@ -625,10 +624,9 @@ function ViewOrder(props) {
                                             <tr>
                                                 <td align="center" >{index + 1}</td>
                                                 <td align="center" >{element.p_id}</td>
-                                                <td align="center" >{element.variation_id || '-'}</td>
                                                 <td align="center" >{element.sku || '-'} </td>
+                                                <td align="center" >{element.vendor_id || '-'}</td>
                                                 <td align="center" >{element.quantity}</td>
-                                                <td align="center" >{element.price}</td>
                                             </tr>
                                         </tbody>
                                     )}

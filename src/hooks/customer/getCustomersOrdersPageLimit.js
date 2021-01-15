@@ -34,9 +34,9 @@ export default function getCustomersOrdersPageLimit(_id, token, status, page, li
                         return [...new Set([...prevOrders, ...res.data.data.docs])]
                     })
                 }).catch(err => {
-                    console.log('Get getCustomersOrdersPageLimit Error:', err);
                     setLoading(false)
                     if (axios.isCancel(err)) return
+                    console.log('Get getCustomersOrdersPageLimit Error:', err);
                 })
             }
         }

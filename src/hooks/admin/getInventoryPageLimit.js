@@ -14,7 +14,6 @@ export default function getInventoryPageLimit(refresh_count, page, limit) {
     }, [refresh_count]);
 
     useEffect(() => {
-        let unmounted = true
         const CancelToken = axios.CancelToken;
         const source = CancelToken.source();
         const getData = () => {
@@ -29,26 +28,22 @@ export default function getInventoryPageLimit(refresh_count, page, limit) {
                 },
                 cancelToken: source.token
             }).then(res => {
-                if (unmounted) {
-                    setLoading(false);
-                    setProducts(prevPro => {
-                        return [...new Set([...prevPro, ...res.data.data.docs])]
-                    });
-                    setPages(Math.ceil(res.data.pages));
-                }
+                setLoading(false);
+                setProducts(prevPro => {
+                    return [...new Set([...prevPro, ...res.data.data])]
+                });
+                setPages(Math.ceil(res.data.data && res.data.data / limit));
             }).catch(err => {
                 console.log('Get products by search:', err);
                 setLoading(false)
-                if (unmounted) {
-                    if (axios.isCancel(err)) return
-                    setError(true)
-                }
+                if (axios.isCancel(err)) return
+                setError(true)
             })
         }
         getData()
         return () => {
-            unmounted = false
             source.cancel();
+            getData;
         };
     }, [page, refresh_count]);
 

@@ -204,7 +204,7 @@ export default function Layout(props) {
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu className='dropdown-menu' style={{ border: 'none', paddingTop: '27px', background: 'none' }} >
                                     <Card style={{ boxShadow: `0px 0px 5px ${constants.COLORS.SHADOW}` }}>
-                                        {user.role == 'admin' &&
+                                        {user.role === 'admin' &&
                                             <div className='link_div'>
                                                 <Nav.Link href="/admin" style={{ fontWeight: 'bold', padding: '10px 30px', fontSize: '12px', borderBottom: `1px solid #e6e6e6` }}>DASHBOARD</Nav.Link>
                                             </div>

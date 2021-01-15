@@ -12,6 +12,7 @@ import Loading from '../components/loading';
 import InfoRow from '../components/customer/info-row';
 import MultiCarosuel from '../components/customer/multi-carosuel';
 import StickyBottomNavbar from '../components/customer/sticky-bottom-navbar';
+import CustomButton from '../components/CustomButton';
 
 export async function getServerSideProps(context) {
   let sliders_list = []
@@ -82,10 +83,6 @@ export default function Home(props) {
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
           crossorigin="anonymous"
         />
-        {/* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"></link> */}
-        {/* <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossOrigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossOrigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossOrigin="anonymous"></script> */}
         <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet" />
         <script src="https://unpkg.com/react/umd/react.production.min.js" crossorigin></script>
         <script src="https://unpkg.com/react-dom/umd/react-dom.production.min.js" crossorigin></script>
@@ -111,6 +108,10 @@ export default function Home(props) {
             sub_categories_list={props.sub_categories_list}
           />
         </div>
+        <CustomButton
+          title="fuck"
+          onClick={() => sendSms()}
+        />
         <Footer />
         <StickyBottomNavbar user={user} />
       </main>
