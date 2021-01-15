@@ -4,7 +4,7 @@ import { Row, Col, Card, Nav, Table, Form, Button, InputGroup, Image } from 'rea
 import { faUsers, faUserPlus, faPersonBooth, faBan, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faThumbsUp, faCheckCircle } from '@fortawesome/free-regular-svg-icons';
 
-import consts from '../../../constants';
+import constants from '../../../constants';
 import TitleRow from '../../title-row';
 import ConfirmModal from '../../confirm-modal';
 import AlertModal from '../../alert-modal';
@@ -17,7 +17,6 @@ import getUsersBySearch from '../../../hooks/getUsersBySearch';
 
 import Loading from '../../loading';
 import urls from '../../../utils/urls';
-import constants from '../../../constants';
 
 class Customers extends React.Component {
     constructor(props) {
@@ -307,14 +306,14 @@ class Customers extends React.Component {
                         }
                         .customers .form_label{
                             color: gray;
-                            font-size: ${consts.SIZES.LABEL};
+                            font-size: ${constants.SIZES.LABEL};
                         }
                         .customers .card_header {
-                            font-size: ${consts.SIZES.HEADER};
+                            font-size: ${constants.SIZES.HEADER};
                             border: none;
                         }
                         .customers .card_text {
-                            color: ${consts.admin_primry_color};
+                            color: ${constants.admin_primry_color};
                             font-size: 17px;
                         }
                         .customers .form_control:disabled {
@@ -613,10 +612,10 @@ function CustomerTableBody(props) {
                     <tr>
                         <th>#</th>
                         <th>ID</th>
+                        <th>License #</th>
                         <th>Mobile</th>
                         <th>Name</th>
                         <th>City</th>
-                        <th>Address</th>
                         <th>Date</th>
                     </tr>
                 </thead>
@@ -644,11 +643,10 @@ function CustomerTableBody(props) {
                                     }
                                 </div>
                             </td>
+                            <td align="center" >{element.licenseNo}</td>
                             <td align="center" >{element.mobile}</td>
                             <td align="center" >{element.fullName}</td>
-                            <td align="center" >{element.countary}</td>
                             <td align="center" >{element.city}</td>
-                            <td align="center" >{element.address}</td>
                             <td align="center" >{element.entry_date.substring(0, 10)}</td>
                         </tr>
                     )}
@@ -689,7 +687,7 @@ function CustomerTableBody(props) {
 
 const styles = {
     fontawesome: {
-        color: `${consts.admin_primry_color}`,
+        color: `${constants.admin_primry_color}`,
         width: '30px',
         height: '30px',
         maxHeight: '30px',
@@ -697,7 +695,7 @@ const styles = {
         float: 'right'
     },
     accordin_fontawesome: {
-        color: `${consts.admin_primry_color}`,
+        color: `${constants.admin_primry_color}`,
         marginRight: '10%',
         width: '15px',
         height: '15px',

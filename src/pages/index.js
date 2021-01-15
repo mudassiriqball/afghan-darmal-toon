@@ -108,10 +108,6 @@ export default function Home(props) {
             sub_categories_list={props.sub_categories_list}
           />
         </div>
-        <CustomButton
-          title="fuck"
-          onClick={() => sendSms()}
-        />
         <Footer />
         <StickyBottomNavbar user={user} />
       </main>

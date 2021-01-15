@@ -90,7 +90,6 @@ export default class Orders extends Component {
             obj = currentComponent.state.singleOrderData
             obj.status = data.status
             currentComponent.setState({ singleOrderData: obj })
-            currentComponent.props.ordersReloadCountHandler()
         }).catch(function (error) {
             currentComponent.setState({
                 confirmModalLoading: false,
@@ -158,7 +157,6 @@ export default class Orders extends Component {
                                 status={'progress'}
                                 refresh={this.state.refresh_count}
                                 setRefresh={() => this.setState({ refresh_count: this.state.refresh_count + 1 })}
-                                ordersReloadCountHandler={this.props.ordersReloadCountHandler}
                             />
                             <Order
                                 header={'Pending Orders'}
@@ -170,7 +168,6 @@ export default class Orders extends Component {
                                 status={'pending'}
                                 refresh={this.state.refresh_count}
                                 setRefresh={() => this.setState({ refresh_count: this.state.refresh_count + 1 })}
-                                ordersReloadCountHandler={this.props.ordersReloadCountHandler}
                             />
                             <Order
                                 header={'Delivered Orders'}
@@ -182,7 +179,6 @@ export default class Orders extends Component {
                                 status={'delivered'}
                                 refresh={this.state.refresh_count}
                                 setRefresh={() => this.setState({ refresh_count: this.state.refresh_count + 1 })}
-                                ordersReloadCountHandler={this.props.ordersReloadCountHandler}
                             />
                             <Order
                                 header={'Cancelled Orders'}
@@ -194,7 +190,6 @@ export default class Orders extends Component {
                                 status={'cancelled'}
                                 refresh={this.state.refresh_count}
                                 setRefresh={() => this.setState({ refresh_count: this.state.refresh_count + 1 })}
-                                ordersReloadCountHandler={this.props.ordersReloadCountHandler}
                             />
                         </>
                         }
