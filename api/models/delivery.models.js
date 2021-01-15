@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const delivery = new Schema({
   order_id: {
     type: Schema.Types.ObjectId,
-},
+  },
   status: {
     type: String,
   },
