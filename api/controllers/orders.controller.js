@@ -118,9 +118,11 @@ OrdersController.get_order_by_id = async (req, res) => {
 
 OrdersController.get_order_by_code = async (req, res) => {
   let order;
+  var ObjectId = mongoose.Types.ObjectId;
+  const _code = new ObjectId(req.params._code);
   try {
     order = await Orders.find({
-      code: req.params._code,
+      code: _code,
     });
     res.status(200).send({
       code: 200,
