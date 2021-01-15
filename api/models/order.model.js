@@ -4,6 +4,9 @@ const Schema = mongoose.Schema;
 
 const Orders = new Schema({
     // TODO
+    code:{
+        type: Schema.Types.ObjectId,
+    },
     c_id: {
         type: String,
     },
