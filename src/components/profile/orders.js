@@ -179,7 +179,7 @@ import QRCode from "react-qr-code";
 function CardBody(props) {
     const [ref, { x, y, width }] = useDimensions();
     const { element, status } = props;
-
+console.log(element)
     return (
         <Card.Body>
             {status === 'progress' &&

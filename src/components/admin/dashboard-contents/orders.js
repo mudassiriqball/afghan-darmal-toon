@@ -477,7 +477,6 @@ function ViewOrder(props) {
                 <Card.Body>
                     <Form.Row style={{ padding: '0% 2%', display: 'flex', alignItems: 'center' }} >
                         <Button size='md' variant='primary' className="mr-auto mt-2" onClick={props.back}> Back </Button>
-                        {props.singleOrderData.status == 'pending' && <Button size='md' variant='primary' className="mr-auto mt-2" onClick={props.back}> Back </Button>}
                         {/* {props.singleOrderData.status == 'progress' && <>
                             <Button size='md' variant='success' className="mt-2 ml-1 mr-1" onClick={props.setDelivered}> Delivered </Button>
                             <Button size='md' variant='warning' className="mt-2 ml-1 mr-1" onClick={props.setPending}> Pending </Button>
@@ -515,36 +514,62 @@ function ViewOrder(props) {
             <Card className='view_user' ref={componentRef}>
                 <Card.Body>
                     <div className='logo_col'>
-                        <Image src='logo.jpg' className='logo' />
+                        <Image src='/logo.jpg' className='logo' />
                         <h2 className='p-0 ml-3'>afghandarmaltoon.com</h2>
                     </div>
                     <p className='p'><span>Order Info</span></p>
                     <Row>
-                        <Col lg={6} md={6} sm={12} xs={12}>
-                            <Form.Group as={Col} lg={12} md={12} sm={12} xs={12} className='w-100'>
-                                <QRCode value={props._id} />
-                            </Form.Group>
-                        </Col>
-                        <Col lg={6} md={6} sm={12} xs={12}>
-                            <Form.Group as={Row} className='w-100'>
-                                <Form.Label className='form_label'>Placed On</Form.Label>
-                                <InputGroup>
-                                    <Form.Control type="text" size="sm" value={props.singleOrderData.entry_date.substring(0, 10)} disabled={true} />
-                                </InputGroup>
-                            </Form.Group>
-                            <Form.Group as={Row} className='w-100'>
-                                <Form.Label className='form_label'>Order Id</Form.Label>
-                                <InputGroup>
-                                    <Form.Control type="text" size="sm" value={props.singleOrderData._id} disabled={true} />
-                                </InputGroup>
-                            </Form.Group>
-                            <Form.Group as={Row} className='w-100'>
-                                <Form.Label className='form_label'>Status</Form.Label>
-                                <InputGroup>
-                                    <Form.Control type="text" size="sm" value={props.singleOrderData.status} disabled={true} />
-                                </InputGroup>
-                            </Form.Group>
-                        </Col>
+                        {props.singleOrderData.status == 'pending' ?
+                            <>
+                                <Col lg={6} md={6} sm={12} xs={12}>
+                                    <Form.Group as={Col} lg={12} md={12} sm={12} xs={12} className='w-100'>
+                                        <QRCode value={props._id} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg={6} md={6} sm={12} xs={12}>
+                                    <Form.Group as={Row} className='w-100'>
+                                        <Form.Label className='form_label'>Placed On</Form.Label>
+                                        <InputGroup>
+                                            <Form.Control type="text" size="sm" value={props.singleOrderData.entry_date.substring(0, 10)} disabled={true} />
+                                        </InputGroup>
+                                    </Form.Group>
+                                    <Form.Group as={Row} className='w-100'>
+                                        <Form.Label className='form_label'>Order Id</Form.Label>
+                                        <InputGroup>
+                                            <Form.Control type="text" size="sm" value={props.singleOrderData._id} disabled={true} />
+                                        </InputGroup>
+                                    </Form.Group>
+                                    <Form.Group as={Row} className='w-100'>
+                                        <Form.Label className='form_label'>Status</Form.Label>
+                                        <InputGroup>
+                                            <Form.Control type="text" size="sm" value={props.singleOrderData.status} disabled={true} />
+                                        </InputGroup>
+                                    </Form.Group>
+                                </Col>
+                            </>
+                            :
+                            <>
+                                <Form.Group as={Col} lg={4} md={4} sm={12} xs={12} className='form_group'>
+                                    <Form.Label className='form_label'>Placed On</Form.Label>
+                                    <InputGroup>
+                                        <Form.Control type="text" size="sm" value={props.singleOrderData.entry_date.substring(0, 10)} disabled={true} />
+                                    </InputGroup>
+                                </Form.Group>
+                                <Form.Group as={Col} lg={4} md={4} sm={12} xs={12} className='form_group'>
+                                    <Form.Label className='form_label'>Order Id</Form.Label>
+                                    <InputGroup>
+                                        <Form.Control type="text" size="sm" value={props.singleOrderData._id} disabled={true} />
+                                    </InputGroup>
+                                </Form.Group>
+                                <Form.Group as={Col} lg={4} md={4} sm={12} xs={12} className='form_group'>
+                                    <Form.Label className='form_label'>Status</Form.Label>
+                                    <InputGroup>
+                                        <Form.Control type="text" size="sm" value={props.singleOrderData.status} disabled={true} />
+                                    </InputGroup>
+                                </Form.Group>
+                            </>
+                        }
+
                     </Row>
                     <Row>
                         <p className='p'><span>Custmer Info</span></p>
@@ -596,7 +621,7 @@ function ViewOrder(props) {
                         <Form.Group as={Col} lg={4} md={4} sm={4} xs={12} className='form_group'>
                             <Form.Label className='form_label'>Total</Form.Label>
                             <InputGroup>
-                                <Form.Control type="text" size="sm" value={props.singleOrderData.shippingCharges + props.singleOrderData.sub_total} disabled={true} />
+                                <Form.Control type="text" size="sm" value={parseInt(props.singleOrderData.shippingCharges) + parseInt(props.singleOrderData.sub_total)} disabled={true} />
                             </InputGroup>
                         </Form.Group>
 
@@ -658,8 +683,8 @@ function ViewOrder(props) {
                     margin-top: 5%;
                 }
                 .print_style .logo_col .logo {
-                    min-width: 100px;
-                    max-width: 100px;
+                    min-width: 400px;
+                    max-width: 400px;
                     min-height: 100px;
                     max-height: 100px;
                 }

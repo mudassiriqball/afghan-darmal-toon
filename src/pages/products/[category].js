@@ -111,6 +111,7 @@ export default function Category(props) {
                 ._category {
                     min-height: 70vh;
                     align-items: center;
+                    flex-direction: column;
                     display: flex;
                 }
                 @media only screen and (max-width: 600px) {

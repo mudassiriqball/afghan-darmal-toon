@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Card, Dropdown, Form, Nav, Navbar } from 'react-bootstrap'
 import consts from '../../constants'
 import PhoneInput from 'react-phone-input-2'
@@ -26,6 +26,12 @@ export default function Toolbar(props) {
     const [mobileError, setmobileError] = useState('');
     const [error, setError] = useState('');
 
+    useEffect(() => {
+        return () => {
+            setLoading(false);
+        }
+    }, [])
+
     // Login/Signup
     const handleLogin = async () => {
         if (mobile == '' || password == '') {
@@ -49,13 +55,13 @@ export default function Toolbar(props) {
                 await saveTokenToStorage(res.data.token);
                 const decodedToken = jwt_decode(res.data.token);
                 if (decodedToken.data.role === 'customer') {
-                    setLoading(false);
+                    Router.push('/');
                     Router.reload('/');
                 } else if (decodedToken.data.role === 'admin') {
-                    setLoading(false);
-                    Router.replace('/admin')
+                    Router.push('/admin')
+                } else if (decodedToken.data.role == 'ministory') {
+                    Router.push('/ministory')
                 } else {
-                    setLoading(false);
                     Router.reload('/');
                 }
             }).catch(function (err) {

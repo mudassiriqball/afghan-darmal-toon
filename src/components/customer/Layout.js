@@ -62,10 +62,8 @@ export default function Layout(props) {
     // 2nd Nav
     const [pagesHover, setpagesHover] = useState(false);
     const [homeHover, sethomeHover] = useState(false);
-    const [servicesHover, setservicesHover] = useState(false);
     const [showHomeDropDown, setshowHomeDropDown] = useState(false);
     const [showPagesDropDown, setshowPagesDropDown] = useState(false);
-    const [showServicesDropDown, setshowServicesDropDown] = useState(false);
 
     // Category
     const [isCategoryOpen, setIsCategoryOpen] = useState(false);
@@ -116,7 +114,7 @@ export default function Layout(props) {
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" style={{ marginTop: '10px', marginBottom: '10px', marginRight: 'auto' }} />
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className='sm_xs_display_none'>
-                            <Image src='logo.jpg' style={{ width: '200', maxWidth: '200px' }} />
+                            <Image src='/logo.jpg' style={{ width: '200', maxWidth: '200px' }} />
                         </Nav>
 
                         <Nav className="justify-content-center mr-auto ml-auto" >

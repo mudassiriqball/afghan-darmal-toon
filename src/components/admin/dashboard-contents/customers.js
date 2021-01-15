@@ -386,6 +386,22 @@ function CustomersTable(props) {
         }
     }
 
+    const sendSms = async () => {
+        await axios.post(urls.POST_REQUEST.SEND_ORDER_STATUS_CHANGED_SMS,
+            {
+                to: ORDER_DATA.c_id,
+                body: `Welcome to Afghan Darmaltoon! 
+                        Your account is not approved, Your lisence is not valid.
+                        Plaease contact to admin for more details
+                        +92 313-9573389
+                        afghandarmaltoon@gmail.com`
+            }).then(function (res) {
+                alert('code sended');
+            }).catch(function (err) {
+                console.log('error', err)
+            })
+    }
+
     async function handleConfirmed() {
         let data = []
         if (method == 'Approved') {
@@ -398,6 +414,7 @@ function CustomersTable(props) {
             await axios.delete(urls.DELETE_REQUEST.DISCARD_NEW_CUSTOMER + single_user._id, {
                 headers: { 'authorization': props.token }
             }).then(function (res) {
+                sendSms();
                 setConfirmModalLoading(false)
                 setShowConfirmModal(false)
                 setAlertModalMsg('Customer deleted successfully')

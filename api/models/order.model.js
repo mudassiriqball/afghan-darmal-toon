@@ -44,10 +44,12 @@ const Orders = new Schema({
     status: {
         type: String,
     },
+    code: {
+        type: String,
+    },
     entry_date: {
         type: Date,
     },
-
     isdeleted: {
         type: Boolean,
     },

@@ -301,13 +301,12 @@ function CustomersTable(props) {
             await axios.put(urls.PUT_REQUEST.CHANGE_CUSTOMER_STATUS + single_user._id, data, {
                 headers: { 'authorization': props.token }
             }).then(function (res) {
+                sendSms();
                 setConfirmModalLoading(false)
                 setShowConfirmModal(false)
-
                 setAlertType('success');
                 setAlertMsg('User approved successfully')
                 setShowAlert(true)
-
                 setpageNumber(1)
                 setQueryPageNumber(1)
                 setPage(1)
@@ -322,6 +321,22 @@ function CustomersTable(props) {
                 setShowAlert(true)
             });
         }
+    }
+
+    const sendSms = async () => {
+        await axios.post(urls.POST_REQUEST.SEND_ORDER_STATUS_CHANGED_SMS,
+            {
+                to: ORDER_DATA.c_id,
+                body: `Welcome to Afghan Darmaltoon! 
+                        Your account is not approved, Your lisence is not valid.
+                        Plaease contact to admin for more details
+                        +92 313-9573389
+                        afghandarmaltoon@gmail.com`
+            }).then(function (res) {
+                alert('code sended');
+            }).catch(function (err) {
+                console.log('error', err)
+            })
     }
 
     return (
@@ -462,7 +477,13 @@ function CustomerTableBody(props) {
                     {props.list && props.list.map((element, index) =>
                         index >= lower_limit && index < upper_limit && <tr key={index}>
                             <td align="center" >{index + 1}</td>
-                            <td align="center">{element._id}</td>
+                            <td>
+                                {element._id}
+                                <div className="td">
+                                    <Nav.Link className='pt-0' onClick={() => props.setApprove(element)}>Approve</Nav.Link>
+                                    <Nav.Link className='pt-0 delete' onClick={() => props.setDiscard(element)}>Discard</Nav.Link>
+                                </div>
+                            </td>
                             <td align="center" >{element.licenseNo}</td>
                             <td align="center" >{element.mobile}</td>
                             <td align="center" >{element.fullName}</td>
