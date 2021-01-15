@@ -27,7 +27,7 @@ export default function Orders(props) {
     }, [CUSTOMER_ORDERS_LOADING, CUSTOMER_ORDERS_HASMORE]);
 
     useEffect(() => {
-        setOrders([])
+        setOrders([]);
         CUSTOMER_ORDERS.forEach((element, index) => {
             getProducts(element, index)
         })
@@ -41,6 +41,7 @@ export default function Orders(props) {
         _order['sub_total'] = element.sub_total
         _order['shippingCharges'] = element.shippingCharges
         _order['entry_date'] = element.entry_date
+        _order['code'] = element.code
         let array = []
 
         for (const e of element.products) {
@@ -49,7 +50,6 @@ export default function Orders(props) {
                 let data = res.data.data[0]
                 obj['product'] = data
                 obj['quantity'] = e.quantity
-                obj['price'] = e.price
             }).catch((error) => {
                 console.log('Error', error)
             })
@@ -179,14 +179,13 @@ import QRCode from "react-qr-code";
 function CardBody(props) {
     const [ref, { x, y, width }] = useDimensions();
     const { element, status } = props;
-console.log(element)
     return (
         <Card.Body>
             {status === 'progress' &&
                 <Row className='p-0 m-0'>
                     <Form.Group as={Col} lg='auto' md='auto' sm={12} xs={12} className='order_col'>
                         <InputGroup>
-                            <QRCode value={element._id} />
+                            <QRCode value={element.code} />
                         </InputGroup>
                     </Form.Group>
                     <Form.Group as={Col} className='order_col'>
@@ -262,9 +261,6 @@ console.log(element)
                         </Col>
                         <Col className='_padding'>
                             <div className='p-0 m-0'>{e.product && e.product.name}</div>
-                        </Col>
-                        <Col className='_padding' lg='auto' md='auto' sm='auto' xs='auto' style={{ color: 'blue' }}>
-                            <label>{'Rs'}{e.price}</label>
                         </Col>
                         <Col style={{ paddingRight: '0%' }} className='_padding' lg={2} md='auto' sm='auto' xs='auto'>
                             <label >{'Quantity'}: {e.quantity}</label>
