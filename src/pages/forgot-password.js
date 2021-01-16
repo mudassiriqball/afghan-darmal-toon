@@ -66,19 +66,18 @@ class ForgotPassword extends Component {
             this.setState({ sendCodeLoading: true, mobileError: '' })
             await axios.get(urls.GET_REQUEST.VARIFY_MOBILE_NUMBER + phoneNumber)
                 .then(function (res) {
-                    debugger
                     if (res.data.code == 201) {
                         currentComponent.setState({
                             intervalTime: 60,
                             isResendCode: false,
                             feedback: '',
-                            _id: res.data.data._id,
+                            _id: res.data._id,
                             sendCodeLoading: false,
                         });
 
                         // Send code to number
                         var appVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
-                        firebase.auth().signInWithPhoneNumber(mobileNumber, appVerifier)
+                        firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
                             .then(function (confirmationResult) {
                                 window.confirmationResult = confirmationResult;
                                 console.log()
@@ -204,7 +203,7 @@ class ForgotPassword extends Component {
                     setTimeout(() => {
                         if (this.resetPassword(values, this)) {
                             resetForm();
-                            Router.push('/login');
+                            Router.push('/');
                         }
                         setSubmitting(false);
                     }, 500);
@@ -318,6 +317,7 @@ class ForgotPassword extends Component {
                                                     {this.state.isCodeSended ?
                                                         <InputGroup.Append>
                                                             <CustomButton disabled={this.state.isCodeVerified}
+                                                                block
                                                                 onClick={() => this.handleVerifyVarificationCode(values.verification_code)}
                                                                 title={this.state.isCodeVerified ? 'Verified' : 'Verify'}
                                                             />
@@ -345,11 +345,6 @@ class ForgotPassword extends Component {
                                                                 onChange={handleChange}
                                                                 isInvalid={touched.password && errors.password}
                                                             />
-                                                            <InputGroup.Append>
-                                                                <CustomButton onClick={this.showPassword}>
-                                                                    {eyeBtn}
-                                                                </CustomButton>
-                                                            </InputGroup.Append>
                                                             <Form.Control.Feedback type="invalid">
                                                                 {errors.password}
                                                             </Form.Control.Feedback>
@@ -366,11 +361,6 @@ class ForgotPassword extends Component {
                                                                 onChange={handleChange}
                                                                 isInvalid={touched.confirm_password && errors.confirm_password}
                                                             />
-                                                            <InputGroup.Append>
-                                                                <CustomButton onClick={this.showPassword}>
-                                                                    {eyeBtn}
-                                                                </CustomButton>
-                                                            </InputGroup.Append>
                                                             <Form.Control.Feedback type="invalid">
                                                                 {errors.confirm_password}
                                                             </Form.Control.Feedback>

@@ -12,7 +12,7 @@ export default function Help(props) {
     const [user, setUser] = useState({
         _id: '', fullName: '', mobile: '', city: '', licenseNo: '', address: '',
         email: '', status: '', role: '', wishList: '', cart: '', entry_date: ''
-    })
+    });
 
     useEffect(() => {
         const CancelToken = axios.CancelToken;
@@ -36,46 +36,14 @@ export default function Help(props) {
         await axios.get(urls.GET_REQUEST.USER_BY_ID + id).then((res) => {
             setUser(res.data.data[0]);
         }).catch((err) => {
-            console.log('Get user error in Help', err);
+            console.log('Get user error in TermsAndConditions', err);
         })
     }
     return (
-        <div className='div_main_help'>
+        <div className='main_help'>
             <Toolbar user={user} />
             <div className='_help'>
-                <p>
-                    Showing results for antipyretics background
-                    Search instead for antiperytics background
 
-
-                    Brief History of Antipyretic Therapy | Clinical Infectious Diseasesacademic.oup.com › cid › article › Supplement_5
-                    Oct 1, 2000 — The origin of antipyretic therapy is not known. When Alexander the Great was stricken with the mysterious febrile illness that would take his life in 323 BC, the Babylonian physicians who cared for him prescribed cool baths as treatment for his unremitting fever [1].
-                    by PA Mackowiak · ‎2000 · ‎Cited by 121 · ‎Related articles
-                    Showing results for antipyretics background
-                    Search instead for antiperytics background
-
-
-                    Brief History of Antipyretic Therapy | Clinical Infectious Diseasesacademic.oup.com › cid › article › Supplement_5
-                    Oct 1, 2000 — The origin of antipyretic therapy is not known. When Alexander the Great was stricken with the mysterious febrile illness that would take his life in 323 BC, the Babylonian physicians who cared for him prescribed cool baths as treatment for his unremitting fever [1].
-                    by PA Mackowiak · ‎2000 · ‎Cited by 121 · ‎Related articles
-
-                    Showing results for antipyretics background
-                    Search instead for antiperytics background
-
-
-                    Brief History of Antipyretic Therapy | Clinical Infectious Diseasesacademic.oup.com › cid › article › Supplement_5
-                    Oct 1, 2000 — The origin of antipyretic therapy is not known. When Alexander the Great was stricken with the mysterious febrile illness that would take his life in 323 BC, the Babylonian physicians who cared for him prescribed cool baths as treatment for his unremitting fever [1].
-                    by PA Mackowiak · ‎2000 · ‎Cited by 121 · ‎Related articles
-
-                    Showing results for antipyretics background
-                    Search instead for antiperytics background
-
-
-                    Brief History of Antipyretic Therapy | Clinical Infectious Diseasesacademic.oup.com › cid › article › Supplement_5
-                    Oct 1, 2000 — The origin of antipyretic therapy is not known. When Alexander the Great was stricken with the mysterious febrile illness that would take his life in 323 BC, the Babylonian physicians who cared for him prescribed cool baths as treatment for his unremitting fever [1].
-                    by PA Mackowiak · ‎2000 · ‎Cited by 121 · ‎Related articles
-
-                </p>
             </div>
             <Footer />
             <StickyBottomNavbar user={user} />
@@ -83,6 +51,16 @@ export default function Help(props) {
                 ._help{
                     padding: 2% 15%;
                     min-height: 90vh;
+                }
+                ._help p {
+                    color: ${constants.COLORS.TEXT};
+                    font-size: 14px;
+                    text-align:justify;
+                    line-height: 1.8rem;
+                }
+                ._help h5 {
+                    color: ${constants.COLORS.TEXT};
+                    font-weight: bolder;
                 }
                 @media (max-width: 1199px){
                     ._help{
@@ -106,7 +84,7 @@ export default function Help(props) {
                 }
             `}</style>
             <style jsx>{`
-                .div_main__cart {
+                .main_help {
                     min-height: 100vh;
                     background: ${constants.COLORS.WHITE};
                     position: absolute;
@@ -120,6 +98,7 @@ export default function Help(props) {
                     font-family: Oswald,sans-serif;
                 }
             `}</style>
-        </div>
+        </div >
     )
 }
+
