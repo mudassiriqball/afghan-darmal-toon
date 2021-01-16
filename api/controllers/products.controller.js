@@ -1478,6 +1478,7 @@ productsController.get_vendor_product_less_stock_by_id = async (req, res) => {
 };
 
 productsController.get_search_all_product = async (req, res) => {
+
   const field = req.query.field;
   const search = {};
   search[field] = req.query.q;

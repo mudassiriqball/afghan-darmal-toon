@@ -53,7 +53,7 @@ OrdersController.dropOrder= async (req, res) => {
   if (order.status === "progress") {
     console.log("ss");
     let order = await Delivery.findOne({
-       _id: req.query.delivery_boy_id,
+      delivery_boy_id: req.query.delivery_boy_id,
        order_id:req.query.order_id 
       });
       if(order){
@@ -68,7 +68,7 @@ OrdersController.dropOrder= async (req, res) => {
           );
 
           let update1 = await Delivery.findOneAndUpdate(
-            { order_id: req.query.order_id,_id:req.query.delivery_boy_id },
+            { order_id: req.query.order_id,delivery_boy_id:req.query.delivery_boy_id },
             {
               $set: { status: "delivered"},
             }
@@ -85,9 +85,6 @@ OrdersController.dropOrder= async (req, res) => {
           code: 202,
         });
       }
-
-          
-
   } else {
     res.status(201).send({
       code: 201,

@@ -35,7 +35,6 @@ router.put("/profile/id/update-all/:_id", UserController.update_profile);
 // router.put("/:_id", UserController.updateUser);
 
 // delete Requests
-router.delete("/user/:_id", checkAuth, UserController.deleteUser);
+router.delete("/discard/new-customer/by-id/:_id", checkAuth, UserController.deleteUser);
 router.delete("/delete-cart/id/delete-cart-by-id/:_id", checkAuth, UserController.delete_cart);
-
 module.exports = router;
