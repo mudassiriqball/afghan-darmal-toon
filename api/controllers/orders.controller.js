@@ -302,7 +302,7 @@ OrdersController.get_customer_orders_page_limit_by_id = async (req, res) => {
 OrdersController.get_delivery_boy_orders = async (req, res) => {
   try {
     const delivery = await Delivery.paginate(
-      { _id: req.params._id, status: req.query.status },
+      { delivery_boy_id: req.params._id, status: req.query.status },
       {
         limit: parseInt(req.query.limit),
         page: parseInt(req.query.page),
@@ -314,7 +314,11 @@ OrdersController.get_delivery_boy_orders = async (req, res) => {
       data: delivery,
     });
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send({
+      code: 500,
+      message: "Error",
+      error: error,
+    });
   }
 };
 OrdersController.updateStatus = async (req, res) => {
