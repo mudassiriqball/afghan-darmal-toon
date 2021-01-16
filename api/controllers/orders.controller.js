@@ -68,6 +68,10 @@ OrdersController.dropOrder = async (req, res) => {
             $set: { status: "delivered" },
           }
         );
+        res.status(200).send({
+          code: 200,
+          message: 'Success'
+        });
       } else {
         res.status(203).send({
           code: 203,
