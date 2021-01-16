@@ -12,7 +12,7 @@ export default function Loading() {
                 ._div{
                     display: flex;
                     justify-content: center;
-                    margin: 5%;
+                    padding: 10% 0%;
                     width: 100%;
                     height: 100%;
                 }

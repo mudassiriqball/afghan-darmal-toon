@@ -45,16 +45,17 @@ export default function Login(props) {
                 password: password
             };
             await axios.post(urls.POST_REQUEST.LOGIN, data).then(function (res) {
-                console.log('ttoao:', res.data)
                 setLoading(false);
                 saveTokenToStorage(res.data.token);
                 const decodedToken = jwt_decode(res.data.token);
                 if (decodedToken.data.role == 'customer') {
-                    Router.replace('/')
+                    Router.push('/')
                 } else if (decodedToken.data.role == 'admin') {
-                    Router.replace('/admin')
+                    Router.push('/admin')
+                } else if (decodedToken.data.role == 'ministory') {
+                    Router.push('/ministory')
                 } else {
-                    Router.replace('/')
+                    Router.push('/');
                 }
             }).catch(function (err) {
                 setLoading(false);
@@ -76,6 +77,7 @@ export default function Login(props) {
         const loggedOut = await removeTokenFromStorage();
         if (loggedOut) {
             Router.replace('/');
+            Router.reload();
         }
     }
     // End Of Acccount
@@ -124,7 +126,7 @@ export default function Login(props) {
                             {!loading && <BiLogInCircle style={globalStyle.leftIcon} />}
                         </CustomButton>
                     </Form>
-                    <a href="#" className='color w-100' style={{ fontSize: 'small', marginTop: '50px' }}>Forgot Password ?</a>
+                    <a href="/forgot-password" className='color w-100' style={{ fontSize: 'small', marginTop: '50px' }}>Forgot Password ?</a>
                 </Card.Body>
             </Card>
             <StickyBottomNavbar user={''} />

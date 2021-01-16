@@ -7,7 +7,7 @@ import Router from 'next/router'
 React.useLayoutEffect = React.useEffect;
 import StripeCheckout from 'react-stripe-checkout';
 
-import consts from '../constants';
+import constants from '../constants';
 import { getTokenFromStorage, checkTokenExpAuth } from '../utils/services/auth';
 import CustomButton from '../components/CustomButton'
 import AlertModal from '../components/alert-modal'
@@ -55,10 +55,9 @@ export default function Cart(props) {
 
     const [cart_list, setCart_list] = useState([])
     const [isCartLoading, setIsCartLoading] = useState(false)
-    const [cart_count, setCart_count] = useState(0)
     const [canUpdateCart, setCanUpdateCart] = useState(false);
 
-    const [productsData, setProductsData] = useState('');
+    const [productsData, setProductsData] = useState([]);
     const [sub_total, setSubTotal] = useState(0)
 
     // Alert Stuff
@@ -70,33 +69,39 @@ export default function Cart(props) {
         async function getData() {
             const _decoded_token = await checkTokenExpAuth();
             if (_decoded_token != null) {
-                setIsCartLoading(true)
-                setUser(_decoded_token)
-                await axios.get(urls.GET_REQUEST.USER_BY_ID + _decoded_token._id).then((res) => {
-                    setUser(res.data.data[0])
-                    setCart_count(res.data.data[0].cart && res.data.data[0].cart.length)
-                    setCart_list(res.data.data[0].cart)
-                    setIsCartLoading(false)
-                }).catch((err) => {
-                    console.log('get user error');
-                    setIsCartLoading(false)
-                })
+                setUser(_decoded_token);
+                getUser(_decoded_token._id);
                 const _token = await getTokenFromStorage();
                 setToken(_token)
             }
         }
         getData()
-        return () => {
-        };
+        return () => { };
     }, []);
-
+    const getUser = async (id) => {
+        setIsCartLoading(true)
+        await axios.get(urls.GET_REQUEST.USER_BY_ID + id).then((res) => {
+            setUser(res.data.data[0]);
+            if (res.data.data[0] !== 'customer')
+                setCart_list(res.data.data[0].cart);
+            setIsCartLoading(false);
+        }).catch((err) => {
+            console.log('get user error');
+            setIsCartLoading(false)
+        })
+    }
 
     useEffect(() => {
         calculateSubTotalPrice();
     }, [productsData])
 
     useEffect(() => {
-        setProductsData('');
+        setProductsData([]);
+        return () => {
+        }
+    }, [cart_list]);
+
+    useEffect(() => {
         cart_list && cart_list.forEach((element, index) => {
             getProducts(element, index);
         })
@@ -118,6 +123,7 @@ export default function Cart(props) {
             })
         }
         return () => {
+            setProductsData([]);
         };
     }, [cart_list]);
 
@@ -149,7 +155,8 @@ export default function Cart(props) {
         let copyArray = []
         copyArray = Object.assign([], productsData)
         copyArray[index].isLoading = true
-        setProductsData(copyArray)
+        setProductsData(copyArray);
+        debugger
         await axios({
             method: 'PUT',
             url: urls.PUT_REQUEST.CLEAR_CART + user._id,
@@ -163,11 +170,11 @@ export default function Cart(props) {
             copyArray[index].isLoading = true
             setProductsData(copyArray)
             copyArray.splice(index, 1)
-            setCart_count(cart_count - 1)
             setProductsData(copyArray);
             setAlertType('success');
             setAlertMsg('Item Removed Successfully from Cart');
             setShowAlertModal(true);
+            getUser(user._id);
         }).catch(err => {
             let copyArray = []
             copyArray = Object.assign([], productsData)
@@ -213,17 +220,17 @@ export default function Cart(props) {
             }}
                 src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIQAAACECAYAAABRRIOnAAAAAklEQVR4AewaftIAAAOWSURBVO3BMa5bCxYDwe4D7X/LHAcTMLqAID3722CV+YWZ/ztmyjFTjplyzJRjphwz5Zgpx0w5ZsoxU46ZcsyUY6YcM+WYKS8+pPI7JeEdKi0J36TSktBUfqckfOKYKcdMOWbKiy9Lwjep/CSVJ0loKi0J70jCN6l80zFTjplyzJQXP0zlHUl4h0pLwieS0FR+kso7kvCTjplyzJRjprz4x6g8UXmi0pLQVJpKS8Lf7Jgpx0w5ZsqLf0wSmkpLwjtUWhL+ZcdMOWbKMVNe/LAk/E4qLQlNpSXhSRKaypMkvCMJ/yXHTDlmyjFTXnyZyp+UhKbSktBUWhKaSktCU3mHyn/ZMVOOmXLMlBcfSsJ/iUpLwjeptCQ8ScLf5Jgpx0w5Zor5hQ+otCQ0lW9KwhOVloSm8o4kNJUnSWgq35SEn3TMlGOmHDPlxYeS8E1JeKLSkvBE5UkSmkpTaUl4otKS8Dc5ZsoxU46Z8uI3S0JTeaLyjiQ0lScqLQlPVFoSWhKaSkvCE5WWhKbyJAmfOGbKMVOOmWJ+4YtUWhKaSkvCO1Q+kYR3qLQkPFFpSXii8iQJv9MxU46ZcsyUF3+YSktCU2lJaCrvUGlJaCotCU3lSRKayjuS0FTekYRPHDPlmCnHTDG/8AGVloSm8okkNJV3JOGJSktCU2lJeKLSkvA3OWbKMVOOmfLihyXhEyo/KQlPktBUWhKeqLQkNJVvSsInjplyzJRjprz4YSotCU9UWhKaSktCU2kqLQlNpSWhqbwjCU2lqbQkNJWWhKbyk46ZcsyUY6a8+GFJaCotCU9UWhKaypMkvEOlJaGpNJVPqLQkNJXf6Zgpx0w5Zor5hb+YypMkfEKlJaGptCS8Q+VJEppKS8I3HTPlmCnHTHnxIZXfKQktCU9U/iSVloQnSXiShKbSkvCJY6YcM+WYKS++LAnfpPJE5UkSmkpLwhOVpvKOJPxNjplyzJRjprz4YSrvSMInktBUnqh8k8onVJ4koSXhm46ZcsyUY6a8+MeotCQ8UWlJ+ITKJ5LwROVJEj5xzJRjphwz5cU/TqUl4R0qLQlPkvAJlZaEloSm8k3HTDlmyjFTXvywJPykJDSVJyrfpPJNSfiTjplyzJRjprz4MpXfSeVJEp6oNJUnKi0JTeVJEp6o/EnHTDlmyjFTzC/M/N8xU46ZcsyUY6YcM+WYKcdMOWbKMVOOmXLMlGOmHDPlmCnHTPkf8smNMyWa6OgAAAAASUVORK5CYII=" alt="Card image" /> */}
 
-            <Card className="text-black" style={{ background: `${consts.COLORS.WHITE}`, border: 'none' }}>
+            <Card className="text-black" style={{ background: `${constants.COLORS.WHITE}`, border: 'none' }}>
 
                 <Card.Img src="cart_background.jpg" alt="Card image"
                     style={{
                         minWidth: '100%', maxWidth: '100%', minHeight: isMobile ? '60vw' : '35vw', maxHeight: isMobile ? '60vw' : '35vw', border: 'none',
                         borderBottomLeftRadius: '20%', borderBottomRightRadius: '20%',
-                        borderBottom: `5px solid ${consts.COLORS.MAIN}`,
+                        borderBottom: `5px solid ${constants.COLORS.MAIN}`,
                     }} />
                 <Card.ImgOverlay className='justify-content-center flex align-items-center'>
-                    <Card.Title style={{ fontSize: isMobile ? '25px' : '70px', fontWeight: 'bolder', color: `${consts.COLORS.MAIN}` }}>CART</Card.Title>
-                    <Card.Text style={{ fontSize: isMobile ? '16px' : '30px', fontWeight: 'bolder', color: `${consts.COLORS.MAIN}` }}>Your Partner for Medical Cannabis</Card.Text>
+                    <Card.Title style={{ fontSize: isMobile ? '25px' : '70px', fontWeight: 'bolder', color: `${constants.COLORS.MAIN}` }}>CART</Card.Title>
+                    <Card.Text style={{ fontSize: isMobile ? '16px' : '30px', fontWeight: 'bolder', color: `${constants.COLORS.MAIN}` }}>Your Partner for Medical Cannabis</Card.Text>
                     <div className='d-flex flex-row justify-content-center flex' style={{ position: 'absolute', bottom: isMobile ? '-30px' : '-40px', left: '0px', right: '0px' }}>
                         <div className='cart_link'>
                             <Nav.Link href="/" style={{
@@ -235,7 +242,7 @@ export default function Cart(props) {
                                 color: 'whitesmoke'
                             }}>
                                 <FiHome style={{
-                                    color: consts.COLORS.WHITE,
+                                    color: constants.COLORS.WHITE,
                                     fontSize: '30px',
                                     alignSelf: 'center'
                                 }} />
@@ -251,7 +258,7 @@ export default function Cart(props) {
                                 color: 'whitesmoke'
                             }}>
                                 <ImCart style={{
-                                    color: consts.COLORS.WHITE,
+                                    color: constants.COLORS.WHITE,
                                     fontSize: '30px',
                                     alignSelf: 'center'
                                 }}
@@ -268,7 +275,7 @@ export default function Cart(props) {
                                 color: 'whitesmoke'
                             }}>
                                 <BiDotsVertical style={{
-                                    color: consts.COLORS.WHITE,
+                                    color: constants.COLORS.WHITE,
                                     fontSize: '30px',
                                     alignSelf: 'center'
                                 }} />
@@ -278,8 +285,8 @@ export default function Cart(props) {
                 </Card.ImgOverlay>
             </Card>
             <CssTransition show={showDotView} hide={() => setshowDotView(false)} />
-            <label style={{ fontSize: isMobile ? '17px' : '20px', color: `${consts.COLORS.MAIN}`, fontWeight: 'bold', textAlign: 'center', marginTop: isMobile ? '40px' : '100px', width: '100%' }}>{'----  SHOPPING  ----'}</label>
-            <label style={{ fontSize: isMobile ? '21px' : '30px', color: `${consts.COLORS.SEC}`, fontWeight: 1000, textAlign: 'center', marginTop: '10px', width: '100%' }}>{'CART DATA'}</label>
+            <label style={{ fontSize: isMobile ? '17px' : '20px', color: `${constants.COLORS.MAIN}`, fontWeight: 'bold', textAlign: 'center', marginTop: isMobile ? '40px' : '100px', width: '100%' }}>{'----  SHOPPING  ----'}</label>
+            <label style={{ fontSize: isMobile ? '21px' : '30px', color: `${constants.COLORS.SEC}`, fontWeight: 1000, textAlign: 'center', marginTop: '10px', width: '100%' }}>{'CART DATA'}</label>
 
             {/* Cart Data */}
             <div className='cart'>
@@ -299,7 +306,7 @@ export default function Cart(props) {
                         <>
                             <Row>
                                 <Col lg={12} md={12} sm={12} xs={12}>
-                                    <Card style={{ border: `1px solid ${consts.COLORS.LIGHT_GRAY}`, boxShadow: `0px 0px 10px 0.5px ${consts.COLORS.LIGHT_GRAY}`, borderRadius: '0px' }}>
+                                    <Card style={{ border: `1px solid ${constants.COLORS.LIGHT_GRAY}`, boxShadow: `0px 0px 10px 0.5px ${constants.COLORS.LIGHT_GRAY}`, borderRadius: '0px' }}>
                                         {!isMobile &&
                                             <Card.Header className='pb-0 mb-0 bl-0 br-0'>
                                                 <Row noGutters>
@@ -319,22 +326,22 @@ export default function Cart(props) {
                                             </Card.Header>
                                         }
                                         {productsData === '' ?
-                                            <h6 className='w-100 text-center p-5' style={{ color: consts.COLORS.GRAY }}>{'No Data Found'}</h6>
+                                            <h6 className='w-100 text-center p-5' style={{ color: constants.COLORS.GRAY }}>{'No Data Found'}</h6>
                                             :
                                             productsData.map((element, index) =>
-                                                <Card key={element._id} style={{ borderBottom: `1px solid ${consts.COLORS.SHADOW}` }}>
+                                                <Card key={element._id} style={{ borderBottom: `1px solid ${constants.COLORS.SHADOW}` }}>
                                                     <Card.Body className='card_body' style={{ border: element.err ? '1px solid red' : null }}>
                                                         {/* Delete */}
                                                         {element.isLoading ?
                                                             <Spinner animation='border' variant="danger" />
                                                             :
-                                                            <AiOutlineDelete onClick={() => handleDeleteCart(element._id, index)} style={{ fontSize: isMobile ? '20px' : '30px', color: consts.COLORS.DANGER, marginRight: isMobile ? '5px' : '10px', cursor: 'pointer' }} />
+                                                            <AiOutlineDelete onClick={() => handleDeleteCart(element._id, index)} style={{ fontSize: isMobile ? '20px' : '30px', color: constants.COLORS.DANGER, marginRight: isMobile ? '5px' : '10px', cursor: 'pointer' }} />
                                                         }
                                                         <Row className='w-100'>
                                                             {/* Image / Name */}
                                                             <Col lg={4} md={4} sm={6} xs={6} className='d-flex flex-row  justify-content-center align-items-center'>
                                                                 <Image ref={ref} className='cart_img'
-                                                                    style={{ maxHeight: width + width / consts.SIZES.IMAGE_HEIGHT_DIVIDE, minHeight: width + width / consts.SIZES.IMAGE_HEIGHT_DIVIDE }}
+                                                                    style={{ maxHeight: width + width / constants.SIZES.IMAGE_HEIGHT_DIVIDE, minHeight: width + width / constants.SIZES.IMAGE_HEIGHT_DIVIDE }}
                                                                     src={element.product && element.product.imagesUrl && element.product.imagesUrl[0].imageUrl}
                                                                 />
                                                                 {/* Name */}
@@ -350,28 +357,28 @@ export default function Cart(props) {
                                                             </Col>
                                                             {/* Quantity */}
                                                             <Col lg={3} md={3} sm={6} xs={6} className='d-flex justify-content-center align-items-center'>
-                                                                <div className='d-flex flex-row align-items-center' style={{ height: '40px', border: `2px solid ${consts.COLORS.LIGHT_GRAY}`, borderRadius: '3px' }}>
+                                                                <div className='d-flex flex-row align-items-center' style={{ height: '40px', border: `2px solid ${constants.COLORS.LIGHT_GRAY}`, borderRadius: '3px' }}>
                                                                     <FaMinus onClick={() => {
                                                                         if (element.quantity > 1 && canUpdateCart) {
                                                                             handleSetQuantity(element.quantity - 1, index)
                                                                         }
-                                                                    }} style={{ fontSize: '15px', margin: '0% 20px', cursor: 'pointer', color: consts.COLORS.MAIN }} />
+                                                                    }} style={{ fontSize: '15px', margin: '0% 20px', cursor: 'pointer', color: constants.COLORS.MAIN }} />
                                                                     <label style={{ margin: 'auto' }}>{element.quantity}</label>
                                                                     <TiPlus onClick={() => {
                                                                         if (element.quantity < element.product.stock && canUpdateCart) {
                                                                             handleSetQuantity(element.quantity + 1, index)
                                                                         }
-                                                                    }} style={{ fontSize: '17px', margin: '0% 20px', cursor: 'pointer', color: consts.COLORS.MAIN }} />
+                                                                    }} style={{ fontSize: '17px', margin: '0% 20px', cursor: 'pointer', color: constants.COLORS.MAIN }} />
                                                                 </div>
                                                             </Col>
                                                             <Col lg={2} md={2} sm={6} xs={6} className='d-flex justify-content-center align-items-center'>
-                                                                <label className='p-0 m-0' style={{ color: consts.COLORS.SEC }}>
+                                                                <label className='p-0 m-0' style={{ color: constants.COLORS.SEC }}>
                                                                     {element.product.discount || 0}{'%'}
-                                                                    <span style={{ textDecorationLine: 'line-through', color: consts.COLORS.GRAY, fontSize: '12px', marginLeft: '5px' }}>{'Rs.'}{element.product.price * element.quantity}</span>
+                                                                    <span style={{ textDecorationLine: 'line-through', color: constants.COLORS.GRAY, fontSize: '12px', marginLeft: '5px' }}>{'Rs.'}{element.product.price * element.quantity}</span>
                                                                 </label>
                                                             </Col>
                                                             <Col lg={3} md={3} sm={6} xs={6} className='d-flex justify-content-center align-items-center'>
-                                                                <h6 className='p-0 m-0' style={{ color: consts.COLORS.MAIN, fontWeight: 'bold' }}>
+                                                                <h6 className='p-0 m-0' style={{ color: constants.COLORS.MAIN, fontWeight: 'bold' }}>
                                                                     {'Rs: '}
                                                                     <CalculateDiscountPrice price={element.product.price * element.quantity} discount={element.product.discount} />
                                                                 </h6>
@@ -389,7 +396,7 @@ export default function Cart(props) {
                                         title={'CONTINUE SHOPPING'}
                                         onClick={() => Router.push('/')}
                                     />
-                                    {productsData !== '' ?
+                                    {cart_list.length > 0 && productsData && productsData.length > 0 ?
                                         <>
                                             <div className='w-75' />
                                             {canUpdateCart ?
@@ -410,25 +417,25 @@ export default function Cart(props) {
                                     }
                                 </Col>
                             </Row>
-                            <div style={{ borderBottom: `1px solid ${consts.COLORS.SHADOW}`, minHeight: '50px', minWidth: '100%', marginBottom: '20px' }} />
+                            <div style={{ borderBottom: `1px solid ${constants.COLORS.SHADOW}`, minHeight: '50px', minWidth: '100%', marginBottom: '20px' }} />
                             {/* Order SUmmery Before */}
                             <Row style={{ paddingBottom: isMobile ? '20px' : '0px' }}>
                                 <Col></Col>
                                 <Col lg={6} md={6} sm={12} xs={12}>
-                                    <Card style={{ border: `1px solid ${consts.COLORS.LIGHT_GRAY}`, boxShadow: `0px 0px 10px 0.5px ${consts.COLORS.SHADOW}`, borderRadius: '0px' }}>
+                                    <Card style={{ border: `1px solid ${constants.COLORS.LIGHT_GRAY}`, boxShadow: `0px 0px 10px 0.5px ${constants.COLORS.SHADOW}`, borderRadius: '0px' }}>
                                         <Card.Body>
-                                            <h3 style={{ color: consts.COLORS.GRAY, fontWeight: 'bold', width: '100%', textAlign: 'center' }}>{'Order Summary'}</h3>
+                                            <h3 style={{ color: constants.COLORS.GRAY, fontWeight: 'bold', width: '100%', textAlign: 'center' }}>{'Order Summary'}</h3>
                                             <div style={{ padding: '20px' }}>
-                                                <div className='d-inline-flex w-100 mt-4' style={{ fontSize: '14px', color: consts.COLORS.TEXT }}>
+                                                <div className='d-inline-flex w-100 mt-4' style={{ fontSize: '14px', color: constants.COLORS.TEXT }}>
                                                     <h6 className='mr-auto'>{'Sub Total'}</h6>
                                                     <h6>{'Rs.'}{sub_total}</h6>
                                                 </div>
-                                                <div className='d-inline-flex w-100 mt-2' style={{ fontSize: '14px', color: consts.COLORS.TEXT }}>
+                                                <div className='d-inline-flex w-100 mt-2' style={{ fontSize: '14px', color: constants.COLORS.TEXT }}>
                                                     <h6 className='mr-auto'>{'Shipping Charges'}</h6>
                                                     <h6>{'Rs.'}{'0'}</h6>
                                                 </div>
-                                                <hr style={{ color: consts.COLORS.SHADOW }} />
-                                                <div className='d-inline-flex w-100 mb-2' style={{ fontSize: '14px', color: consts.COLORS.TEXT }}>
+                                                <hr style={{ color: constants.COLORS.SHADOW }} />
+                                                <div className='d-inline-flex w-100 mb-2' style={{ fontSize: '14px', color: constants.COLORS.TEXT }}>
                                                     <h6 className='mr-auto'>{'Total'}</h6>
                                                     <h6>{'Rs.'}{sub_total}</h6>
                                                 </div>
@@ -436,7 +443,7 @@ export default function Cart(props) {
                                             <CustomButton
                                                 title={'PROCEED TO CHECKOUT'}
                                                 onClick={() => setIsProcedeOrder(true)}
-                                                disabled={productsData === '' ? true : false}
+                                                disabled={user.role !== 'customer' || (productsData && productsData.length < 1)}
                                                 block
                                             >
                                             </CustomButton>
@@ -454,10 +461,10 @@ export default function Cart(props) {
                     border-radius: 20px;
                     overflow: hidden;
                     margin: 0px 2px;
-                    background: ${consts.COLORS.MAIN};
+                    background: ${constants.COLORS.MAIN};
                 }
                 .cart_link:hover {
-                    background: ${consts.COLORS.SEC};
+                    background: ${constants.COLORS.SEC};
                 }
                 .cart{
                     padding: 2% 15%;
@@ -499,7 +506,7 @@ export default function Cart(props) {
             <style jsx>{`
                 ._cart {
                     min-height: 100vh;
-                    background: ${consts.COLORS.WHITE};
+                    background: ${constants.COLORS.WHITE};
                     position: absolute;
                     top: 0;
                     left: 0;
@@ -542,7 +549,15 @@ function ProcedeOrder(props) {
     const [onlinePaymentChecked, setOnlinePaymentChecked] = useState(false);
 
     const handleConfirmOrder = async (_token) => {
-        if (name == '' || city == '' || mobile == '' || address == '') {
+        if (user.role === 'customer' && user.status === 'disapproved') {
+            setAlertType('error');
+            setAlertMsg('Your account is not approved yet, Contact to admin for more information');
+            setShowAlertModal(true);
+        } else if (user.role === 'customer' && user.status === 'restricted') {
+            setAlertType('error');
+            setAlertMsg('Your account is restricted, Contact to admin for more information');
+            setShowAlertModal(true);
+        } else if (name == '' || city == '' || mobile == '' || address == '') {
             setAlertType('error');
             setAlertMsg('Please Enter All Required Fields in Personel Information!');
             setShowAlertModal(true);
@@ -634,7 +649,9 @@ function ProcedeOrder(props) {
                 'authorization': token
             }
         }).then(res => {
-            Router.reload();
+            setTimeout(() => {
+                Router.reload();
+            }, 1000);
         }).catch(err => {
             console.log('Clear Cart Data Failed Error:', err)
         })
@@ -655,9 +672,9 @@ function ProcedeOrder(props) {
             />
             <Row>
                 <Col lg={12} md={12} sm={12} xs={12}>
-                    <Card style={{ border: `1px solid ${consts.COLORS.LIGHT_GRAY}`, boxShadow: `0px 0px 10px 0.5px ${consts.COLORS.LIGHT_GRAY}`, borderRadius: '0px' }}>
+                    <Card style={{ border: `1px solid ${constants.COLORS.LIGHT_GRAY}`, boxShadow: `0px 0px 10px 0.5px ${constants.COLORS.LIGHT_GRAY}`, borderRadius: '0px' }}>
                         <Card.Body>
-                            <h3 style={{ color: consts.COLORS.GRAY, fontWeight: 'bold', width: '100%', textAlign: 'center' }}>{'Personel Information'}</h3>
+                            <h3 style={{ color: constants.COLORS.GRAY, fontWeight: 'bold', width: '100%', textAlign: 'center' }}>{'Personel Information'}</h3>
                             <div style={{ padding: '20px' }}>
                                 <Row className='p-0 m-0'>
                                     <Col lg={4} md={4} sm={12} xs={12}>
@@ -720,20 +737,20 @@ function ProcedeOrder(props) {
             {/* Order SUmmery */}
             <Row style={{ marginTop: '3%' }}>
                 <Col lg={6} md={6} sm={12} xs={12} style={{ paddingBottom: isMobile ? '3%' : '0px' }}>
-                    <Card ref={cardRef} style={{ border: `1px solid ${consts.COLORS.LIGHT_GRAY}`, boxShadow: `0px 0px 10px 0.5px ${consts.COLORS.LIGHT_GRAY}`, borderRadius: '0px' }}>
+                    <Card ref={cardRef} style={{ border: `1px solid ${constants.COLORS.LIGHT_GRAY}`, boxShadow: `0px 0px 10px 0.5px ${constants.COLORS.LIGHT_GRAY}`, borderRadius: '0px' }}>
                         <Card.Body>
-                            <h3 style={{ color: consts.COLORS.GRAY, fontWeight: 'bold', width: '100%', textAlign: 'center' }}>{'Order Summary'}</h3>
+                            <h3 style={{ color: constants.COLORS.GRAY, fontWeight: 'bold', width: '100%', textAlign: 'center' }}>{'Order Summary'}</h3>
                             <div style={{ padding: '20px' }}>
-                                <div className='d-inline-flex w-100 mt-4' style={{ fontSize: '14px', color: consts.COLORS.TEXT }}>
+                                <div className='d-inline-flex w-100 mt-4' style={{ fontSize: '14px', color: constants.COLORS.TEXT }}>
                                     <h6 className='mr-auto'>{'Sub Total'}</h6>
                                     <h6>{'Rs. '}{sub_total + ''}</h6>
                                 </div>
-                                <div className='d-inline-flex w-100 mt-2' style={{ fontSize: '14px', color: consts.COLORS.TEXT }}>
+                                <div className='d-inline-flex w-100 mt-2' style={{ fontSize: '14px', color: constants.COLORS.TEXT }}>
                                     <h6 className='mr-auto'>{'Shipping Charges'}</h6>
                                     <h6>{'Rs. '}{'0'}</h6>
                                 </div>
-                                <hr style={{ color: consts.COLORS.SHADOW }} />
-                                <div className='d-inline-flex w-100 mb-2' style={{ fontSize: '14px', color: consts.COLORS.TEXT }}>
+                                <hr style={{ color: constants.COLORS.SHADOW }} />
+                                <div className='d-inline-flex w-100 mb-2' style={{ fontSize: '14px', color: constants.COLORS.TEXT }}>
                                     <h6 className='mr-auto'>{'Total'}</h6>
                                     <h6>{'Rs. '}{sub_total}</h6>
                                 </div>
@@ -744,9 +761,9 @@ function ProcedeOrder(props) {
                 {/* Payment Options */}
                 {/* 0340-0154994 */}
                 <Col lg={6} md={6} sm={12} xs={12} style={{ paddingBottom: isMobile ? '3%' : '0px' }}>
-                    <Card style={{ border: `1px solid ${consts.COLORS.LIGHT_GRAY}`, boxShadow: `0px 0px 10px 0.5px ${consts.COLORS.LIGHT_GRAY}`, borderRadius: '0px', minHeight: cardSize.height, maxHeight: cardSize.height }}>
+                    <Card style={{ border: `1px solid ${constants.COLORS.LIGHT_GRAY}`, boxShadow: `0px 0px 10px 0.5px ${constants.COLORS.LIGHT_GRAY}`, borderRadius: '0px', minHeight: cardSize.height, maxHeight: cardSize.height }}>
                         <Card.Body className='d-flex flex-column'>
-                            <h3 style={{ color: consts.COLORS.GRAY, fontWeight: 'bold', width: '100%', textAlign: 'center' }}>{'Payment Option'}</h3>
+                            <h3 style={{ color: constants.COLORS.GRAY, fontWeight: 'bold', width: '100%', textAlign: 'center' }}>{'Payment Option'}</h3>
                             <div style={{ padding: '20px', marginTop: 'auto', marginBottom: 'auto' }}>
                                 <Row>
                                     <Col>
@@ -766,9 +783,9 @@ function ProcedeOrder(props) {
                 </Col>
             </Row>
             {/* Confirm Order */}
-            <Card style={{ border: `1px solid ${consts.COLORS.LIGHT_GRAY}`, boxShadow: `0px 0px 10px 0.5px ${consts.COLORS.LIGHT_GRAY}`, borderRadius: '0px', marginTop: '3%' }}>
+            <Card style={{ border: `1px solid ${constants.COLORS.LIGHT_GRAY}`, boxShadow: `0px 0px 10px 0.5px ${constants.COLORS.LIGHT_GRAY}`, borderRadius: '0px', marginTop: '3%' }}>
                 <Card.Body className='d-flex flex-column'>
-                    <h3 style={{ color: consts.COLORS.GRAY, fontWeight: 'bold', width: '100%', textAlign: 'center' }}>{'Cofirm Order'}</h3>
+                    <h3 style={{ color: constants.COLORS.GRAY, fontWeight: 'bold', width: '100%', textAlign: 'center' }}>{'Cofirm Order'}</h3>
                     <div style={{ padding: '20px' }}>
                         <Row style={{ marginBottom: '5%' }}>
                             <Col>
@@ -789,7 +806,7 @@ function ProcedeOrder(props) {
                                     <StripeCheckout
                                         token={handleConfirmOrder}
                                         name="Pay"
-                                        stripeKey={consts.STRIPE.STRIPE_PUBLIC_KEY}
+                                        stripeKey={constants.STRIPE.STRIPE_PUBLIC_KEY}
                                         price={sub_total * 100}
                                         disabled={loading}
                                     >
@@ -838,7 +855,7 @@ function ProcedeOrder(props) {
                     color: blue;
                 }
                 .proced_order .err {
-                    color: ${consts.COLORS.ERROR};
+                    color: ${constants.COLORS.ERROR};
                     margin-left: 2px;
                     font-size: 12px;
                     width: 100%;

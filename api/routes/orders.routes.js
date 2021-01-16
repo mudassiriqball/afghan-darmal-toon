@@ -8,7 +8,9 @@ router.post("/deliver/order-deliver/delivery-boy/deliver-order/to-customer", Ord
 
 // get Requests
 router.get("/single/order/by/id/search/:_id", OrdersController.get_order_by_id);
+router.get("/single/order/by/code/delivery/pick/order/search/progress/:_code", OrdersController.get_order_by_code);
 router.get("/admin/all/search/query/page/limit/:_status", OrdersController.get_order_query_search);
+
 
 // post Requests
 router.post("/place/order/id/user-order/:_id", OrdersController.place_order);

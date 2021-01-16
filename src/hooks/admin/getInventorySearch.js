@@ -11,7 +11,7 @@ export default function getInventorySearch(refresh_count, fieldName, query, quer
         setProducts([]);
         return () => {
         }
-    }, [refresh_count])
+    }, [refresh_count, fieldName, query])
 
     useEffect(() => {
         const CancelToken = axios.CancelToken;
@@ -30,7 +30,7 @@ export default function getInventorySearch(refresh_count, fieldName, query, quer
                 }).then(res => {
                     setLoading(false);
                     setProducts(prevPro => {
-                        return [...new Set([...prevPro, ...res.data.data.docs])]
+                        return [...new Set([...prevPro, ...res.data.data])]
                     });
                     setPages(Math.ceil(res.data.pages));
                 }).catch(err => {
@@ -46,8 +46,8 @@ export default function getInventorySearch(refresh_count, fieldName, query, quer
             source.cancel();
             getData;
         };
-    }, [queryPageNumber, refresh_count]);
-
+    }, [queryPageNumber, refresh_count, query, fieldName]);
+    console.log('INVENTORY_SEARCH_PRODUCTS', INVENTORY_SEARCH_PRODUCTS)
     return {
         INVENTORY_SEARCH_LOADING,
         INVENTORY_SEARCH_ERROR,

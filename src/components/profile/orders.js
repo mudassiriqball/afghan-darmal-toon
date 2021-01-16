@@ -27,7 +27,7 @@ export default function Orders(props) {
     }, [CUSTOMER_ORDERS_LOADING, CUSTOMER_ORDERS_HASMORE]);
 
     useEffect(() => {
-        setOrders([])
+        setOrders([]);
         CUSTOMER_ORDERS.forEach((element, index) => {
             getProducts(element, index)
         })
@@ -41,6 +41,7 @@ export default function Orders(props) {
         _order['sub_total'] = element.sub_total
         _order['shippingCharges'] = element.shippingCharges
         _order['entry_date'] = element.entry_date
+        _order['code'] = element.code
         let array = []
 
         for (const e of element.products) {
@@ -49,7 +50,6 @@ export default function Orders(props) {
                 let data = res.data.data[0]
                 obj['product'] = data
                 obj['quantity'] = e.quantity
-                obj['price'] = e.price
             }).catch((error) => {
                 console.log('Error', error)
             })
@@ -61,8 +61,6 @@ export default function Orders(props) {
             return [...new Set([...prevOrder, _order])]
         })
     }
-
-    console.log('ahaha:', orders)
 
     return (
         <div className='orders_style'>
@@ -90,6 +88,7 @@ export default function Orders(props) {
                             <Form.Label style={{ fontSize: '14px', color: `${constants.COLORS.MAIN}` }}>{'To cancel order, Please contact to admin.'}</Form.Label>
                         </Row>
                     }
+
                     {orders && orders.map((element, index) =>
                         orders.length == (index + 1) ?
                             <Card key={index} ref={lastProducrRef} >
@@ -176,12 +175,28 @@ export default function Orders(props) {
     )
 }
 
+import QRCode from "react-qr-code";
 function CardBody(props) {
     const [ref, { x, y, width }] = useDimensions();
-    let element = props.element
-    let index = element.index
+    const { element, status } = props;
     return (
         <Card.Body>
+            {status === 'progress' &&
+                <Row className='p-0 m-0'>
+                    <Form.Group as={Col} lg='auto' md='auto' sm={12} xs={12} className='order_col'>
+                        <InputGroup>
+                            <QRCode value={element.code} />
+                        </InputGroup>
+                    </Form.Group>
+                    <Form.Group as={Col} className='order_col'>
+                        <InputGroup>
+                            <Form.Label className='form_control'>
+                                {'This QR Code is used to receive order, The delivery boy scan this code an your order status will updated in our system.'}
+                            </Form.Label>
+                        </InputGroup>
+                    </Form.Group>
+                </Row>
+            }
             <Row className='p-0 m-0'>
                 <Form.Group as={Col} lg={4} md={4} sm={12} xs={12} className='order_col'>
                     <Form.Label className='form_label'>{'Order ID'}</Form.Label>
@@ -246,9 +261,6 @@ function CardBody(props) {
                         </Col>
                         <Col className='_padding'>
                             <div className='p-0 m-0'>{e.product && e.product.name}</div>
-                        </Col>
-                        <Col className='_padding' lg='auto' md='auto' sm='auto' xs='auto' style={{ color: 'blue' }}>
-                            <label>{'Rs'}{e.price}</label>
                         </Col>
                         <Col style={{ paddingRight: '0%' }} className='_padding' lg={2} md='auto' sm='auto' xs='auto'>
                             <label >{'Quantity'}: {e.quantity}</label>

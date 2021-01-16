@@ -15,14 +15,14 @@ const { ObjectID } = require('mongodb');
 OrdersController.add = async (req, res) => {
   let order = await Orders.findOne({ _id: req.query.order_id }, { status: 1 });
   if (order.status === "pending") {
-    const body=req.query;
+    const body = req.query;
     var datetime = new Date();
     body.entry_date = datetime;
-    body.status="progress";
+    body.status = "progress";
 
     const delivery = new Delivery(body);
     const result = await delivery.save();
-   
+
     const newObjectId = new ObjectID();
     console.log('object id', newObjectId);
 
@@ -31,7 +31,7 @@ OrdersController.add = async (req, res) => {
     let update = await Orders.findOneAndUpdate(
       { _id: req.query.order_id },
       {
-        $set: { status: "progress" , code: newObjectId },
+        $set: { status: "progress", code: newObjectId },
       }
     );
     res.status(200).send({
@@ -47,7 +47,7 @@ OrdersController.add = async (req, res) => {
   }
 };
 
-OrdersController.dropOrder= async (req, res) => {
+OrdersController.dropOrder = async (req, res) => {
 
   let order = await Orders.findOne({ _id: req.query.order_id }, { status: 1 });
   if (order.status === "progress") {
@@ -56,17 +56,13 @@ OrdersController.dropOrder= async (req, res) => {
       delivery_boy_id: req.query.delivery_boy_id,
        order_id:req.query.order_id 
       });
-      if(order){
-        let code = await Orders.findOne({
-         _id: req.query.order_id, code:req.query.code });
-         if(code){
-          let update = await Orders.findOneAndUpdate(
-            { _id: req.query.order_id },
-            {
-              $set: { status: "delivered"},
-            }
-          );
-
+      if (code) {
+        let update = await Orders.findOneAndUpdate(
+          { _id: req.query.order_id },
+          {
+            $set: { status: "delivered" },
+          }
+        );
           let update1 = await Delivery.findOneAndUpdate(
             { order_id: req.query.order_id,delivery_boy_id:req.query.delivery_boy_id },
             {
@@ -80,9 +76,9 @@ OrdersController.dropOrder= async (req, res) => {
           });
          } 
       }
-      else{
-        res.status(202).send({
-          code: 202,
+      else {
+        res.status(203).send({
+          code: 203,
         });
       }
   } else {
@@ -100,6 +96,25 @@ OrdersController.get_order_by_id = async (req, res) => {
   try {
     order = await Orders.find({
       _id: req.params._id,
+    });
+    res.status(200).send({
+      code: 200,
+      message: "Successful",
+      data: order,
+    });
+  } catch (error) {
+    console.log("error", error);
+    return res.status(500).send(error);
+  }
+};
+
+OrdersController.get_order_by_code = async (req, res) => {
+  let order;
+  var ObjectId = mongoose.Types.ObjectId;
+  const _code = new ObjectId(req.params._code);
+  try {
+    order = await Orders.find({
+      code: _code,
     });
     res.status(200).send({
       code: 200,
@@ -133,10 +148,6 @@ OrdersController.get_order_query_search = async (req, res) => {
     return res.status(500).send(error);
   }
 };
-
-// Put Methods
-
-// Delete Methods
 
 OrdersController.place_order = async (req, res) => {
   let data = [];
@@ -178,7 +189,7 @@ OrdersController.place_order = async (req, res) => {
       if (body.paymentType === "online") {
         const idempontencyKey = uuidv4();
         try {
-          stripe.customers
+          paymentResult = stripe.customers
             .create({
               email: body.token.email,
               source: body.token.id,
@@ -196,13 +207,10 @@ OrdersController.place_order = async (req, res) => {
               );
             })
             .then((result) => {
-              // res.status(200).send(result);
               console.log("\n\n\npayment successfull:", result);
-              paymentResult = result;
             })
             .catch((error) => {
               console.log("\n\n\nerror in make ransaction:", error);
-              // return res.status(500).send(error);
               return res.status(500).send({
                 code: 500,
                 message: "Error in payment:" + error,

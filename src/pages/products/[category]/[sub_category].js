@@ -109,6 +109,12 @@ export default function Category(props) {
             </div>
             <StickyBottomNavbar user={user} />
             <style type="text/css">{`
+                ._subCategory {
+                    min-height: 70vh;
+                    align-items: center;
+                    flex-direction: column;
+                    display: flex;
+                }
                 @media only screen and (max-width: 600px) {
                     ._subCategory {
                         padding: 2% 5%;

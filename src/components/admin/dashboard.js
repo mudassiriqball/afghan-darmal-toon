@@ -79,14 +79,14 @@ const Dashboard = props => {
                             <Nav.Item style={styles.image_div}>
                                 <p>
                                     <Image src={props.avatar} roundedCircle thumbnail fluid style={styles.image} />
-                                    <Nav.Link style={styles.muhalik}> {props.fullName} </Nav.Link>
+                                    <Nav.Link style={styles.afghan}> {props.fullName} </Nav.Link>
                                 </p>
                             </Nav.Item>
                             <Nav.Item>
                                 <div className="nav_link">
                                     <Nav.Link eventKey="Customers" style={styles.nav_link} onClick={() => setShow_category(false)}>
                                         <FontAwesomeIcon size="xs" icon={faUsers} style={styles.fontawesome} />
-                                        <div className="mr-auto">Customers</div>
+                                        <div className="mr-auto _label">Customers</div>
                                         <FontAwesomeIcon icon={faChevronRight} style={styles.forword_fontawesome} />
                                     </Nav.Link>
                                 </div>
@@ -95,7 +95,7 @@ const Dashboard = props => {
                                 <div className="nav_link">
                                     <Nav.Link eventKey="DeliveryBoys" style={styles.nav_link} onClick={() => setShow_category(false)}>
                                         <FontAwesomeIcon icon={faUsers} style={styles.fontawesome} />
-                                        <div className="mr-auto">Delivery Boys</div>
+                                        <div className="mr-auto _label">Delivery Boys</div>
                                         <FontAwesomeIcon icon={faChevronRight} style={styles.forword_fontawesome} />
                                     </Nav.Link>
                                 </div>
@@ -104,7 +104,7 @@ const Dashboard = props => {
                                 <div className="nav_link">
                                     <Nav.Link eventKey="Inventory" style={styles.nav_link} onClick={() => setShow_category(false)}>
                                         <FontAwesomeIcon icon={faWarehouse} style={styles.fontawesome} />
-                                        <div className="mr-auto">Inventory</div>
+                                        <div className="mr-auto _label">Inventory</div>
                                         <FontAwesomeIcon icon={faChevronRight} style={styles.forword_fontawesome} />
                                     </Nav.Link>
                                 </div>
@@ -113,7 +113,7 @@ const Dashboard = props => {
                                 <div className="nav_link">
                                     <Nav.Link eventKey="OutOfStock" style={styles.nav_link} onClick={() => setShow_category(false)}>
                                         <MdRemoveShoppingCart style={styles.fontawesome} />
-                                        <div className="mr-auto">Out Of Stock</div>
+                                        <div className="mr-auto _label">Out Of Stock</div>
                                         <FontAwesomeIcon icon={faChevronRight} style={styles.forword_fontawesome} />
                                     </Nav.Link>
                                 </div>
@@ -122,7 +122,7 @@ const Dashboard = props => {
                                 <div className="nav_link">
                                     <Nav.Link eventKey="AddProduct" onClick={props.click} style={styles.nav_link}>
                                         <FontAwesomeIcon size="xs" icon={faPlusCircle} style={styles.fontawesome} />
-                                        <div className="mr-auto">Add Product</div>
+                                        <div className="mr-auto _label">Add Product</div>
                                         <FontAwesomeIcon icon={faChevronRight} style={styles.forword_fontawesome} />
                                     </Nav.Link>
                                 </div>
@@ -131,7 +131,7 @@ const Dashboard = props => {
                                 <div className="nav_link">
                                     <Nav.Link eventKey="Orders" style={styles.nav_link} onClick={() => setShow_category(false)}>
                                         <FontAwesomeIcon icon={faEdit} style={styles.fontawesome} />
-                                        <div className="mr-auto">Orders</div>
+                                        <div className="mr-auto _label">Orders</div>
                                         <FontAwesomeIcon icon={faChevronRight} style={styles.forword_fontawesome} />
                                     </Nav.Link>
                                 </div>
@@ -140,7 +140,7 @@ const Dashboard = props => {
                                 <div className="nav_link" >
                                     <Nav.Link eventKey="Slider" style={styles.nav_link} onClick={() => setShow_category(false)}>
                                         <FontAwesomeIcon icon={faImages} style={styles.fontawesome} />
-                                        <div className="mr-auto">Slider</div>
+                                        <div className="mr-auto _label">Slider</div>
                                         <FontAwesomeIcon icon={faChevronRight} style={styles.forword_fontawesome} />
                                     </Nav.Link>
                                 </div>
@@ -149,7 +149,7 @@ const Dashboard = props => {
                                 <div style={{ borderTop: '0.5px solid #434556' }}>
                                     <Nav.Link style={styles.nav_link}>
                                         <FontAwesomeIcon size="xs" icon={faTh} style={styles.fontawesome} />
-                                        <div className="mr-auto"> Category </div>
+                                        <div className="mr-auto _label"> Category </div>
                                     </Nav.Link>
                                 </div>
                             </Nav.Item>
@@ -157,14 +157,14 @@ const Dashboard = props => {
                                 <div className="limk_submenue">
                                     <Nav.Link eventKey="AddCategory" style={styles.submenu_link} >
                                         <FontAwesomeIcon size="xs" icon={faPlusCircle} style={styles.fontawesome} />
-                                        <div className="mr-auto"> Add Category</div>
+                                        <div className="mr-auto _label"> Add Category</div>
                                         <FontAwesomeIcon icon={faChevronRight} style={styles.forword_fontawesome} />
                                     </Nav.Link>
                                 </div>
                                 <div className="limk_submenue">
                                     <Nav.Link eventKey="AllCategories" style={styles.submenu_link} >
                                         <FontAwesomeIcon size="xs" icon={faTh} style={styles.fontawesome} />
-                                        <div className="mr-auto"> All Categories</div>
+                                        <div className="mr-auto _label"> All Categories</div>
                                         <FontAwesomeIcon icon={faChevronRight} style={styles.forword_fontawesome} />
                                     </Nav.Link>
                                 </div>
@@ -225,6 +225,9 @@ const Dashboard = props => {
                 </Row>
             </Tab.Container>
             <style type="text/css">{`
+                .admin_dashboard ._label {
+                    font-size: 12px;
+                }
                 .admin_dashboard .dropdown_item{
                     color: gray;
                     font-size: 13px;
@@ -384,7 +387,7 @@ const styles = {
         minHeight: '100px',
         maxHeight: '100px',
     },
-    muhalik: {
+    afghan: {
         color: `${consts.COLORS.ADMIN_MAIN}`,
         fontSize: '14px',
         margin: '0%',
@@ -429,7 +432,7 @@ const styles = {
         fontSize: '14px',
         display: 'flex',
         alignItems: 'center',
-        height: '60px'
+        height: '50px'
     },
     submenu_link: {
         color: 'white',

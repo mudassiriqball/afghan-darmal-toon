@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Router from 'next/router'
 import axios from 'axios'
-import { Row, Col, ListGroup } from 'react-bootstrap'
+import { Row, Col, ListGroup, Alert } from 'react-bootstrap'
 import { getDecodedTokenFromStorage, getTokenFromStorage, checkTokenExpAuth } from '../utils/services/auth';
 import AlertModal from '../components/alert-modal'
 import ManageAccount from '../components/profile/manage-account'
@@ -111,7 +111,7 @@ export default function Profile(props) {
 
     function handleShowAlert(msg) {
         setAlertMsg(msg)
-        setShowAlertModal(true)
+        setShowAlertModal(true);
     }
 
     return (
@@ -125,6 +125,14 @@ export default function Profile(props) {
             />
             <div className='_div'>
                 <Row>
+                    {user.role === 'customer' && user.status === 'disapproved' && <Col lg={12} md={12} sm={12} xs={12}>
+                        <Alert variant='danger' style={{ textAlign: 'center' }}>{'Your account is not approved yet, Contact to admin for more information'}</Alert>
+                    </Col>
+                    }
+                    {user.role === 'customer' && user.status === 'restricted' && <Col lg={12} md={12} sm={12} xs={12}>
+                        <Alert variant='danger' style={{ textAlign: 'center' }}>{'Your account is restricted, Contact to admin for more information'}</Alert>
+                    </Col>
+                    }
                     <Col lg={3} md={3}>
                         <ListGroup variant="flush">
                             <ListGroup.Item style={{ color: view == 'manage_account' || view == 'my_profile' || view == 'change_picture' || view == 'address' ? 'blue' : 'black' }}
@@ -147,7 +155,7 @@ export default function Profile(props) {
                             >
                                 {'Change Picture'}
                             </ListGroup.Item>
-                            <ListGroup.Item onClick={() => Router.push('/reset-password')}>{'Change Password'}</ListGroup.Item>
+                            <ListGroup.Item onClick={() => Router.push('/forgot-password')}>{'Change Password'}</ListGroup.Item>
                         </ListGroup>
                         {(user.role === 'customer' || user.role === 'delivery') && <>
                             {/* <ListGroup variant="flush" >

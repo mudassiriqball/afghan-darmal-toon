@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import axios from 'axios'
 import { Card, Form, Col, Row, Image, Button, InputGroup, Spinner } from 'react-bootstrap'
 import urls from '../../utils/urls'
@@ -8,9 +8,9 @@ import CustomButton from '../CustomButton'
 import { BsUpload } from 'react-icons/bs';
 
 export default function ChangrProfilePicture(props) {
-    const [token, setToken] = React.useState(null)
-    const [img, setImg] = React.useState('')
-    const [isLoading, setIsLoading] = React.useState(false)
+    const [token, setToken] = useState(null)
+    const [img, setImg] = useState('')
+    const [isLoading, setIsLoading] = useState(false)
 
     async function handleImgUpload() {
         let uploaded = false;
@@ -26,13 +26,12 @@ export default function ChangrProfilePicture(props) {
             uploaded = true;
             let dataa = await res.json();
             secure_url = dataa.secure_url;
-            console.log('ImageUrl:', dataa.secure_url)
             setIsLoading(false);
         }).catch(err => {
             uploaded = false;
             console.log('error:', err)
             setIsLoading(false);
-            alert("Error", "An Error Occured While Uploading")
+            alert("An Error Occured While Uploading")
             return;
         })
         if (uploaded) {
@@ -43,7 +42,7 @@ export default function ChangrProfilePicture(props) {
             }).then((response) => {
                 setIsLoading(false)
                 setImg('')
-                props.showAlert('Image Uploaded Successfully')
+                props.showAlert('Image Uploaded Successfully');
                 props.reloadUser()
             }).catch((error) => {
                 setIsLoading(false)

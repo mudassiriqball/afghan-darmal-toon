@@ -194,7 +194,7 @@ export default function OutOfStock(props) {
                             INVENTORY_SEARCH_LOADING ?
                                 <Loading />
                                 :
-                                INVENTORY_SEARCH_PRODUCTS > 0 ?
+                                INVENTORY_SEARCH_PRODUCTS && INVENTORY_SEARCH_PRODUCTS.length > 0 ?
                                     <>
                                         <ProductTable
                                             list={INVENTORY_SEARCH_PRODUCTS}
@@ -310,10 +310,10 @@ function ProductTable(props) {
                                         {element.stock}
                                     </td>
                                     <td align="center" >
-                                        {element.categoryId}
+                                        {element.category && element.category.label}
                                     </td>
                                     <td align="center" >
-                                        {element.subCategoryId}
+                                        {element.sub_category && element.sub_category.label}
                                     </td>
                                     <td align="center" >
                                         {element.entry_date.substring(0, 10)}
@@ -679,7 +679,7 @@ const ViewProduct = props => {
                     <Form.Label className='heading_label'>Product Category:</Form.Label>
                     <InputGroup>
                         <Form.Label className='form_label'>
-                            {productData.categoryId}
+                            {productData.category && productData.category.label}
                         </Form.Label>
                     </InputGroup>
                 </Form.Group >
@@ -688,7 +688,7 @@ const ViewProduct = props => {
                     <Form.Label className='heading_label'>Product Category:</Form.Label>
                     <InputGroup>
                         <Form.Label className='form_label'>
-                            {productData.subCategoryId}
+                            {productData.sub_category && productData.sub_category.label}
                         </Form.Label>
                     </InputGroup>
                 </Form.Group >

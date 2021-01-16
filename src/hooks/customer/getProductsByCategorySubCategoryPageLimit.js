@@ -13,7 +13,6 @@ export default function getProductsByCategorySubCategoryPageLimit(category, subC
     }, [category, subCategory])
 
     useEffect(() => {
-        let unmounted = true
         const CancelToken = axios.CancelToken;
         const source = CancelToken.source();
 
@@ -32,27 +31,23 @@ export default function getProductsByCategorySubCategoryPageLimit(category, subC
                     },
                     cancelToken: source.token
                 }).then(res => {
-                    if (unmounted) {
-                        setLoading(false)
-                        setProducts(prevPro => {
-                            return [...new Set([...prevPro, ...res.data.data.docs])]
-                        });
-                        setHasMore(res.data.data && res.data.data.docs && res.data.data.docs.length > 0);
-                    }
+                    setLoading(false)
+                    setProducts(prevPro => {
+                        return [...new Set([...prevPro, ...res.data.data.docs])]
+                    });
+                    setHasMore(res.data.data && res.data.data.docs && res.data.data.docs.length > 0);
                 }).catch(err => {
                     console.log('PRODUCTS_BY_CATEGORY_SUB_CATEGORY_PAGE_LIMIT ERROR:', err);
-                    if (unmounted) {
-                        setLoading(false)
-                        if (axios.isCancel(err)) return
-                        setError(true)
-                    }
+                    setLoading(false)
+                    if (axios.isCancel(err)) return
+                    setError(true)
                 })
             }
         }
         getData()
         return () => {
-            unmounted = false
             source.cancel();
+            getData;
         };
     }, [category, subCategory, page, limit])
 

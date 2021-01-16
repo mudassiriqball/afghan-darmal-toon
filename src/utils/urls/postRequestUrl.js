@@ -20,4 +20,7 @@ export default {
 
     // PAYMENT
     MAKE_PAYMENT: baseUrl + '/api/paymants/add-payment/make-transaction/',
+
+    // SMS
+    SEND_ORDER_STATUS_CHANGED_SMS: baseUrl + '/api/sms/to-customer/order/status/update/sms',
 }

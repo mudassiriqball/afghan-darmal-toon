@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Card, Dropdown, Form, Nav, Navbar } from 'react-bootstrap'
 import consts from '../../constants'
 import PhoneInput from 'react-phone-input-2'
@@ -26,6 +26,12 @@ export default function Toolbar(props) {
     const [mobileError, setmobileError] = useState('');
     const [error, setError] = useState('');
 
+    useEffect(() => {
+        return () => {
+            setLoading(false);
+        }
+    }, [])
+
     // Login/Signup
     const handleLogin = async () => {
         if (mobile == '' || password == '') {
@@ -49,13 +55,13 @@ export default function Toolbar(props) {
                 await saveTokenToStorage(res.data.token);
                 const decodedToken = jwt_decode(res.data.token);
                 if (decodedToken.data.role === 'customer') {
-                    setLoading(false);
+                    Router.push('/');
                     Router.reload('/');
                 } else if (decodedToken.data.role === 'admin') {
-                    setLoading(false);
-                    Router.replace('/admin')
+                    Router.push('/admin')
+                } else if (decodedToken.data.role == 'ministory') {
+                    Router.push('/ministory')
                 } else {
-                    setLoading(false);
                     Router.reload('/');
                 }
             }).catch(function (err) {
@@ -144,7 +150,7 @@ export default function Toolbar(props) {
                                                     {!loading && <BiLogInCircle style={globalStyle.leftIcon} />}
                                                 </CustomButton>
                                             </Form>
-                                            <a href="#" className='color w-100' style={{ fontSize: 'small', marginTop: '50px' }}>Forgot Password ?</a>
+                                            <a href="/forgot-password" className='color w-100' style={{ fontSize: 'small', marginTop: '50px' }}>Forgot Password ?</a>
                                         </Card.Body>
                                     </Card>
                                 </Dropdown.Menu>
@@ -162,7 +168,7 @@ export default function Toolbar(props) {
                                 <Dropdown.Toggle as={Nav.Link}
                                     style={{ fontWeight: 'bold', fontSize: '15px' }} active
                                 >
-                                    {'Account'}
+                                    {user.fullName}
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu className='dropdown-menu dropdown-menu-right' style={{ border: 'none', paddingTop: '7px', background: 'none' }} >
                                     <Card style={{ boxShadow: `1px 0px 3px lightgray` }}>

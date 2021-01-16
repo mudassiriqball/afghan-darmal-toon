@@ -37,9 +37,9 @@ export default function CardSearchAccordion(props) {
         var key = e.keyCode || e.which;
         if (key == 13) {
             if (searchType === 'order_qr_id') {
-                props.handleSearch('_id', value)
+                props.handleSearch('_id', searchValue)
             } else {
-                props.handleSearch(searchType, value)
+                props.handleSearch(searchType, searchValue)
             }
         }
     }
@@ -138,7 +138,7 @@ export default function CardSearchAccordion(props) {
                                         />
                                         {searchValue && <InputGroup.Append >
                                             <Button size='sm' variant='danger' onClick={() => handleSearchClearBtnClick('')}>
-                                                {'clear'}
+                                                {'Clear'}
                                             </Button>
                                         </InputGroup.Append>
                                         }

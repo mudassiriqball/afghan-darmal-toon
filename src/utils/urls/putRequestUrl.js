@@ -2,6 +2,7 @@ import baseUrl from './baseUrl'
 export default {
     // USERS
     CHANGE_CUSTOMER_STATUS: baseUrl + '/api/users/status/id/customer-only/',
+    RESET_PASSWORD: baseUrl + '/api/users/reset-password/',
 
     DELETE_PRODUCT: baseUrl + '/api/products/delete-product/',
     UPDATE_USER_STATUS: baseUrl + '/api/users/user-status/',

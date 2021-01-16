@@ -4,60 +4,15 @@ const PORT = process.env.PORT || 3000;
 const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
 const handle = app.getRequestHandler();
-// const multer = require("multer");
-// const path=require("path");
-// const aws = require('aws-sdk')
-// const multerS3 = require('multer-s3')
 
 const dotenv = require('dotenv');
 dotenv.config();
 
-// start
-
-// aws.config.update({
-//   secretAccessKey:process.env.secretAccessKey,
-//   accessKeyId:process.env.accessKeyId,
-//   region: process.env.region
-// });
-// const s3 = new aws.S3()
-
-// const upload = multer({
-// storage: multerS3({
-//   s3: s3,
-//   bucket: 'slider-images',
-//   acl: 'public-read',
-//   metadata: function (req, file, cb) {
-//     cb(null, {fieldName: 'TESTING_ME'});
-//   },
-//   key: function (req, file, cb) {
-//     cb(null, Date.now().toString() + '-' + file.originalname)
-//   }
-// })
-// })
-
-//end
-
-// const storage=multer.diskStorage({
-//   destination:function(req,file,cb){
-//     cb(null,'images/')
-//   },
-//   filename:function(req,file,cb){
-//      cb(null,file.fieldname + '-' +  Date.now() + '-' + file.originalname);
-// }
-// });
-// const fileFilter = (req, file, cb) => {
-//   if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
-//       cb(null, true)
-//   } else {
-//       //reject file
-//       cb({message: 'Unsupported file format'}, false)
-//   }
-// }
-
-// const upload =multer({
-//   storage:storage,
-//   fileFilter: fileFilter
-// });
+const pino = require('express-pino-logger')();
+const client = require('twilio')(
+    process.env.TWILIO_ACCOUNT_SID,
+    process.env.TWILIO_AUTH_TOKEN
+);
 
 app
     .prepare()
@@ -80,8 +35,6 @@ app
         );
         app.use(bodyParser.json());
 
-        // for parsing multipart/form-data
-        // app.use(upload.array('myImage'));
         app.use(express.static("public"));
 
         // connection to mongoose
@@ -106,13 +59,6 @@ app
         fs.readdirSync(__dirname + "/api/models").forEach(function (file) {
             require(__dirname + "/api/models/" + file);
         });
-        // var key = fs.readFileSync('./new/one.txt');
-        // var cert = fs.readFileSync( './new/two.txt' );
-        // var ca = fs.readFileSync( './new/three.txt' );
-        // console.log("key",key);
-        // console.log("cert",cert);
-        // console.log("ca",ca);
-
 
         // in case you want to serve images
         app.use(express.static("public"));
@@ -125,8 +71,11 @@ app
         });
 
         app.set("port", process.env.PORT);
-
         app.use(accessControls);
+
+        app.use(bodyParser.urlencoded({ extended: false }));
+        app.use(bodyParser.json());
+        app.use(pino);
 
         const UsersRoutes = require("./api/routes/users.routes");
         const ProductRoutes = require("./api/routes/products.routes");
@@ -138,8 +87,24 @@ app
         app.use("/api/categories", CategoryRoutes);
         app.use("/api/sliders", SlidersRoutes);
         app.use("/api/orders", OrdersRoutes);
-
-
+        app.post('/api/sms/to-customer/order/status/update/sms', (req, res) => {
+            client.messages
+                .create({
+                    from: process.env.TWILIO_PHONE_NUMBER,
+                    to: req.body.to,
+                    body: req.body.body
+                })
+                .then(() => {
+                    res.status(200).send({
+                        code: 200,
+                        message: "Field Added Successfully",
+                    });
+                })
+                .catch(err => {
+                    console.log(err);
+                    return res.status(500).send(err);
+                });
+        });
 
         app.get("*", (req, res) => {
             return handle(req, res);

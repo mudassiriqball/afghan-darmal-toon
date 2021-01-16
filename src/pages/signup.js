@@ -79,7 +79,6 @@ class Signup extends Component {
         this.setState({ phone: mobileNumber, sendCodeLoading: true, mobileError: '' })
         const currentComponent = this;
         await axios.get(urls.GET_REQUEST.VARIFY_MOBILE_NUMBER + mobileNumber).then((res) => {
-            console.log('res.data:', res.data)
             if (res.data.code == 201) {
                 currentComponent.setState({
                     mobileError: 'Number Already Exists!',
@@ -116,7 +115,6 @@ class Signup extends Component {
                             }
                         }, 1000)
                     }).catch(function (error) {
-
                         if (error.code == 'auth/too-many-requests') {
                             currentComponent.setState({
                                 isCodeSended: false,

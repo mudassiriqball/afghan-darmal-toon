@@ -48,7 +48,7 @@ export default function ProductCard(props) {
                 setAlertType('success');
                 setAlertMsg('Product Successfully Added to Cart');
                 setShowAlertModal(true);
-                getUser(user._id);
+                getUser();
             }).catch(function (err) {
                 setCartLoading(false)
                 setAlertType('error');
@@ -69,21 +69,20 @@ export default function ProductCard(props) {
             />
             <Link href='/products/[category]/[sub_category]/[product]' as={`/products/${element.categoryId}/${element.subCategoryId}/${element._id}`}>
                 <Card className='_card' >
-                    {/* 5006 7900 827 803 */}
                     <Card.Body className='p-3'>
                         {element.discount && element.discount > 0 &&
                             <div style={{
-                                position: 'absolute', right: '0px', top: '0px', background: constants.COLORS.LIGHT_GRAY, opacity: 0.8,
+                                position: 'absolute', right: '0px', top: '0px', background: constants.COLORS.MAIN, opacity: 0.8,
                                 width: '60px', height: '60px', borderBottomLeftRadius: '90%', justifyContent: 'center', alignItems: 'center', display: 'flex'
                             }}>
-                                <label style={{ color: constants.COLORS.SEC, fontSize: '14px' }}>-{element.discount}% </label>
+                                <label style={{ color: constants.COLORS.WHITE, fontSize: '15px' }}>-{element.discount}% </label>
                             </div>
                         }
                         <Card.Title style={{
                             textOverflow: 'ellipsis',
                             overflow: 'hidden',
                             whiteSpace: 'nowrap',
-                            color: consts.COLORS.GRAY
+                            color: consts.COLORS.TEXT
                         }}
                         >{element.name}</Card.Title>
                         <Card.Text className='descriptions' >
@@ -109,7 +108,7 @@ export default function ProductCard(props) {
                                     <h6 className='p-0 m-0' style={{ color: consts.COLORS.MAIN, fontWeight: 'bold' }}>
                                         {'Rs: '}
                                         <CalculateDiscountPrice price={element.price} discount={element.discount} />
-                                        <span style={{ textDecorationLine: 'line-through', color: consts.COLORS.GRAY, fontSize: '12px', marginLeft: '5px' }}>{element.price}</span>
+                                        <span style={{ textDecorationLine: 'line-through', color: consts.COLORS.TEXT, fontSize: '12px', marginLeft: '5px' }}>{element.price}</span>
                                     </h6>
                                     :
                                     <h6 className='p-0 m-0' style={{ color: consts.COLORS.MAIN, fontWeight: 'bold' }}>{'Rs: ' + element.price}</h6>
@@ -128,15 +127,14 @@ export default function ProductCard(props) {
                                             loading={cartLoading}
                                             disabled={cartLoading}
                                             title={'ADD TO CART'}
-                                            // variant={'success'}
                                             spinnerSize={'lg'}
                                             onlyLoading
                                             onClick={() => handleAddToCart()}
                                         />
                                     </div>
                                     :
-                                    <div style={{ border: `1px solid ${consts.COLORS.LIGHT_GRAY}`, borderRadius: '3px', padding: '5px' }}>
-                                        <FiShoppingCart style={{ fontSize: '20px', color: consts.COLORS.GRAY }} />
+                                    <div style={{ border: `1px solid ${consts.COLORS.TEXT}`, borderRadius: '3px', padding: '5px' }}>
+                                        <FiShoppingCart style={{ fontSize: '20px', color: consts.COLORS.DANGER }} />
                                     </div>}
                             </Col>
                         </Row>
@@ -154,7 +152,7 @@ export default function ProductCard(props) {
                     -webkit-line-clamp: 2; /* number of lines to show */
                     -webkit-box-orient: vertical;
                     font-size: 12px;
-                    color: ${consts.COLORS.GRAY}
+                    color: ${consts.COLORS.TEXT}
                 }
                 ._productCard ._card:hover{
                     box-shadow: 0px 0px 10px 0.5px ${consts.COLORS.SHADOW};
