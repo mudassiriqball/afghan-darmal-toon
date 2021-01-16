@@ -12,6 +12,9 @@ const delivery = new Schema({
   entry_date: {
     type: Date,
   },
+  delivery_boy_id:{
+    type: Schema.Types.ObjectId,
+  }
 });
 
 delivery.plugin(mongoosePaginate);
