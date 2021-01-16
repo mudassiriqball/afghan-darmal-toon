@@ -608,17 +608,11 @@ productsController.get_admin_inventory = async (req, res) => {
       },
     ]);
     //if (products.length) {
-      res.status(200).send({
-        code: 200,
-        message: "Successful",
-        data: products,
-      });
-    // } else {
-    //   res.status(500).send({
-    //     code: 500,
-    //     message: "This Product Does Not Exists",
-    //   });
-    // }
+    res.status(200).send({
+      code: 200,
+      message: "Successful",
+      data: products,
+    });
   } catch (error) {
     console.log("error", error);
     return res.status(500).send(error);
@@ -809,15 +803,6 @@ productsController.get_all_product_by_id = async (req, res) => {
   }
 };
 
-// {
-//   $project: {
-//     product_name: 1,
-//     product_type: 1,
-//     product_weight: 1,
-//     value: "$category.value",
-//     label: "$category.label",
-//   },
-// },
 //Get All Products of specific vendor endpoint definition
 productsController.get_vendor_products = async (req, res) => {
   console.log("aaaa");
@@ -859,15 +844,6 @@ productsController.get_vendor_products = async (req, res) => {
       {
         $limit: parseInt(req.query.limit),
       },
-      // {
-      //   $project: {
-      //     product_name: 1,
-      //     product_type: 1,
-      //     product_weight: 1,
-      //     value: "$category.value",
-      //     label: "$category.label",
-      //   },
-      // },
     ]);
     res.status(200).send({
       code: 200,
@@ -880,33 +856,6 @@ productsController.get_vendor_products = async (req, res) => {
     return res.status(500).send(error);
   }
 };
-
-// productsController.bulkupload = async (req, res) => {
-//   console.log("Check:",req.body);
-//   var datetime = new Date();
-//   var date=datetime.toISOString().slice(0,10);
-//     // const body = req.body;
-//     // req.body.product_entry_date=date;
-//   try {
-//     var ws = wb.Sheets["Worksheet"];
-//     var data = xlsx.utils.sheet_to_json(ws);
-
-//     data.forEach(element => {
-//       element.product_entry_date=date;
-//       const product = new Products(element);
-//       product.save();
-//     });
-//     res.status(200).send({
-//       code: 200,
-//       message: "Product Added Successfully"
-//     });
-//   } catch (error) {
-//     console.log("error", error);
-//     return res
-//       .status(500)
-//       .send({ message: "Product Added Successfully", error });
-//   }
-// };
 
 productsController.getSingleProduct = async (req, res) => {
   let product;
@@ -1144,17 +1093,6 @@ productsController.geteverything = async (req, res) => {
     total_products,
     in_stock_products,
   });
-  // {
-  //   $project: {
-  //     product_variations: {
-  //        $filter: {
-  //           input: "$product_variations",
-  //           as: "item",
-  //           cond: { $gt: [ "$$item.stock", 0 ] },
-  //        }
-  //     }
-  //  }
-  // },
 };
 
 productsController.get_search_products = async (req, res) => {
@@ -1225,23 +1163,6 @@ productsController.get_search_products = async (req, res) => {
       }
     }
 
-    // if (set === 3) {
-    //   console.log("15");
-    //   products4 = await Products.paginate(
-    //     { "product_tags.label": regex },
-    //     {
-    //       limit: parseInt(req.query.limit),
-    //       page: parseInt(req.query.page),
-    //     }
-    //   );
-    //   if (products4.total > 0) {
-    //     console.log("16");
-    //     actual_products = products4;
-    //   } else {
-    //     console.log("17");
-    //     actual_products = products4;
-    //   }
-    // }
 
     res.status(200).send({
       code: 200,

@@ -28,7 +28,7 @@ export default function Orders(props) {
 
     useEffect(() => {
         setOrders([]);
-        CUSTOMER_ORDERS.forEach((element, index) => {
+        CUSTOMER_ORDERS && CUSTOMER_ORDERS.forEach((element, index) => {
             getProducts(element, index)
         })
         return () => {
@@ -36,6 +36,7 @@ export default function Orders(props) {
     }, [CUSTOMER_ORDERS])
 
     async function getProducts(element, index) {
+        debugger
         let _order = {}
         _order['_id'] = element._id
         _order['sub_total'] = element.sub_total
@@ -244,7 +245,7 @@ function CardBody(props) {
                     <InputGroup>
                         <Form.Control
                             className='form_control'
-                            value={parseInt(element.sub_total) + (element.shippingCharges || 0)}
+                            value={parseInt(element.sub_total) + parseInt(element.shippingCharges)}
                             disabled={true}
                         />
                     </InputGroup>

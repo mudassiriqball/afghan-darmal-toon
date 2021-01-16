@@ -48,36 +48,42 @@ OrdersController.add = async (req, res) => {
 };
 
 OrdersController.dropOrder = async (req, res) => {
-
-  let order = await Orders.findOne({ _id: req.query.order_id }, { status: 1 });
-  if (order.status === "progress") {
-    console.log("ss");
-    let order = await Delivery.findOne({
-      delivery_boy_id: req.query.delivery_boy_id,
-      order_id: req.query.order_id
-    });
-    if (order) {
-      let update = await Orders.findOneAndUpdate(
-        { _id: req.query.order_id },
-        {
-          $set: { status: "delivered" },
-        }
-      );
-      let update1 = await Delivery.findOneAndUpdate(
-        { order_id: req.query.order_id, delivery_boy_id: req.query.delivery_boy_id },
-        {
-          $set: { status: "delivered" },
-        }
-      );
+  try {
+    let order = await Orders.findOne({ _id: req.query.order_id }, { status: 1 });
+    if (order.status === "progress") {
+      let order = await Delivery.findOne({
+        delivery_boy_id: req.query.delivery_boy_id,
+        order_id: req.query.order_id
+      });
+      if (order) {
+        let update = await Orders.findOneAndUpdate(
+          { _id: req.query.order_id },
+          {
+            $set: { status: "delivered" },
+          }
+        );
+        let update1 = await Delivery.findOneAndUpdate(
+          { order_id: req.query.order_id, delivery_boy_id: req.query.delivery_boy_id },
+          {
+            $set: { status: "delivered" },
+          }
+        );
+      } else {
+        res.status(203).send({
+          code: 203,
+        });
+      }
     } else {
-      res.status(203).send({
-        code: 203,
+      res.status(201).send({
+        code: 201,
+        message: order.status,
       });
     }
-  } else {
-    res.status(201).send({
-      code: 201,
-      message: order.status,
+  } catch (err) {
+    console.log("error", error);
+    return res.status(500).send({
+      message: 'Error',
+      error: err
     });
   }
 };
@@ -225,6 +231,12 @@ OrdersController.place_order = async (req, res) => {
           { stock: 1 }
         );
         if (check[0].stock === 0) {
+          // let update = await Product.findOneAndUpdate(
+          //   { _id: check[0]._id},
+          //   {
+          //     $set: { isdeleted: "true" },
+          //   }
+          // );
           // TODO Set isDeleted: true instead of deleteing product
           // Product.findByIdAndDelete(check[0]._id, function (err) {
           // });
