@@ -56,7 +56,7 @@ OrdersController.dropOrder = async (req, res) => {
       delivery_boy_id: req.query.delivery_boy_id,
       order_id: req.query.order_id
     });
-    if (code) {
+    if (order) {
       let update = await Orders.findOneAndUpdate(
         { _id: req.query.order_id },
         {
@@ -69,8 +69,7 @@ OrdersController.dropOrder = async (req, res) => {
           $set: { status: "delivered" },
         }
       );
-    }
-    else {
+    } else {
       res.status(203).send({
         code: 203,
       });
