@@ -155,7 +155,7 @@ export default function Profile(props) {
                             >
                                 {'Change Picture'}
                             </ListGroup.Item>
-                            <ListGroup.Item onClick={() => Router.push('/reset-password')}>{'Change Password'}</ListGroup.Item>
+                            <ListGroup.Item onClick={() => Router.push('/forgot-password')}>{'Change Password'}</ListGroup.Item>
                         </ListGroup>
                         {(user.role === 'customer' || user.role === 'delivery') && <>
                             {/* <ListGroup variant="flush" >

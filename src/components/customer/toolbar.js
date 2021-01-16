@@ -150,7 +150,7 @@ export default function Toolbar(props) {
                                                     {!loading && <BiLogInCircle style={globalStyle.leftIcon} />}
                                                 </CustomButton>
                                             </Form>
-                                            <a href="#" className='color w-100' style={{ fontSize: 'small', marginTop: '50px' }}>Forgot Password ?</a>
+                                            <a href="/forgot-password" className='color w-100' style={{ fontSize: 'small', marginTop: '50px' }}>Forgot Password ?</a>
                                         </Card.Body>
                                     </Card>
                                 </Dropdown.Menu>
