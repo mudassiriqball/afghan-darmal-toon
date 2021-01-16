@@ -81,8 +81,6 @@ OrdersController.dropOrder = async (req, res) => {
       message: order.status,
     });
   }
-
-
 };
 
 OrdersController.get_order_by_id = async (req, res) => {
