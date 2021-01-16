@@ -47,7 +47,6 @@ export default function getInventorySearch(refresh_count, fieldName, query, quer
             getData;
         };
     }, [queryPageNumber, refresh_count, query, fieldName]);
-    console.log('INVENTORY_SEARCH_PRODUCTS', INVENTORY_SEARCH_PRODUCTS)
     return {
         INVENTORY_SEARCH_LOADING,
         INVENTORY_SEARCH_ERROR,

@@ -97,12 +97,16 @@ app
                 .then(() => {
                     res.status(200).send({
                         code: 200,
-                        message: "Field Added Successfully",
+                        message: "Sms sended",
                     });
                 })
                 .catch(err => {
                     console.log(err);
-                    return res.status(500).send(err);
+                    return res.status(500).send({
+                        code: 500,
+                        message: "Sms not sended",
+                        error: err
+                    });
                 });
         });
 
