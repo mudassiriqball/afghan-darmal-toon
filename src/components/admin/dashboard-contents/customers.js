@@ -39,7 +39,52 @@ class Customers extends React.Component {
         }
     }
 
-    async handleViewModalConfirmed() {
+    sendDiscardSms = async () => {
+        await axios.post(urls.POST_REQUEST.SEND_ORDER_STATUS_CHANGED_SMS,
+            {
+                to: this.state.single_user.mobile,
+                body: `Welcome to Afghan Darmaltoon!\nYour account is not approved, Your lisence is not valid.\nPlaease contact to admin for more details\n+92 313-9573389\nafghandarmaltoon@gmail.com`
+            }).then(function (res) {
+                console.log('code sended');
+            }).catch(function (err) {
+                console.log('error', err)
+            })
+    }
+    sendApproveSms = async () => {
+        await axios.post(urls.POST_REQUEST.SEND_ORDER_STATUS_CHANGED_SMS,
+            {
+                to: this.state.single_user.mobile,
+                body: `Welcome to Afghan Darmaltoon!\nYour account is approved, You can purchase now.\nPlaease contact to admin for more details\n+92 313-9573389\nafghandarmaltoon@gmail.com`
+            }).then(function (res) {
+                console.log('code sended');
+            }).catch(function (err) {
+                console.log('error', err)
+            })
+    }
+    sendUnRestrictSms = async () => {
+        await axios.post(urls.POST_REQUEST.SEND_ORDER_STATUS_CHANGED_SMS,
+            {
+                to: this.state.single_user.mobile,
+                body: `Welcome to Afghan Darmaltoon!\nYour account is unrestricted. You can purchase now\nPlaease contact to admin for more details\n+92 313-9573389\nafghandarmaltoon@gmail.com`
+            }).then(function (res) {
+                console.log('code sended');
+            }).catch(function (err) {
+                console.log('error', err)
+            })
+    }
+    sendRestrictSms = async () => {
+        await axios.post(urls.POST_REQUEST.SEND_ORDER_STATUS_CHANGED_SMS,
+            {
+                to: this.state.single_user.mobile,
+                body: `Welcome to Afghan Darmaltoon!\nYour account is restricted.\nPlaease contact to admin for more details\n+92 313-9573389\nafghandarmaltoon@gmail.com`
+            }).then(function (res) {
+                console.log('code sended');
+            }).catch(function (err) {
+                console.log('error', err)
+            })
+    }
+
+    async handleUpdateStatus() {
         this.setState({ viewConfirmModalLoading: true })
         const currentComponent = this
         let data = []
@@ -73,11 +118,11 @@ class Customers extends React.Component {
                 console.log('New customer Ddiscarded failed, Please try again later.', err);
             });
             return
-        } else if (this.state.method == 'Restricted') {
+        } else if (this.state.method === 'Restricted') {
             data = {
                 status: 'restricted'
             }
-        } else if (this.state.method == 'Unrestricted') {
+        } else if (this.state.method === 'Unrestricted') {
             data = {
                 status: 'approved'
             }
@@ -86,6 +131,13 @@ class Customers extends React.Component {
         await axios.put(urls.PUT_REQUEST.CHANGE_CUSTOMER_STATUS + currentComponent.state.single_user._id, data, {
             headers: { 'authorization': currentComponent.props.token }
         }).then((res) => {
+            if (this.state.method === 'Approved')
+                this.sendApproveSms();
+            else if (this.state.method === 'Unrestricted')
+                this.sendUnRestrictSms();
+            else if (this.state.method === 'Restricted')
+                this.sendRestrictSms();
+
             currentComponent.setState({
                 viewConfirmModalLoading: false,
                 showViewConfirmModal: false,
@@ -122,7 +174,7 @@ class Customers extends React.Component {
                     color={this.state.viewConfirmModalColor}
                     _id={this.state.single_user._id}
                     name={this.state.single_user.fullName}
-                    confirm={this.handleViewModalConfirmed.bind(this)}
+                    confirm={this.handleUpdateStatus.bind(this)}
                     loading={this.state.viewConfirmModalLoading}
                 />
                 <AlertModal
@@ -236,6 +288,12 @@ class Customers extends React.Component {
                                         </InputGroup>
                                     </Form.Group>
                                     <Form.Group as={Col} lg={4} md={6} sm={6} xs={12}>
+                                        <Form.Label className='form_label'>Lisence #</Form.Label>
+                                        <InputGroup>
+                                            <Form.Control type="text" disabled={true} size="sm" value={this.state.single_user.licenseNo} className='form_control' />
+                                        </InputGroup>
+                                    </Form.Group>
+                                    <Form.Group as={Col} lg={4} md={6} sm={6} xs={12}>
                                         <Form.Label className='form_label'>Mobile</Form.Label>
                                         <InputGroup>
                                             <Form.Control type="text" disabled={true} size="sm" value={this.state.single_user.mobile} className='form_control' />
@@ -259,16 +317,16 @@ class Customers extends React.Component {
                                             <Form.Control type="text" disabled={true} size="sm" value={this.state.single_user.city} className='form_control' />
                                         </InputGroup>
                                     </Form.Group>
-                                    <Form.Group as={Col} lg={4} md={6} sm={6} xs={12}>
-                                        <Form.Label className='form_label'>Status</Form.Label>
-                                        <InputGroup>
-                                            <Form.Control type="text" disabled={true} size="sm" value={this.state.single_user.status} className='form_control' />
-                                        </InputGroup>
-                                    </Form.Group>
                                     <Form.Group as={Col} lg={12} md={12} sm={12} xs={12}>
                                         <Form.Label className='form_label'>Address</Form.Label>
                                         <InputGroup>
                                             <Form.Control type="text" disabled={true} size="sm" value={this.state.single_user.address} className='form_control' />
+                                        </InputGroup>
+                                    </Form.Group>
+                                    <Form.Group as={Col} lg={4} md={6} sm={6} xs={12}>
+                                        <Form.Label className='form_label'>Status</Form.Label>
+                                        <InputGroup>
+                                            <Form.Control type="text" disabled={true} size="sm" value={this.state.single_user.status} className='form_control' />
                                         </InputGroup>
                                     </Form.Group>
                                     <Form.Group as={Col} lg={4} md={6} sm={6} xs={12}>
@@ -386,23 +444,53 @@ function CustomersTable(props) {
         }
     }
 
-    const sendSms = async () => {
+    const sendDiscardSms = async () => {
         await axios.post(urls.POST_REQUEST.SEND_ORDER_STATUS_CHANGED_SMS,
             {
-                to: ORDER_DATA.c_id,
-                body: `Welcome to Afghan Darmaltoon! 
-                        Your account is not approved, Your lisence is not valid.
-                        Plaease contact to admin for more details
-                        +92 313-9573389
-                        afghandarmaltoon@gmail.com`
+                to: single_user.mobile,
+                body: `Welcome to Afghan Darmaltoon!\nYour account is not approved, Your lisence is not valid.\nPlaease contact to admin for more details\n+92 313-9573389\nafghandarmaltoon@gmail.com`
             }).then(function (res) {
-                alert('code sended');
+                console.log('code sended');
+            }).catch(function (err) {
+                console.log('error', err)
+            })
+    }
+    const sendApproveSms = async () => {
+        await axios.post(urls.POST_REQUEST.SEND_ORDER_STATUS_CHANGED_SMS,
+            {
+                to: single_user.mobile,
+                body: `Welcome to Afghan Darmaltoon!\nYour account is approved, You can purchase now.\nPlaease contact to admin for more details\n+92 313-9573389\nafghandarmaltoon@gmail.com`
+            }).then(function (res) {
+                console.log('code sended');
+            }).catch(function (err) {
+                console.log('error', err)
+            })
+    }
+    const sendUnRestrictSms = async () => {
+        await axios.post(urls.POST_REQUEST.SEND_ORDER_STATUS_CHANGED_SMS,
+            {
+                to: single_user.mobile,
+                body: `Welcome to Afghan Darmaltoon!\nYour account is un restricted. You can purchase now\nPlaease contact to admin for more details\n+92 313-9573389\nafghandarmaltoon@gmail.com`
+            }).then(function (res) {
+                console.log('code sended');
+            }).catch(function (err) {
+                debugger
+                console.log('error', err)
+            })
+    }
+    const sendRestrictSms = async () => {
+        await axios.post(urls.POST_REQUEST.SEND_ORDER_STATUS_CHANGED_SMS,
+            {
+                to: single_user.mobile,
+                body: `Welcome to Afghan Darmaltoon!\nYour account is restricted.\nPlaease contact to admin for more details\n+92 313-9573389\nafghandarmaltoon@gmail.com`
+            }).then(function (res) {
+                console.log('code sended');
             }).catch(function (err) {
                 console.log('error', err)
             })
     }
 
-    async function handleConfirmed() {
+    async function handleUpdateStatus() {
         let data = []
         if (method == 'Approved') {
             setConfirmModalLoading(true)
@@ -414,7 +502,7 @@ function CustomersTable(props) {
             await axios.delete(urls.DELETE_REQUEST.DISCARD_NEW_CUSTOMER + single_user._id, {
                 headers: { 'authorization': props.token }
             }).then(function (res) {
-                sendSms();
+                sendDiscardSms();
                 setConfirmModalLoading(false)
                 setShowConfirmModal(false)
                 setAlertModalMsg('Customer deleted successfully')
@@ -447,6 +535,13 @@ function CustomersTable(props) {
         await axios.put(urls.PUT_REQUEST.CHANGE_CUSTOMER_STATUS + single_user._id, data, {
             headers: { 'authorization': props.token }
         }).then(function (res) {
+            if (method === 'Approved')
+                sendApproveSms();
+            else if (method === 'Unrestricted')
+                sendUnRestrictSms();
+            else if (method === 'Restricted')
+                sendRestrictSms();
+
             setConfirmModalLoading(false)
             setShowConfirmModal(false)
             setAlertModalMsg(`Customer ${method}  successfully`)
@@ -475,7 +570,7 @@ function CustomersTable(props) {
                 color={confirmModalColor}
                 _id={single_user._id}
                 name={single_user.fullName}
-                confirm={handleConfirmed}
+                confirm={handleUpdateStatus}
                 loading={confirmModalLoading}
             />
             <AlertModal
@@ -613,13 +708,17 @@ function CustomersTable(props) {
 }
 
 function CustomerTableBody(props) {
-
     const [lower_limit, setlower_limit] = useState(0)
     const [upper_limit, setupper_limit] = useState(0)
 
     useEffect(() => {
         setlower_limit(props.pageNumber * 20 - 20);
         setupper_limit(props.pageNumber * 20);
+
+        return () => {
+            setlower_limit;
+            setupper_limit;
+        }
     }, [props.pageNumber])
 
     return (

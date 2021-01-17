@@ -150,6 +150,23 @@ export default function Cart(props) {
         setProductsData(copyArray)
     }
 
+    const handleProceedOrder = async () => {
+        if (user.role !== 'customer') {
+            setAlertType('error');
+            setAlertMsg('Please login as customer to proceed.');
+            setShowAlertModal(true);
+        } else if (user.role === 'customer' && user.status === 'disapproved') {
+            setAlertType('error');
+            setAlertMsg('Your account is not approved yet, Contact to admin for more information.');
+            setShowAlertModal(true);
+        } else if (user.role === 'customer' && user.status === 'restricted') {
+            setAlertType('error');
+            setAlertMsg('Your account is restricted, Contact to admin for more information.');
+            setShowAlertModal(true);
+        } else
+            setIsProcedeOrder(true)
+    }
+
     // Delete Cart Data Single
     async function handleDeleteCart(obj_id, index) {
         let copyArray = []
@@ -442,7 +459,7 @@ export default function Cart(props) {
                                             </div>
                                             <CustomButton
                                                 title={'PROCEED TO CHECKOUT'}
-                                                onClick={() => setIsProcedeOrder(true)}
+                                                onClick={() => handleProceedOrder()}
                                                 disabled={user.role !== 'customer' || (productsData && productsData.length < 1)}
                                                 block
                                             >
@@ -548,7 +565,7 @@ function ProcedeOrder(props) {
     const [cashOnDeliveryChecked, setCashOnDeliveryChecked] = useState(false);
     const [onlinePaymentChecked, setOnlinePaymentChecked] = useState(false);
 
-    const handleConfirmOrder = async (_token) => {
+    const handlePlaceOrder = async (_token) => {
         if (user.role === 'customer' && user.status === 'disapproved') {
             setAlertType('error');
             setAlertMsg('Your account is not approved yet, Contact to admin for more information');
@@ -804,7 +821,7 @@ function ProcedeOrder(props) {
                             <Col lg={6} md={6} sm={12} xs={12} style={{ paddingTop: isMobile ? '3%' : '0%' }}>
                                 {onlinePaymentChecked ?
                                     <StripeCheckout
-                                        token={handleConfirmOrder}
+                                        token={handlePlaceOrder}
                                         name="Pay"
                                         stripeKey={constants.STRIPE.STRIPE_PUBLIC_KEY}
                                         price={sub_total * 100}
@@ -824,7 +841,7 @@ function ProcedeOrder(props) {
                                         block
                                         loading={loading}
                                         title={'CONFIRM ORDER'}
-                                        onClick={() => handleConfirmOrder(null)}
+                                        onClick={() => handlePlaceOrder(null)}
                                         disabled={!cashOnDeliveryChecked && !onlinePaymentChecked ? true : loading ? true : false}
                                     />
                                 }

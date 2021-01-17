@@ -7,7 +7,7 @@ export default function PaginationRow(props) {
             <Pagination >
                 <Pagination.Item onClick={() => props.setActivePageNumber(1)}>{1}</Pagination.Item>
                 <Pagination.Prev
-                    disabled={props.activePageNumber == 1}
+                    disabled={props.activePageNumber === 1}
                     onClick={() => props.setActivePageNumber(props.activePageNumber - 1)}>
                 </Pagination.Prev>
 
@@ -16,14 +16,9 @@ export default function PaginationRow(props) {
                 <Pagination.Ellipsis />
 
                 <Pagination.Next
-                    disabled={props.totalPages != -1 ? props.totalPages == props.activePageNumber : props.hasMore ? false : true}
+                    disabled={props.totalPages !== -1 ? props.totalPages === props.activePageNumber : props.hasMore ? false : true}
                     onClick={() => props.setActivePageNumber(props.activePageNumber + 1)}>
                 </Pagination.Next>
-
-                {/* <Pagination.Item
-                    disabled={props.totalPages == -1 ? true : false}
-                    onClick={() => props.setActivePageNumber(props.totalPages)}>{props.totalPages == -1 ? '-' : props.totalPages}
-                    </Pagination.Item> */}
             </Pagination>
         </Row>
     )

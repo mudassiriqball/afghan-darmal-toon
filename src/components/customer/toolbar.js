@@ -96,7 +96,7 @@ export default function Toolbar(props) {
                 <Navbar.Collapse id="responsive-navbar-nav ">
                     <Nav className="mr-auto">
                         <Nav.Link href='/' style={{ fontWeight: 'bold', fontSize: '15px' }} active>AFGHANDARMALTOON@GMAIL.COM</Nav.Link>
-                        <Nav.Link style={{ fontWeight: 'bold', fontSize: '15px' }} active>+92 3413657092</Nav.Link>
+                        <Nav.Link style={{ fontWeight: 'bold', fontSize: '15px' }} active>+92 335 9929528</Nav.Link>
                     </Nav>
                     {/* Login/Signup */}
                     {user && user.fullName === '' &&

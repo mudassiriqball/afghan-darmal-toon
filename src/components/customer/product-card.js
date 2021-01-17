@@ -48,9 +48,11 @@ export default function ProductCard(props) {
                 setAlertType('success');
                 setAlertMsg('Product Successfully Added to Cart');
                 setShowAlertModal(true);
+                setIsCartHover(false);
                 getUser();
             }).catch(function (err) {
-                setCartLoading(false)
+                setIsCartHover(false);
+                setCartLoading(false);
                 setAlertType('error');
                 setAlertMsg('Product Not Added to Cart, Please Try Again Later');
                 setShowAlertModal(true);
@@ -114,36 +116,41 @@ export default function ProductCard(props) {
                                     <h6 className='p-0 m-0' style={{ color: consts.COLORS.MAIN, fontWeight: 'bold' }}>{'Rs: ' + element.price}</h6>
                                 }
                             </Col>
-                            <Col
-                                onMouseEnter={() => setIsCartHover(true)}
-                                onMouseLeave={() => setIsCartHover(false)}
-                                lg={4} md={4} sm={4} xs={4} className='d-flex align-items-center p-0'
-                            >
-                                <div className='mr-auto' />
-                                {isCartHover ?
-                                    <div style={{ position: 'absolute', top: '0px', right: '0px', bottom: '0px' }}>
-                                        <CustomButton
-                                            size={'sm'}
-                                            loading={cartLoading}
-                                            disabled={cartLoading}
-                                            title={'ADD TO CART'}
-                                            spinnerSize={'lg'}
-                                            onlyLoading
-                                            onClick={() => handleAddToCart()}
-                                        />
-                                    </div>
-                                    :
-                                    <div style={{ border: `1px solid ${consts.COLORS.TEXT}`, borderRadius: '3px', padding: '5px' }}>
-                                        <FiShoppingCart style={{ fontSize: '20px', color: consts.COLORS.DANGER }} />
-                                    </div>}
-                            </Col>
+                            <Col></Col>
                         </Row>
                     </Card.Body>
                 </Card>
             </Link>
+            <div
+                onMouseEnter={() => setIsCartHover(true)}
+                onMouseLeave={() => { setIsCartHover(cartLoading ? true : false) }}
+                style={{ position: 'absolute', zIndex: 100, bottom: '20px', right: '20px' }}
+            >
+                <div className='mr-auto' />
+                {isCartHover ?
+                    // <div style={{ position: 'absolute', top: '0px', right: '0px', bottom: '0px' }}>
+                    <CustomButton
+                        size={'sm'}
+                        loading={cartLoading}
+                        disabled={cartLoading}
+                        title={'ADD TO CART'}
+                        spinnerSize={'lg'}
+                        onlyLoading
+                        onClick={() => handleAddToCart()}
+                    />
+                    // </div>
+                    :
+                    <div style={{ border: `1px solid ${consts.COLORS.TEXT}`, borderRadius: '3px', padding: '5px' }}>
+                        <FiShoppingCart style={{ fontSize: '20px', color: consts.COLORS.DANGER }} />
+                    </div>}
+            </div>
             <style type="text/css">{`
+                ._productCard {
+                    z-index: 1;
+                }
                 ._productCard ._card {
                     margin: 3%;
+                    z-index: 1;
                 }
                 .descriptions {
                     overflow: hidden;

@@ -22,17 +22,18 @@ export default function getInventorySearch(refresh_count, fieldName, query, quer
                 setError(false);
                 axios({
                     method: 'GET',
-                    url: urls.GET_REQUEST.INVENTRY_PAGE_LIMIT,
+                    url: urls.GET_REQUEST.INVENTRY_SEARCH,
                     params: {
                         field: fieldName, q: query, page: queryPageNumber, limit: limit,
                     },
                     cancelToken: source.token,
                 }).then(res => {
+                    debugger
                     setLoading(false);
                     setProducts(prevPro => {
-                        return [...new Set([...prevPro, ...res.data.data])]
+                        return [...new Set([...prevPro, ...res.data.data.docs])]
                     });
-                    setPages(Math.ceil(res.data.pages));
+                    setPages(res.data.data.pages);
                 }).catch(err => {
                     console.log('Get products by search:', err);
                     setLoading(false)

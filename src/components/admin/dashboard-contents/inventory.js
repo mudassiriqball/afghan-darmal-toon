@@ -43,9 +43,9 @@ export default function Inventory(props) {
     const [queryPageNumber, setQueryPageNumber] = useState(1);
     const [query, setQuery] = useState('')
 
-    const { INVENTORY_PRODUCTS_LOADING, INVENTORY_PRODUCTS, INVENTRY_PAGES } = getInventoryPageLimit(refresh_count, limitPageNumber, '20');
+    const { INVENTORY_PRODUCTS_LOADING, INVENTORY_PRODUCTS, INVENTRY_PAGES } = getInventoryPageLimit(refresh_count, limitPageNumber, '20', false);
     const { INVENTORY_SEARCH_LOADING, INVENTORY_SEARCH_ERROR, INVENTORY_SEARCH_PRODUCTS, INVENTRY_SEARCH_PAGES } =
-        getInventorySearch(refresh_count, fieldName, query, queryPageNumber, '20');
+        getInventorySearch(refresh_count, fieldName, query, queryPageNumber, '20', false);
 
     async function handleSearch(searchType, searchValue) {
         if (searchValue != '') {

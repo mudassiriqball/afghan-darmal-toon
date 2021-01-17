@@ -52,29 +52,11 @@ export default class Orders extends Component {
         });
     }
 
-    async handleConfirmed() {
+    async handleCancelOrder() {
         this.setState({ confirmModalLoading: true })
         let currentComponent = this
 
-        let data = []
-        if (this.state.method == 'cancelled') {
-            data = {
-                status: 'cancelled'
-            }
-        } else if (this.state.method == 'pending') {
-            data = {
-                status: 'pending'
-            }
-        } else if (this.state.method == 'delivered') {
-            data = {
-                status: 'delivered'
-            }
-        } else if (this.state.method == 'progress') {
-            data = {
-                status: 'progress'
-            }
-        }
-        await axios.put(urls.PUT_REQUEST.UPDATE_ORDER_STATUS + this.state.singleOrderData._id, data, {
+        await axios.put(urls.PUT_REQUEST.UPDATE_ORDER_STATUS + this.state.singleOrderData._id, { status: 'cancelled' }, {
             headers: { 'authorization': currentComponent.props.token }
         }).then(function (response) {
             currentComponent.sendSms();
@@ -102,25 +84,16 @@ export default class Orders extends Component {
         });
     }
 
-    sendSms = async (status) => {
-        axios({
-            method: 'POST',
-            url: urls.POST_REQUEST.SEND_ORDER_STATUS_CHANGED_SMS,
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            data: JSON.stringify({
-                to: this.state.user.mobile,
-                body: `Welcome to Afghan Darmaltoon! Your order status updated to ${status}
-                \n order ID: ${this.state.singleOrderData._id}
-                 \nPlaced on: ${this.state.singleOrderData.entry_date.substring(0, 10)}
-                 \nPlaease contact to admin for more details: +92 313-9573389`
+    sendSms = async () => {
+        await axios.post(urls.POST_REQUEST.SEND_ORDER_STATUS_CHANGED_SMS,
+            {
+                to: this.state.singleOrderData.mobile,
+                body: `Welcome to Afghan Darmaltoon! Your order cancelled.\n order ID: ${this.state.singleOrderData._id}\nPlaced on: ${this.state.singleOrderData.entry_date.substring(0, 10)}\nPlaease contact to admin for more details: +92 313-9573389`
+            }).then(function (res) {
+                console.log('code sended');
+            }).catch(function (err) {
+                console.log('error', err)
             })
-        }).then(res => res.json()).then(data => {
-            if (data.success) {
-            } else {
-            }
-        });
     }
 
     render() {
@@ -134,7 +107,7 @@ export default class Orders extends Component {
                     color={this.state.confirmModalColor}
                     _id={this.state.singleOrderData._id}
                     name={this.state.singleOrderData.c_name}
-                    confirm={this.handleConfirmed.bind(this)}
+                    confirm={this.handleCancelOrder.bind(this)}
                     loading={this.state.confirmModalLoading}
                 />
                 <AlertModal
@@ -199,33 +172,6 @@ export default class Orders extends Component {
                         back={() => this.setState({ isViewOrder: false })}
                         singleOrderData={this.state.singleOrderData}
                         _id={this.state.singleOrderData._id}
-                        setPending={() => {
-                            this.setState({
-                                method: 'pending',
-                                showConfirmModal: true,
-                                confirmModalMsg: 'Set Order Pnding?',
-                                confirmModalColor: '#ffc107',
-                                iconname: faHistory,
-                            })
-                        }}
-                        setProgress={() => {
-                            this.setState({
-                                method: 'progress',
-                                showConfirmModal: true,
-                                confirmModalMsg: 'Set Order Progress?',
-                                confirmModalColor: 'green',
-                                iconname: faCheckCircle,
-                            })
-                        }}
-                        setDelivered={() => {
-                            this.setState({
-                                method: 'delivered',
-                                showConfirmModal: true,
-                                confirmModalMsg: 'Set Order Delivered?',
-                                confirmModalColor: 'green',
-                                iconname: faCheckCircle,
-                            })
-                        }}
                         setCancel={() => {
                             this.setState({
                                 method: 'cancelled',
@@ -379,6 +325,10 @@ function OrderTable(props) {
     useEffect(() => {
         setlower_limit(props.pageNumber * 20 - 20)
         setupper_limit(props.pageNumber * 20)
+        return () => {
+            setlower_limit;
+            setupper_limit;
+        }
     }, [props.pageNumber])
 
     function print(element) {
@@ -477,31 +427,6 @@ function ViewOrder(props) {
                 <Card.Body>
                     <Form.Row style={{ padding: '0% 2%', display: 'flex', alignItems: 'center' }} >
                         <Button size='md' variant='primary' className="mr-auto mt-2" onClick={props.back}> Back </Button>
-                        {/* {props.singleOrderData.status == 'progress' && <>
-                            <Button size='md' variant='success' className="mt-2 ml-1 mr-1" onClick={props.setDelivered}> Delivered </Button>
-                            <Button size='md' variant='warning' className="mt-2 ml-1 mr-1" onClick={props.setPending}> Pending </Button>
-                            <Button size='md' variant='danger' className="mt-2 ml-1 mr-1" onClick={props.setCancel}> Cancel </Button>
-                        </>
-                        }
-                        {props.singleOrderData.status == 'pending' && <>
-                            <Button size='md' variant='success' className="mt-2 ml-1 mr-1" onClick={props.setProgress}> Progress </Button>
-                            <Button size='md' variant='success' className="mt-2 ml-1 mr-1" onClick={props.setDelivered}> Delivered </Button>
-                            <Button size='md' variant='danger' className="mt-2 ml-1 mr-1" onClick={props.setCancel}> Cancel </Button>
-                        </>
-                        }
-                        {props.singleOrderData.status == 'delivered' && <>
-                            <Button size='md' variant='success' className="mt-2 ml-1 mr-1" onClick={props.setProgress}> Progress </Button>
-                            <Button size='md' variant='warning' className="mt-2 ml-1 mr-1" onClick={props.setPending}> Pending </Button>
-                            <Button size='md' variant='danger' className="mt-2 ml-1 mr-1" onClick={props.setCancel}> Cancel </Button>
-                        </>
-                        }
-                        {props.singleOrderData.status == 'cancelled' && <>
-                            <Button size='md' variant='success' className="mt-2 ml-1 mr-1" onClick={props.setProgress}> Progress </Button>
-                            <Button size='md' variant='warning' className="mt-2 ml-1 mr-1" onClick={props.setPending}> Pending </Button>
-                            <Button size='md' variant='success' className="mt-2 ml-1 mr-1" onClick={props.setDelivered}> Delivered </Button>
-                        </>
-                        } */}
-
                         <ReactToPrint
                             trigger={() => <Button size='md' variant='primary' className='mt-2 ml-4'> Print </Button>}
                             content={() => componentRef.current}

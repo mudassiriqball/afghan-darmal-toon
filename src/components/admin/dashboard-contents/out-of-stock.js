@@ -44,11 +44,11 @@ export default function OutOfStock(props) {
     const [queryPageNumber, setQueryPageNumber] = useState(1);
     const [query, setQuery] = useState('')
 
-    const { INVENTORY_PRODUCTS_LOADING, INVENTORY_PRODUCTS, INVENTRY_PAGES } = getInventoryPageLimit(refresh_count, limitPageNumber, '20');
+    const { INVENTORY_PRODUCTS_LOADING, INVENTORY_PRODUCTS, INVENTRY_PAGES } = getInventoryPageLimit(refresh_count, limitPageNumber, '20', true);
     const { INVENTORY_SEARCH_LOADING, INVENTORY_SEARCH_ERROR, INVENTORY_SEARCH_PRODUCTS, INVENTRY_SEARCH_PAGES } =
-        getInventorySearch(refresh_count, fieldName, query, queryPageNumber, '20');
+        getInventorySearch(refresh_count, fieldName, query, queryPageNumber, '20', true);
 
-    async function handleSearch(searchType, searchValue, start, end) {
+    async function handleSearch(searchType, searchValue) {
         if (searchValue != '') {
             setFieldName(searchType)
             setQuery(searchValue)
@@ -271,6 +271,11 @@ function ProductTable(props) {
     useEffect(() => {
         setlower_limit(props.pageNumber * 20 - 20)
         setupper_limit(props.pageNumber * 20)
+
+        return () => {
+            setlower_limit;
+            setupper_limit;
+        }
     }, [props.pageNumber])
 
     return (

@@ -9,18 +9,8 @@ export default {
     WARNING: '#FB6340',
     TEXT: '#32325D',
     MUTED: '#8898AA',
-    INPUT: '#DCDCDC',
-    INPUT_SUCCESS: '#7BDEB2',
-    INPUT_ERROR: '#FCB3A4',
-    ACTIVE: '#5E72E4', //same as primary
     LIGHT_RED: '#ffcccc',
-    PLACEHOLDER: '#9FA5AA',
     GRADIENT_START: '#6B24AA',
-    GRADIENT_END: '#AC2688',
-    PRICE_COLOR: '#EAD5FB',
-    BORDER_COLOR: '#E7E7E7',
-    BLOCK: '#E7E7E7',
-    ICON: '#172B4D',
     HEADER: '#172B4D',
     HEADER_BACKGROUND: '#172B4D',
     BORDER: '#CAD1D7',
@@ -35,7 +25,5 @@ export default {
     GRAY: 'gray',
     LIGHT_GRAY: 'lightgray',
     DANGER: 'red',
-    // Admin
     ADMIN_MAIN: '#172B4D',
-
 };

@@ -71,71 +71,87 @@ class Signup extends Component {
     componentDidMount() {
         window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier("recaptcha-container",
             {
-                size: "invisible"
-            });
+                size: "invisible",
+                callback: (response) => {
+                    // RECAPTCHA solved, allow signInWithPhoneNumber.
+                },
+                "expired-callback": (response) => {
+                    // RECAPTCHA Expired
+                    console.log("reCAPTCH expired :");
+                },
+                onload: (response) => {
+                    console.log("reCAPTCHA loaded:", response);
+                }
+            },
+        );
     }
 
     async handleSenVerificationCode(mobileNumber) {
         this.setState({ phone: mobileNumber, sendCodeLoading: true, mobileError: '' })
         const currentComponent = this;
-        await axios.get(urls.GET_REQUEST.VARIFY_MOBILE_NUMBER + mobileNumber).then((res) => {
-            if (res.data.code == 201) {
+        await axios.get(urls.GET_REQUEST.VARIFY_MOBILE_NUMBER + mobileNumber)
+            .then((res) => {
+                if (res.data.code == 201) {
+                    currentComponent.setState({
+                        mobileError: 'Number Already Exists!',
+                        feedback: '',
+                        isCodeSended: false,
+                        isCodeVerified: false,
+                        sendCodeLoading: false,
+                    })
+                } else {
+                    currentComponent.setState({
+                        sendCodeLoading: false,
+                        intervalTime: 60,
+                        isResendCode: false,
+                        feedback: '',
+                    });
+                    // Send code to number
+                    var appVerifier = window.recaptchaVerifier;
+                    firebase.auth().signInWithPhoneNumber(mobileNumber, appVerifier)
+                        .then(function (confirmationResult) {
+                            window.confirmationResult = confirmationResult;
+                            console.log()
+                            currentComponent.setState({
+                                isCodeSended: true,
+                                mobileError: '',
+                                feedback: 'Code Sended',
+                                sendCodeLoading: false,
+                            })
+                            let interval = null
+                            interval = setInterval(() => {
+                                currentComponent.setState({ intervalTime: currentComponent.state.intervalTime - 1 });
+                                if (currentComponent.state.intervalTime == 0) {
+                                    currentComponent.setState({ isResendCode: true });
+                                    clearInterval(interval)
+                                }
+                            }, 1000)
+                        }).catch(function (error) {
+                            if (error.code == 'auth/too-many-requests') {
+                                currentComponent.setState({
+                                    isCodeSended: false,
+                                    mobileError: 'To Many Request, Please try later',
+                                    feedback: '',
+                                    isCodeVerified: false,
+                                })
+                            } else {
+                                currentComponent.setState({
+                                    isCodeSended: false,
+                                    mobileError: "Some problem occur while sending OTP (or initializing recaptcha)",
+                                    feedback: '',
+                                    isCodeVerified: false,
+                                })
+                            }
+                            console.log('send code error:', error)
+                        });
+                }
+            }).catch((error) => {
                 currentComponent.setState({
-                    mobileError: 'Number Already Exists!',
-                    feedback: '',
-                    isCodeSended: false,
-                    isCodeVerified: false,
+                    mobileError: 'Something went wront! Please try again later.',
                     sendCodeLoading: false,
                 })
-            } else {
-                currentComponent.setState({
-                    sendCodeLoading: false,
-                    intervalTime: 60,
-                    isResendCode: false,
-                    feedback: '',
-                });
-                // Send code to number
-                var appVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
-                firebase.auth().signInWithPhoneNumber(mobileNumber, appVerifier)
-                    .then(function (confirmationResult) {
-                        window.confirmationResult = confirmationResult;
-                        console.log()
-                        currentComponent.setState({
-                            isCodeSended: true,
-                            mobileError: '',
-                            feedback: 'Code Sended',
-                            sendCodeLoading: false,
-                        })
-                        let interval = null
-                        interval = setInterval(() => {
-                            currentComponent.setState({ intervalTime: currentComponent.state.intervalTime - 1 });
-                            if (currentComponent.state.intervalTime == 0) {
-                                currentComponent.setState({ isResendCode: true });
-                                clearInterval(interval)
-                            }
-                        }, 1000)
-                    }).catch(function (error) {
-                        if (error.code == 'auth/too-many-requests') {
-                            currentComponent.setState({
-                                isCodeSended: false,
-                                mobileError: 'To Many Request, Please try later',
-                                feedback: '',
-                                isCodeVerified: false,
-                            })
-                        } else {
-                            currentComponent.setState({
-                                isCodeSended: false,
-                                mobileError: 'Code not Seded, Check your Number',
-                                feedback: '',
-                                isCodeVerified: false,
-                            })
-                        }
-                        console.log('send code error:', error)
-                    });
-            }
-        }).catch((error) => {
-            console.log('error number exist check:', error)
-        })
+                console.log('error number exist check:', error)
+            })
     }
 
 

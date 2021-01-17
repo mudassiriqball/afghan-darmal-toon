@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Row, Col, Card, Nav, Table, Form, Button, InputGroup, Image } from 'react-bootstrap'
@@ -26,7 +27,6 @@ class deliveryBoy extends React.Component {
             isNewUser: false,
             single_user: {},
 
-            method: '',
             showViewConfirmModal: false,
             viewConfirmModalMsg: '',
             viewModalIconname: null,
@@ -38,69 +38,9 @@ class deliveryBoy extends React.Component {
         }
     }
 
-    // UNSAFE_componentWillReceiveProps(nextProps) {
-    //     this.setState({
-    //         token: nextProps.token
-    //     });
-    // }
-
-    async handleViewModalConfirmed() {
-        this.setState({ viewConfirmModalLoading: true })
-        const currentComponent = this
-        let data = []
-        if (this.state.method == 'Restricted') {
-            data = {
-                status: 'restricted'
-            }
-        } else if (this.state.method == 'Unrestricted') {
-            data = {
-                status: 'approved'
-            }
-        }
-        await axios.put(urls.PUT_REQUEST.UPDATE_USER_STATUS + currentComponent.state.single_user._id, data, {
-            headers: { 'authorization': currentComponent.props.token }
-        }).then((res) => {
-            currentComponent.setState({
-                viewConfirmModalLoading: false,
-                showViewConfirmModal: false,
-                viewAlertModalMsg: `Customer ${currentComponent.state.method}  successfully`,
-                viewShowAlertModal: true,
-                refresh_count: currentComponent.state.refresh_count + 1
-            })
-            let obj = {}
-            obj = currentComponent.state.single_user
-            obj.status = data.status
-            currentComponent.setState({ single_user: obj })
-            currentComponent.props.usersReloadCountHandler()
-        }).catch((err) => {
-            currentComponent.setState({
-                viewConfirmModalLoading: false,
-                showViewConfirmModal: false,
-            })
-            alert('Error')
-        });
-    }
-
     render() {
         return (
             <div className='customers'>
-                <ConfirmModal
-                    onHide={() => { this.setState({ showViewConfirmModal: false, viewConfirmModalLoading: false }) }}
-                    show={this.state.showViewConfirmModal}
-                    title={this.state.viewConfirmModalMsg}
-                    iconname={this.state.viewModalIconname}
-                    color={this.state.viewConfirmModalColor}
-                    _id={this.state.single_user._id}
-                    name={this.state.single_user.fullName}
-                    confirm={this.handleViewModalConfirmed.bind(this)}
-                    loading={this.state.viewConfirmModalLoading}
-                />
-                <AlertModal
-                    onHide={() => this.setState({ viewShowAlertModal: false })}
-                    show={this.state.viewShowAlertModal}
-                    alerttype={'success'}
-                    message={this.state.viewAlertModalMsg}
-                />
                 {!this.state.isViewUser ?
                     <div >
                         <TitleRow icon={faUsers} title={' Admin Dashboard / Delivery Boy'} />
@@ -126,21 +66,6 @@ class deliveryBoy extends React.Component {
                         <TitleRow icon={faPersonBooth} title={`Admin Dashboard / Delivery Boys / ${this.state.single_user.fullName}`} />
                         <Form.Row style={{ margin: ' 0% 2%', display: 'flex', alignItems: 'center' }} >
                             <Button size='sm' variant='outline-primary' className="mr-auto mt-2" onClick={() => this.setState({ isViewUser: false })}> Back </Button>
-                            {this.state.single_user.status != 'restricted' ?
-                                <Button size='sm' variant='outline-danger' className='ml-2 mt-2 mb-2'
-                                    onClick={() => this.setState({
-                                        showViewConfirmModal: true, viewConfirmModalMsg: 'Restrict Customer?', method: 'Restricted',
-                                        viewConfirmModalColor: 'red', viewModalIconname: faCheckCircle
-                                    })}
-                                > Restrict </Button>
-                                :
-                                <Button size='sm' variant='outline-success' className='ml-2 mt-2 mb-2'
-                                    onClick={() => this.setState({
-                                        showViewConfirmModal: true, viewConfirmModalMsg: 'Unrestrict Customer?', method: 'Unrestricted',
-                                        viewConfirmModalColor: 'blue', viewModalIconname: faCheckCircle,
-                                    })}
-                                > Unrestrict </Button>
-                            }
                         </Form.Row>
                         <Card className='view_user'>
                             <Card.Body>
@@ -236,9 +161,6 @@ class deliveryBoy extends React.Component {
                     }
                     .vendors .form_control:disabled {
                         background: none;
-                        // border: none;
-                        // padding-left: 0%;
-                        // padding-top: 0%;
                         font-size: 14px;
                         font-weight: bold;
                     }
@@ -258,24 +180,12 @@ function DeliveryBoyTable(props) {
     const [fieldName, setFieldName] = useState('')
     const [query, setQuery] = useState(null)
 
-    const [single_user, setSingle_customer] = useState({})
-    // Confirm Modal
-    const [method, setMethod] = useState('')
-    const [showConfirmModal, setShowConfirmModal] = useState(false)
-    const [confirmModalMsg, setConfirmModalMsg] = useState('')
-    const [iconname, setIconname] = useState(null)
-    const [confirmModalColor, setConfirmModalColor] = useState('green')
-    const [confirmModalLoading, setConfirmModalLoading] = useState(false)
-
-    const [showAlertModal, setShowAlertModal] = useState(false);
-    const [alertModalMsg, setAlertModalMsg] = useState(false);
-
     const { USERS_PAGE_LOADING, USERS_PAGE_ERROR, USERS_PAGE_USERS, USERS_PAGE_PAGES, USERS_PAGE_TOTAL } =
         getUsersPageLimit(props.token, props.refresh, 'delivery', null, pageNumber, '20');
     const { USERS_SEARCH_LOADING, USERS_SEARCH_ERROR, USERS_SEARCH_USERS, USERS_SEARCH_PAGES, USERS_SEARCH_TOTAL } =
         getUsersBySearch(props.token, props.refresh, 'delivery', null, fieldName, query, queryPageNumber, '20');
 
-    async function handleSearch(type, value, start, end) {
+    async function handleSearch(type, value) {
         if (value != '') {
             setFieldName(type)
             setQuery(value)
@@ -303,39 +213,6 @@ function DeliveryBoyTable(props) {
         }
     }
 
-    async function handleConfirmed() {
-        let data = []
-        if (method == 'Restricted') {
-            setConfirmModalLoading(true)
-            data = {
-                status: 'restricted'
-            }
-        } else if (method == 'Unrestricted') {
-            setConfirmModalLoading(true)
-            data = {
-                status: 'approved'
-            }
-        }
-        await axios.put(urls.PUT_REQUEST.UPDATE_USER_STATUS + single_user._id, data, {
-            headers: { 'authorization': props.token }
-        }).then(function (response) {
-            setConfirmModalLoading(false)
-            setShowConfirmModal(false)
-            setAlertModalMsg(`Customer ${method}  successfully`)
-            setShowAlertModal(true)
-            setpageNumber(1)
-            setQueryPageNumber(1)
-            setPage(1)
-            setQueryPage(1)
-            props.setRefresh()
-            props.usersReloadCountHandler()
-        }).catch(function (error) {
-            setConfirmModalLoading(false)
-            setShowConfirmModal(false)
-            alert('Error')
-        });
-    }
-
     return (
         <div className='customers'>
             <CardSearchAccordion
@@ -344,23 +221,6 @@ function DeliveryBoyTable(props) {
                 handleSearch={handleSearch}
                 setIsSearch={() => setIsSearch(false)}
             >
-                <ConfirmModal
-                    onHide={() => { setShowConfirmModal(false), setConfirmModalLoading(false) }}
-                    show={showConfirmModal}
-                    title={confirmModalMsg}
-                    iconname={iconname}
-                    color={confirmModalColor}
-                    _id={single_user._id}
-                    name={single_user.fullName}
-                    confirm={handleConfirmed}
-                    loading={confirmModalLoading}
-                />
-                <AlertModal
-                    onHide={(e) => setShowAlertModal(false)}
-                    show={showAlertModal}
-                    alerttype={'success'}
-                    message={alertModalMsg}
-                />
                 {!isSearch ?
                     USERS_PAGE_LOADING ?
                         <Loading />
@@ -423,6 +283,11 @@ function DeliveryBoyTableBody(props) {
     useEffect(() => {
         setlower_limit(props.pageNumber * 20 - 20)
         setupper_limit(props.pageNumber * 20)
+
+        return () => {
+            setlower_limit;
+            setupper_limit;
+        }
     }, [props.pageNumber])
 
     return (
@@ -486,26 +351,6 @@ function DeliveryBoyTableBody(props) {
             `}</style>
         </div>
     )
-}
-
-
-const styles = {
-    fontawesome: {
-        color: `${consts.COLORS.SEC} `,
-        width: '30px',
-        height: '30px',
-        maxHeight: '30px',
-        maxWidth: '30px',
-        float: 'right'
-    },
-    accordin_fontawesome: {
-        color: `${consts.COLORS.SEC} `,
-        marginRight: '10%',
-        width: '15px',
-        height: '15px',
-        maxHeight: '15px',
-        maxWidth: '15px',
-    },
 }
 
 export default deliveryBoy;

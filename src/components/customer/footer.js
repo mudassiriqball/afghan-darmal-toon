@@ -18,9 +18,9 @@ export default function Footer() {
                             <Card style={{ background: consts.COLORS.MAIN, border: 'none', height: '400px' }}>
                                 <Card.Body className='text-white'>
                                     <h1 className='card_header'>GET IN TOUCH</h1>
-                                    <p className='paragraph'>+987 876 765 87 67 6</p>
+                                    <p className='paragraph'>+92 335 9929528</p>
                                     <p className='paragraph'>afghandarmaltoon@gmail.com</p>
-                                    <p className='paragraph'>14/Browni City Tower Hall New York, US</p>
+                                    <p className='paragraph'>H-10 Islamabad, Pakistan</p>
                                 </Card.Body>
                             </Card>
                         </Col>

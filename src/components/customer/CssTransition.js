@@ -22,11 +22,11 @@ const CssTransition = props => {
                             <Card.Title style={{ fontWeight: 'bolder' }}>Contact Us</Card.Title>
                             <div className='flex-row align-items-center mt-2'>
                                 <HiOutlineLocationMarker style={styles.dotsIcon} />
-                                <label className='dotViewLabel'>305 Royal Track Suite 019, USA</label>
+                                <label className='dotViewLabel'>H-10 Islamabad, Pakistan</label>
                             </div>
                             <div className='flex-row align-items-center  mt-2'>
                                 <AiOutlinePhone style={styles.dotsIcon} />
-                                <label className='dotViewLabel'>+92 341-3657092</label>
+                                <label className='dotViewLabel'>+92 335 9929528</label>
                             </div>
                             <div className='flex-row align-items-center  mt-2'>
                                 <HiOutlineMailOpen style={styles.dotsIcon} />
