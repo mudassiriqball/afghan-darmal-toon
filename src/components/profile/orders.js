@@ -192,7 +192,8 @@ function CardBody(props) {
                     <Form.Group as={Col} className='order_col'>
                         <InputGroup>
                             <Form.Label className='form_control'>
-                                {'This QR Code is used to receive order, The delivery boy scan this code an your order status will updated in our system.'}
+                                {element.code}
+                                {'\nThis QR Code is used to receive order, The delivery boy scan this code an your order status will updated in our system.'}
                             </Form.Label>
                         </InputGroup>
                     </Form.Group>
