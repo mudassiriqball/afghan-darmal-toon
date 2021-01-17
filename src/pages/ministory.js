@@ -59,7 +59,7 @@ class Customers extends React.Component {
         }
     }
     async authUser(role) {
-        if (role !== 'admin') {
+        if (role !== 'ministory') {
             Router.push('/')
         }
     }
@@ -132,6 +132,9 @@ class Customers extends React.Component {
     }
 
     render() {
+        if (this.state.user.role !== 'ministory') {
+            return <Loading />
+        }
         return (
             <div className='customers'>
                 <ConfirmModal

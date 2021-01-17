@@ -6,6 +6,7 @@ import DashboardSideDrawer from '../components/admin/dashboard-side-drawer';
 import consts from '../constants';
 import urls from '../utils/urls/index'
 import { checkTokenExpAuth, removeTokenFromStorage, getTokenFromStorage } from '../utils/services/auth';
+import Loading from '../components/loading';
 
 export async function getServerSideProps(context) {
     let sliders_list = []
@@ -208,6 +209,9 @@ class Admin extends Component {
         let backdrop;
         if (this.state.sideDrawerOpen) {
             backdrop = <BackDrop click={this.backdropClickHandler} />;
+        }
+        if (this.state.user.role !== 'admin') {
+            return <Loading />
         }
         return (
             <div style={styles.body}>

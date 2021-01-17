@@ -314,7 +314,7 @@ class AddNew extends Component {
                             <Row noGutters style={{ paddingTop: '1%' }}>
                                 <Col lg={12} md={12} sm={12} xs={12}>
                                     <Form.Group as={Row} style={{ margin: '0.5% 2% 2% 2%', padding: '0%' }}>
-                                        <Scanner setScanerCode={(val) => setFieldValue('id', val)} />
+                                        <Scanner setScanerCode={(val) => setFieldValue('qr_id', val)} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg={12} md={12} sm={12} xs={12}>

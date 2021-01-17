@@ -5,10 +5,6 @@ const jsonwebtoken = require("jsonwebtoken");
 // var AWS = require("aws-sdk");
 const mongoose = require("mongoose");
 
-// var s3 = new AWS.S3({
-//   secretAccessKey: "nKZSmn0MFET9TEtEy4kUrksDjzkMFBQdt+x6+aPc",
-//   accessKeyId: "AKIAIYECX324S27WGWFQ",
-// });
 //Post Methods
 usersController.loginUser = async (req, res) => {
   try {
