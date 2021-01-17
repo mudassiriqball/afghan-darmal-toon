@@ -514,7 +514,7 @@ function ViewOrder(props) {
             <Card className='view_user' ref={componentRef}>
                 <Card.Body>
                     <div className='logo_col'>
-                        <Image src='/logo.png' className='logo' />
+                        <Image src='/logo.jpg' className='logo' />
                         <h2 className='p-0 ml-3'>afghandarmaltoon.com</h2>
                     </div>
                     <p className='p'><span>Order Info</span></p>
