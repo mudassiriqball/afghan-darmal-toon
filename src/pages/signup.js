@@ -107,7 +107,24 @@ class Signup extends Component {
                         feedback: '',
                     });
                     // Send code to number
-                    var appVerifier = window.recaptchaVerifier;
+                    var appVerifier = window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier("recaptcha-container",
+                        {
+                            size: "invisible",
+                            callback: (response) => {
+                                // RECAPTCHA solved, allow signInWithPhoneNumber.
+                            },
+                            "expired-callback": (response) => {
+                                // RECAPTCHA Expired
+                                console.log("reCAPTCH expired :");
+                                currentComponent.setState({
+                                    mobileError: 'RECAPTCHA Expired',
+                                });
+                            },
+                            onload: (response) => {
+                                console.log("reCAPTCHA loaded:", response);
+                            }
+                        },
+                    );
                     firebase.auth().signInWithPhoneNumber(mobileNumber, appVerifier)
                         .then(function (confirmationResult) {
                             window.confirmationResult = confirmationResult;

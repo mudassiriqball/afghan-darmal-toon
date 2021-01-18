@@ -9,15 +9,6 @@ import CustomButton from './CustomButton';
 function AlertModal(props) {
     const { onHide, show, alerttype, message } = props;
 
-    // useEffect(() => {
-    //     setTimeout(() => {
-    //         onHide();
-    //     }, 5000);
-    //     return () => {
-
-    //     }
-    // }, [show]);
-
     return (
         <Modal
             {...props}
