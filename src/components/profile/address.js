@@ -4,13 +4,16 @@ import { Card, Form, Col, Row, Image, InputGroup, Button, Spinner } from 'react-
 import constants from '../../constants';
 import urls from '../../utils/urls';
 import CustomButton from '../CustomButton';
+import renderError from '../renderError';
 
 export default function Address(props) {
     const [isLoading, setIsLoading] = useState(false)
     const [isEditProfile, setisEditProfile] = useState(false)
 
-    const [city, setCity] = useState(props.city)
-    const [address, setAddress] = useState(props.address)
+    const [city, setCity] = useState(props.city);
+    const [cityErr, setcityErr] = useState('');
+    const [address, setAddress] = useState(props.address);
+    const [addressErr, setaddressErr] = useState('');
 
     useEffect(() => {
         setCity(props.city)
@@ -21,29 +24,40 @@ export default function Address(props) {
     }, [props])
 
     function handleUpdateProfile() {
-        setIsLoading(true)
-        let data = {}
-        data = {
-            city: city,
-            address: address,
-        }
-        axios.put(urls.PUT_REQUEST.UPDATE_USER_PROFILE + props._id, data, {
-            headers: {
-                'authorization': props.token,
+        if (city === '' || city.length < 3 || city.length > 25 || address === '' || address.length < 5 || address.length > 150) {
+            if (city === '' || city.length < 3 || city.length > 25) {
+                setcityErr('Value must be 3-25 characters');
             }
-        }).then((response) => {
-            setisEditProfile(false)
-            setIsLoading(false)
-            props.showAlert('Address Updated Successfully')
-            props.reloadUser()
-        }).catch((error) => {
-            setIsLoading(false)
-            console.log('Address Update Failed:', error)
-            alert('Address Update Failed')
-        });
+            if (address === '' || address.length < 5 || address.length > 150) {
+                setaddressErr('Value must be 5-150 characters');
+            }
+        } else {
+            setIsLoading(true)
+            let data = {}
+            data = {
+                city: city,
+                address: address,
+            }
+            axios.put(urls.PUT_REQUEST.UPDATE_USER_PROFILE + props._id, data, {
+                headers: {
+                    'authorization': props.token,
+                }
+            }).then((response) => {
+                setisEditProfile(false)
+                setIsLoading(false)
+                props.showAlert('Address Updated Successfully')
+                props.reloadUser()
+            }).catch((error) => {
+                setIsLoading(false)
+                console.log('Address Update Failed:', error)
+                alert('Address Update Failed')
+            });
+        }
     }
 
     function handleCancelEdit() {
+        setaddressErr('');
+        setcityErr('');
         setisEditProfile(!isEditProfile)
         setAddress(props.address)
         setCity(props.city)
@@ -65,7 +79,9 @@ export default function Address(props) {
                                     onChange={(e) => setCity(e.target.value)}
                                     style={{ color: isEditProfile ? constants.COLORS.TEXT : constants.COLORS.MUTED }}
                                     disabled={!isEditProfile}
+                                    isInvalid={isEditProfile && cityErr}
                                 />
+                                {cityErr !== '' && renderError(cityErr)}
                             </InputGroup>
                         </Form.Group>
                     </Row>
@@ -81,7 +97,9 @@ export default function Address(props) {
                                     onChange={(e) => { setAddress(e.target.value) }}
                                     style={{ color: isEditProfile ? constants.COLORS.TEXT : constants.COLORS.MUTED }}
                                     disabled={!isEditProfile}
+                                    isInvalid={isEditProfile && addressErr}
                                 />
+                                {addressErr !== '' && renderError(addressErr)}
                             </InputGroup>
                         </Form.Group>
                     </Row>

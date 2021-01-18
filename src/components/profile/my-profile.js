@@ -4,6 +4,9 @@ import { Card, Form, Col, Row, InputGroup, Button, Spinner } from 'react-bootstr
 import constants from '../../constants';
 import urls from '../../utils/urls'
 import CustomButton from '../CustomButton'
+import renderError from '../renderError';
+
+
 
 export default function MyProfile(props) {
     const [isLoading, setIsLoading] = useState(false)
@@ -11,6 +14,8 @@ export default function MyProfile(props) {
     const [fullName, setFull_name] = useState(props.fullName)
     const [mobile, setMobile] = useState(props.mobile);
     const [email, setEmail] = useState(props.email)
+    const [fullNameError, setFullNameError] = useState('');
+    const [emailError, setEmailError] = useState('');
 
     useEffect(() => {
         setFull_name(props.fullName)
@@ -21,29 +26,41 @@ export default function MyProfile(props) {
     }, [props])
 
     function handleUpdateProfile() {
-        setIsLoading(true)
-        let data = {}
-        data = {
-            fullName: fullName,
-            email: email,
-        }
-        axios.put(urls.PUT_REQUEST.UPDATE_USER_PROFILE + props._id, data, {
-            headers: {
-                'authorization': props.token,
+        var emailRegex = /^\w+([.-]?\w+)@\w+([.-]?\w+)(\.\w{2,3})+$/;
+        if (fullName === '' || fullName.length < 5 || fullName.length > 25 || (email !== '' && !email.match(emailRegex))) {
+            if (fullName === '' || fullName.length < 5 || fullName.length > 25) {
+                setFullNameError('Value must be 5-25 characters');
             }
-        }).then((response) => {
-            setisEditProfile(false)
-            setIsLoading(false)
-            props.showAlert('Personal Info Updated Successfully')
-            props.reloadUser()
-        }).catch((error) => {
-            setIsLoading(false)
-            console.log('Update Personal Info Failed:', error)
-            alert('Update Personal Info Failed')
-        });
+            if (email !== '' && !email.match(emailRegex)) {
+                setEmailError('Invalid Email')
+            }
+        } else {
+            setIsLoading(true)
+            let data = {}
+            data = {
+                fullName: fullName,
+                email: email,
+            }
+            axios.put(urls.PUT_REQUEST.UPDATE_USER_PROFILE + props._id, data, {
+                headers: {
+                    'authorization': props.token,
+                }
+            }).then((response) => {
+                setisEditProfile(false)
+                setIsLoading(false)
+                props.showAlert('Personal Info Updated Successfully')
+                props.reloadUser()
+            }).catch((error) => {
+                setIsLoading(false)
+                console.log('Update Personal Info Failed:', error)
+                alert('Update Personal Info Failed')
+            });
+        }
     }
 
     function handleCancelEdit() {
+        setFullNameError('');
+        setEmailError('');
         setisEditProfile(!isEditProfile)
         setFull_name(props.fullName)
         setEmail(props.email);
@@ -77,7 +94,9 @@ export default function MyProfile(props) {
                                     onChange={(e) => setFull_name(e.target.value)}
                                     style={{ color: isEditProfile ? constants.COLORS.TEXT : constants.COLORS.MUTED }}
                                     disabled={!isEditProfile}
+                                    isInvalid={isEditProfile && fullNameError}
                                 />
+                                {fullNameError !== '' && renderError(fullNameError)}
                             </InputGroup>
                         </Form.Group>
                     </Row>
@@ -93,7 +112,10 @@ export default function MyProfile(props) {
                                     onChange={(e) => setEmail(e.target.value)}
                                     style={{ color: isEditProfile ? constants.COLORS.TEXT : constants.COLORS.MUTED }}
                                     disabled={!isEditProfile}
+                                    error={emailError}
+                                    isInvalid={isEditProfile && emailError}
                                 />
+                                {emailError !== '' && renderError(emailError)}
                             </InputGroup>
                         </Form.Group>
                     </Row>
