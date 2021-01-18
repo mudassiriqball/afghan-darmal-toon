@@ -91,12 +91,12 @@ export default function MyProfile(props) {
                                 <Form.Control
                                     className='form_control'
                                     value={fullName || ''}
-                                    onChange={(e) => setFull_name(e.target.value)}
+                                    onChange={(e) => { setFull_name(e.target.value), setFullNameError('') }}
                                     style={{ color: isEditProfile ? constants.COLORS.TEXT : constants.COLORS.MUTED }}
                                     disabled={!isEditProfile}
                                     isInvalid={isEditProfile && fullNameError}
                                 />
-                                {fullNameError !== '' && renderError(fullNameError)}
+                                {isEditProfile && fullNameError !== '' && renderError(fullNameError)}
                             </InputGroup>
                         </Form.Group>
                     </Row>
@@ -109,13 +109,13 @@ export default function MyProfile(props) {
                                     placeholder='mr.x@gmail.com'
                                     type='email'
                                     value={email || ''}
-                                    onChange={(e) => setEmail(e.target.value)}
+                                    onChange={(e) => { setEmail(e.target.value), setEmailError('') }}
                                     style={{ color: isEditProfile ? constants.COLORS.TEXT : constants.COLORS.MUTED }}
                                     disabled={!isEditProfile}
                                     error={emailError}
                                     isInvalid={isEditProfile && emailError}
                                 />
-                                {emailError !== '' && renderError(emailError)}
+                                {isEditProfile && emailError !== '' && renderError(emailError)}
                             </InputGroup>
                         </Form.Group>
                     </Row>

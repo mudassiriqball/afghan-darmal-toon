@@ -76,12 +76,12 @@ export default function Address(props) {
                                     className='form_control'
                                     type='text'
                                     value={city}
-                                    onChange={(e) => setCity(e.target.value)}
+                                    onChange={(e) => { setCity(e.target.value), setcityErr('') }}
                                     style={{ color: isEditProfile ? constants.COLORS.TEXT : constants.COLORS.MUTED }}
                                     disabled={!isEditProfile}
                                     isInvalid={isEditProfile && cityErr}
                                 />
-                                {cityErr !== '' && renderError(cityErr)}
+                                {isEditProfile && cityErr !== '' && renderError(cityErr)}
                             </InputGroup>
                         </Form.Group>
                     </Row>
@@ -94,12 +94,12 @@ export default function Address(props) {
                                     className='form_control'
                                     type='text'
                                     value={address}
-                                    onChange={(e) => { setAddress(e.target.value) }}
+                                    onChange={(e) => { setAddress(e.target.value), setaddressErr('') }}
                                     style={{ color: isEditProfile ? constants.COLORS.TEXT : constants.COLORS.MUTED }}
                                     disabled={!isEditProfile}
                                     isInvalid={isEditProfile && addressErr}
                                 />
-                                {addressErr !== '' && renderError(addressErr)}
+                                {isEditProfile && addressErr !== '' && renderError(addressErr)}
                             </InputGroup>
                         </Form.Group>
                     </Row>
