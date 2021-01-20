@@ -474,7 +474,6 @@ function CustomersTable(props) {
             }).then(function (res) {
                 console.log('code sended');
             }).catch(function (err) {
-                debugger
                 console.log('error', err)
             })
     }

@@ -12,7 +12,6 @@ import Loading from '../components/loading';
 import InfoRow from '../components/customer/info-row';
 import MultiCarosuel from '../components/customer/multi-carosuel';
 import StickyBottomNavbar from '../components/customer/sticky-bottom-navbar';
-import CustomButton from '../components/CustomButton';
 
 export async function getServerSideProps(context) {
   let sliders_list = []
@@ -93,12 +92,13 @@ export default function Home(props) {
           user={user}
           categories_list={props.categories_list}
           sub_categories_list={props.sub_categories_list}
-        >
-          <SliderCarousel
-            sliders_list={props.sliders_list}
-          />
-          <InfoRow />
-        </Layout>
+        />
+        <SliderCarousel
+          sliders_list={props.sliders_list}
+          categories_list={props.categories_list}
+          sub_categories_list={props.sub_categories_list}
+        />
+        <InfoRow />
         <div className='_index'>
           <MultiCarosuel
             user={user}

@@ -28,7 +28,6 @@ export default function getInventorySearch(refresh_count, fieldName, query, quer
                     },
                     cancelToken: source.token,
                 }).then(res => {
-                    debugger
                     setLoading(false);
                     setProducts(prevPro => {
                         return [...new Set([...prevPro, ...res.data.data.docs])]

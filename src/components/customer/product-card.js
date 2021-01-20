@@ -33,31 +33,43 @@ export default function ProductCard(props) {
             setAlertMsg('Please Login as Customer!');
             setShowAlertModal(true);
         } else {
-            setCartLoading(true);
-            let data = {
-                p_id: element._id,
-                vendor_id: element.vendor_id,
-                quantity: 1
-            };
-            await axios.put(urls.PUT_REQUEST.ADD_TO_CART + user._id, data, {
-                headers: {
-                    'authorization': token,
+            let found = false;
+            user && user.cart && user.cart.forEach(item => {
+                if (element._id === item.p_id) {
+                    found = true;
+                    setAlertType('error');
+                    setAlertMsg('Product Already exists in cart, If you want to add more go to cart and update the stock');
+                    setShowAlertModal(true);
+                    return
                 }
-            }).then(function (res) {
-                setCartLoading(false);
-                setAlertType('success');
-                setAlertMsg('Product Successfully Added to Cart');
-                setShowAlertModal(true);
-                setIsCartHover(false);
-                getUser();
-            }).catch(function (err) {
-                setIsCartHover(false);
-                setCartLoading(false);
-                setAlertType('error');
-                setAlertMsg('Product Not Added to Cart, Please Try Again Later');
-                setShowAlertModal(true);
-                console.log('Add to cart error:', err);
             });
+            if (!found) {
+                setCartLoading(true);
+                let data = {
+                    p_id: element._id,
+                    vendor_id: element.vendor_id,
+                    quantity: 1
+                };
+                await axios.put(urls.PUT_REQUEST.ADD_TO_CART + user._id, data, {
+                    headers: {
+                        'authorization': token,
+                    }
+                }).then(function (res) {
+                    setCartLoading(false);
+                    setAlertType('success');
+                    setAlertMsg('Product Successfully Added to Cart');
+                    setShowAlertModal(true);
+                    setIsCartHover(false);
+                    getUser();
+                }).catch(function (err) {
+                    setIsCartHover(false);
+                    setCartLoading(false);
+                    setAlertType('error');
+                    setAlertMsg('Product Not Added to Cart, Please Try Again Later');
+                    setShowAlertModal(true);
+                    console.log('Add to cart error:', err);
+                });
+            }
         }
     }
     // ENd of Add to cart

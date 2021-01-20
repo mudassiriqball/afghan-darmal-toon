@@ -143,11 +143,21 @@ export default function Cart(props) {
         setSubTotal(sum)
     }
 
-    function handleSetQuantity(quan, index) {
-        let copyArray = []
-        copyArray = Object.assign([], productsData)
-        copyArray[index].quantity = quan;
-        setProductsData(copyArray)
+    function handleSetQuantity(quan, index, stock) {
+        if (quan < 1) {
+            setAlertType('error');
+            setAlertMsg('Enter valid quantity');
+            setShowAlertModal(true);
+        } else if (quan > stock) {
+            setAlertType('error');
+            setAlertMsg(`Not enough quantity available, please enter 1-${stock}`);
+            setShowAlertModal(true);
+        } else {
+            let copyArray = []
+            copyArray = Object.assign([], productsData)
+            copyArray[index].quantity = quan;
+            setProductsData(copyArray);
+        }
     }
 
     const handleProceedOrder = async () => {
@@ -173,7 +183,6 @@ export default function Cart(props) {
         copyArray = Object.assign([], productsData)
         copyArray[index].isLoading = true
         setProductsData(copyArray);
-        debugger
         await axios({
             method: 'PUT',
             url: urls.PUT_REQUEST.CLEAR_CART + user._id,
@@ -356,7 +365,7 @@ export default function Cart(props) {
                                                         }
                                                         <Row className='w-100'>
                                                             {/* Image / Name */}
-                                                            <Col lg={4} md={4} sm={6} xs={6} className='d-flex flex-row  justify-content-center align-items-center'>
+                                                            <Col lg={4} md={4} sm={6} xs={6} className='d-flex flex-row  align-items-center'>
                                                                 <Image ref={ref} className='cart_img'
                                                                     style={{ maxHeight: width + width / constants.SIZES.IMAGE_HEIGHT_DIVIDE, minHeight: width + width / constants.SIZES.IMAGE_HEIGHT_DIVIDE }}
                                                                     src={element.product && element.product.imagesUrl && element.product.imagesUrl[0].imageUrl}
@@ -374,26 +383,23 @@ export default function Cart(props) {
                                                             </Col>
                                                             {/* Quantity */}
                                                             <Col lg={3} md={3} sm={6} xs={6} className='d-flex justify-content-center align-items-center'>
-                                                                <div className='d-flex flex-row align-items-center' style={{ height: '40px', border: `2px solid ${constants.COLORS.LIGHT_GRAY}`, borderRadius: '3px' }}>
-                                                                    <FaMinus onClick={() => {
-                                                                        if (element.quantity > 1 && canUpdateCart) {
-                                                                            handleSetQuantity(element.quantity - 1, index)
-                                                                        }
-                                                                    }} style={{ fontSize: '15px', margin: '0% 20px', cursor: 'pointer', color: constants.COLORS.MAIN }} />
-                                                                    <label style={{ margin: 'auto' }}>{element.quantity}</label>
-                                                                    <TiPlus onClick={() => {
-                                                                        if (element.quantity < element.product.stock && canUpdateCart) {
-                                                                            handleSetQuantity(element.quantity + 1, index)
-                                                                        }
-                                                                    }} style={{ fontSize: '17px', margin: '0% 20px', cursor: 'pointer', color: constants.COLORS.MAIN }} />
-                                                                </div>
+                                                                <Form.Control
+                                                                    type="number"
+                                                                    size='lg'
+                                                                    disabled={!canUpdateCart}
+                                                                    value={element.quantity}
+                                                                    onChange={(e) => handleSetQuantity(e.target.value, index, element.product.stock)}
+                                                                    style={{ borderColor: constants.COLORS.SHADOW, textAlign: 'center' }}
+                                                                />
                                                             </Col>
+                                                            {/* Discount */}
                                                             <Col lg={2} md={2} sm={6} xs={6} className='d-flex justify-content-center align-items-center'>
                                                                 <label className='p-0 m-0' style={{ color: constants.COLORS.SEC }}>
                                                                     {element.product.discount || 0}{'%'}
-                                                                    <span style={{ textDecorationLine: 'line-through', color: constants.COLORS.GRAY, fontSize: '12px', marginLeft: '5px' }}>{'Rs.'}{element.product.price * element.quantity}</span>
+                                                                    {element.product && element.product.discount > 0 && <span style={{ textDecorationLine: 'line-through', color: constants.COLORS.GRAY, fontSize: '12px', marginLeft: '5px' }}>{'Rs.'}{element.product.price * element.quantity}</span>}
                                                                 </label>
                                                             </Col>
+                                                            {/* Total */}
                                                             <Col lg={3} md={3} sm={6} xs={6} className='d-flex justify-content-center align-items-center'>
                                                                 <h6 className='p-0 m-0' style={{ color: constants.COLORS.MAIN, fontWeight: 'bold' }}>
                                                                     {'Rs: '}

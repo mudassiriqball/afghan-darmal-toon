@@ -36,7 +36,6 @@ export default function Orders(props) {
     }, [CUSTOMER_ORDERS])
 
     async function getProducts(element, index) {
-        debugger
         let _order = {}
         _order['_id'] = element._id
         _order['sub_total'] = element.sub_total

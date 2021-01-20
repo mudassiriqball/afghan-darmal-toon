@@ -28,7 +28,6 @@ export default function getCustomersOrdersPageLimit(_id, token, status, page, li
                     params: { page: page, limit: limit, status: status },
                     cancelToken: source.token
                 }).then(res => {
-                    debugger
                     setLoading(false);
                     setHasMore(res.data.data.docs && res.data.data.docs.length > 0);
                     setOrders(prevOrders => {

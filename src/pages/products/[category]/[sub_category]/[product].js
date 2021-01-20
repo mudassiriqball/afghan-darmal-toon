@@ -19,8 +19,7 @@ import urls from '../../../../utils/urls';
 
 import StickyBottomNavbar from '../../../../components/customer/sticky-bottom-navbar';
 import AlertModal from '../../../../components/alert-modal';
-import { FaMinus } from 'react-icons/fa';
-import { TiPlus } from 'react-icons/ti';
+import constants from '../../../../constants';
 
 export async function getServerSideProps(context) {
     let categories_list = [];
@@ -93,6 +92,19 @@ export default function Product(props) {
     // Add to cart
     const [quantity, setQuantity] = useState(1);
     const [cartLoading, setCartLoading] = useState(false);
+    const handleSetQuantity = (q) => {
+        if (q < 1) {
+            setAlertType('error');
+            setAlertMsg('Enter valid quantity');
+            setShowAlertModal(true);
+        } else if (q > productData.stock) {
+            setAlertType('error');
+            setAlertMsg(`Not enough quantity available, please enter 1-${productData.stock}`);
+            setShowAlertModal(true);
+        } else {
+            setQuantity(q);
+        }
+    }
     const handleAddToCart = async () => {
         if (user.role == '') {
             setAlertType('error');
@@ -103,29 +115,41 @@ export default function Product(props) {
             setAlertMsg('Please Login as Customer!');
             setShowAlertModal(true);
         } else {
-            setCartLoading(true);
-            let data = {
-                p_id: productData._id,
-                vendor_id: productData.vendor_id,
-                quantity: quantity
-            };
-            await axios.put(urls.PUT_REQUEST.ADD_TO_CART + user._id, data, {
-                headers: {
-                    'authorization': token,
+            let found = false;
+            user && user.cart && user.cart.forEach(item => {
+                if (productData._id === item.p_id) {
+                    found = true;
+                    setAlertType('error');
+                    setAlertMsg('Product Already exists in cart, If you want to add more go to cart and update the stock');
+                    setShowAlertModal(true);
+                    return
                 }
-            }).then(function (res) {
-                setCartLoading(false);
-                setAlertType('success');
-                setAlertMsg('Product Successfully Added to Cart');
-                setShowAlertModal(true);
-                getUser(user._id);
-            }).catch(function (err) {
-                setCartLoading(false)
-                setAlertType('error');
-                setAlertMsg('Product Not Added to Cart, Please Try Again Later');
-                setShowAlertModal(true);
-                console.log('Add to cart error:', err);
             });
+            if (!found) {
+                setCartLoading(true);
+                let data = {
+                    p_id: productData._id,
+                    vendor_id: productData.vendor_id,
+                    quantity: quantity
+                };
+                await axios.put(urls.PUT_REQUEST.ADD_TO_CART + user._id, data, {
+                    headers: {
+                        'authorization': token,
+                    }
+                }).then(function (res) {
+                    setCartLoading(false);
+                    setAlertType('success');
+                    setAlertMsg('Product Successfully Added to Cart');
+                    setShowAlertModal(true);
+                    getUser(user._id);
+                }).catch(function (err) {
+                    setCartLoading(false)
+                    setAlertType('error');
+                    setAlertMsg('Product Not Added to Cart, Please Try Again Later');
+                    setShowAlertModal(true);
+                    console.log('Add to cart error:', err);
+                });
+            }
         }
     }
     // ENd of Add to cart
@@ -220,19 +244,13 @@ export default function Product(props) {
                                     <label className='description' style={{ minHeight: width / 1.5, color: consts.COLORS.GRAY }}>{productData.description}</label>
                                     <Row>
                                         <Col lg={3} md={3} sm={6} xs={6} sm={6}>
-                                            <div style={{ height: '100%', border: `2px solid ${consts.COLORS.LIGHT_GRAY}`, borderRadius: '5px', display: 'flex', flexDirection: 'row' }}>
-                                                <FaMinus onClick={() => {
-                                                    if (quantity > 1) {
-                                                        setQuantity(quantity - 1)
-                                                    }
-                                                }} style={{ fontSize: '30px', margin: 'auto', cursor: 'pointer', color: consts.COLORS.MAIN }} />
-                                                <label style={{ margin: 'auto' }}>{quantity}</label>
-                                                <TiPlus onClick={() => {
-                                                    if (quantity < productData.stock) {
-                                                        setQuantity(quantity + 1)
-                                                    }
-                                                }} style={{ fontSize: '30px', margin: 'auto', cursor: 'pointer', color: consts.COLORS.MAIN }} />
-                                            </div>
+                                            <Form.Control
+                                                type="number"
+                                                size='lg'
+                                                value={quantity}
+                                                onChange={(e) => handleSetQuantity(e.target.value)}
+                                                style={{ borderColor: constants.COLORS.SHADOW, textAlign: 'center' }}
+                                            />
                                         </Col>
                                         <Col>
                                             <CustomButton
