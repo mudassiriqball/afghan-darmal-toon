@@ -448,7 +448,7 @@ function CustomersTable(props) {
         await axios.post(urls.POST_REQUEST.SEND_ORDER_STATUS_CHANGED_SMS,
             {
                 to: single_user.mobile,
-                body: `Welcome to Afghan Darmaltoon!\nYour account is not approved, Your lisence is not valid.\nPlaease contact to admin for more details\n+92 313-9573389\nafghandarmaltoon@gmail.com`
+                body: `Welcome to Afghan Darmaltoon!\nYour account is not approved, Your lisence is not valid or something wront with your account.\nPlaease contact to admin for more details\n+92 313-9573389\nafghandarmaltoon@gmail.com`
             }).then(function (res) {
                 console.log('code sended');
             }).catch(function (err) {
