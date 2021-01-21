@@ -578,11 +578,6 @@ productsController.get_admin_inventory = async (req, res) => {
   try {
     let products = await Products.aggregate([
       {
-        $match: {
-          isdeleted: false,
-        },
-      },
-      {
         $lookup: {
           from: "categories",
           localField: "categoryId",
@@ -716,7 +711,6 @@ productsController.get_product_by_id = async (req, res) => {
       {
         $match: {
           _id: _id,
-          isdeleted: false,
         },
       },
       {
@@ -1425,6 +1419,8 @@ productsController.get_search_all_product = async (req, res) => {
 productsController.update_product_data = async (req, res) => {
   const body = req.body;
   try {
+    if (body.stock > 0)
+      body.isdeleted = false;
     const _id = req.params._id;
     Products.findOneAndUpdate(
       { _id: _id },

@@ -235,15 +235,12 @@ OrdersController.place_order = async (req, res) => {
           { stock: 1 }
         );
         if (check[0].stock === 0) {
-          // let update = await Product.findOneAndUpdate(
-          //   { _id: check[0]._id},
-          //   {
-          //     $set: { isdeleted: "true" },
-          //   }
-          // );
-          // TODO Set isDeleted: true instead of deleteing product
-          // Product.findByIdAndDelete(check[0]._id, function (err) {
-          // });
+          let update = await Product.findOneAndUpdate(
+            { _id: check[0]._id },
+            {
+              $set: { isdeleted: "true" },
+            }
+          );
         }
         saveorder = true;
       }

@@ -295,9 +295,9 @@ function ProductTable(props) {
                 </thead>
                 <tbody>
                     {props.list && props.list.map((element, index) =>
-                        element.stock && element.stock < constants.SIZES.LESS_STOCK ?
+                        element && element.stock < constants.SIZES.LESS_STOCK ?
                             index >= lower_limit && index < upper_limit ?
-                                <tr key={index} style={(element.stock && element.stock < constants.SIZES.LESS_STOCK) ? { background: constants.COLORS.LIGHT_RED } : {}}>
+                                <tr key={index} style={(element && element.stock < constants.SIZES.LESS_STOCK) ? { background: constants.COLORS.LIGHT_RED } : {}}>
                                     <td align="center" >{index + 1}</td>
                                     <td >
                                         {element._id}
@@ -534,12 +534,12 @@ const ViewProduct = props => {
                         :
                         null
                     }
-                    <Form.Group as={Col} lg={12} md={12} sm={12} xs={12}>
+                    {/* <Form.Group as={Col} lg={12} md={12} sm={12} xs={12}>
                         <Form.Label className='form_label'>QR Code:</Form.Label>
                         <InputGroup>
                             <QRCode value={productData.qr_id ? productData.qr_id : ''} />
                         </InputGroup>
-                    </Form.Group>
+                    </Form.Group> */}
                     <Form.Group as={Col} lg={4} md={4} sm={6} xs={12}>
                         <Form.Label className='form_label'>Product ID:</Form.Label>
                         <InputGroup>

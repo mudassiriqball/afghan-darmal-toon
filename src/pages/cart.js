@@ -549,6 +549,7 @@ function ProcedeOrder(props) {
     const { isMobile } = DetectDeviceView();
     const { productsData, token, user, cancel, sub_total, handlePlaceOrderError } = props;
     const [cardRef, cardSize] = useDimensions();
+    console.log('user', user);
 
     const [loading, setLoading] = useState(false)
 
@@ -598,7 +599,6 @@ function ProcedeOrder(props) {
             }
         } else {
             setLoading(true)
-            console.log(user, token)
             let data = []
             productsData.forEach((element, index) => {
                 data.push({
@@ -729,7 +729,6 @@ function ProcedeOrder(props) {
                                         <InputGroup>
                                             <Form.Control
                                                 type='number'
-                                                min='0'
                                                 placeholder='+966590911891'
                                                 value={mobile}
                                                 onChange={(e) => { setMobile(e.target.value), setMobError('') }}

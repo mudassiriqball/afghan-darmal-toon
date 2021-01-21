@@ -57,7 +57,7 @@ export default function ProductCard(props) {
                 }).then(function (res) {
                     setCartLoading(false);
                     setAlertType('success');
-                    setAlertMsg('Product Successfully Added to Cart');
+                    setAlertMsg('Product Successfully Added to Cart, You can update quantity from cart.');
                     setShowAlertModal(true);
                     setIsCartHover(false);
                     getUser();

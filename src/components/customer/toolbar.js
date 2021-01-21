@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Card, Dropdown, Form, Nav, Navbar } from 'react-bootstrap'
+import { Button, Card, Dropdown, Form, InputGroup, Nav, Navbar } from 'react-bootstrap'
 import consts from '../../constants'
 import PhoneInput from 'react-phone-input-2'
 import renderError from '../renderError'
@@ -15,6 +15,7 @@ import Router from 'next/router';
 import { BiLogInCircle, BiLogOutCircle } from 'react-icons/bi';
 import { CgProfile } from 'react-icons/cg';
 import { RiDashboardFill } from 'react-icons/ri';
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 
 export default function Toolbar(props) {
     const { user } = props;
@@ -23,6 +24,7 @@ export default function Toolbar(props) {
     const [loading, setLoading] = useState(false);
     const [mobile, setMobile] = useState('');
     const [password, setPassword] = useState('');
+    const [showPass, setshowPass] = useState(false);
     const [mobileError, setmobileError] = useState('');
     const [error, setError] = useState('');
 
@@ -122,23 +124,37 @@ export default function Toolbar(props) {
                                                         inputStyle={{ width: '100%' }}
                                                         country={'pk'}
                                                         onlyCountries={['pk', 'af']}
-                                                        value={''}
-                                                        disableDropdown
+                                                        value={mobile}
+                                                        searchPlaceholder={'3359929528'}
                                                         onChange={phone => { setMobile(phone), setmobileError(''), setError('') }}
                                                         onKeyPress={(e) => handleEnterKeyPress(e)}
                                                     />
                                                     {mobileError !== '' && renderError(mobileError)}
                                                 </Form.Group>
                                                 <Form.Group controlId="formBasicPassword">
-                                                    <Form.Control
-                                                        type="password"
-                                                        value={password}
-                                                        onChange={(e) => { setPassword(e.target.value), setpasswordError(''), setError('') }}
-                                                        placeholder="Password"
-                                                        onKeyPress={(e) => handleEnterKeyPress(e)}
-                                                    />
+                                                    <InputGroup>
+                                                        <Form.Control
+                                                            type={showPass ? 'text' : "password"}
+                                                            value={password}
+                                                            onChange={(e) => { setPassword(e.target.value), setpasswordError(''), setError('') }}
+                                                            placeholder="Password"
+                                                            onKeyPress={(e) => handleEnterKeyPress(e)}
+                                                        />
+                                                        <InputGroup.Append>
+                                                            {showPass ?
+                                                                <Button variant='light' onClick={() => setshowPass(false)}>
+                                                                    <AiOutlineEyeInvisible style={{ fontSize: '20px' }} />
+                                                                </Button>
+                                                                :
+                                                                <Button variant='light' onClick={() => setshowPass(true)}>
+                                                                    <AiOutlineEye style={{ fontSize: '20px' }} />
+                                                                </Button>
+                                                            }
+                                                        </InputGroup.Append>
+                                                    </InputGroup>
                                                     {passwordError !== '' && renderError(passwordError)}
                                                 </Form.Group>
+
                                                 {error !== '' && renderError(error)}
                                                 <CustomButton
                                                     block
