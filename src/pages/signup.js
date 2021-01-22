@@ -288,7 +288,6 @@ class Signup extends Component {
                                                     country={'pk'}
                                                     onlyCountries={['pk', 'af']}
                                                     value={this.state.phone}
-                                                    disableDropdown
                                                     disabled={this.state.isCodeSended}
                                                     onChange={phone => this.setState({ phone: "+" + phone, mobileError: '' })}
                                                 />

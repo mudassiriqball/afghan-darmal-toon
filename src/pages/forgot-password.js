@@ -264,7 +264,6 @@ class ForgotPassword extends Component {
                                                         name="mobile"
                                                         onlyCountries={['pk', 'af']}
                                                         value={values.mobile}
-                                                        disableDropdown
                                                         disabled={this.state.isCodeSended}
                                                         onChange={(e) => { handleChange(e) }}
                                                         onChange={phone => { setFieldValue('mobile', '+' + phone), this.setState({ mobileError: '' }) }}
