@@ -2,7 +2,9 @@ This is an online medicine supplier system, which supply the medicines to medica
 Customer place order and get their poducts.
 
 Website Url: https://afghandarmaltoon.herokuapp.com/
+
 App Rep Link: https://github.com/mudassiriqball/afghan-darmaltoon-delivery-app
+
 App apk link: https://1drv.ms/u/s!AuxPil5kslEJk2AJ4qeSKStfEuwB?e=XtNSYn
 
 Accounts:
